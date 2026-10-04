@@ -241,7 +241,10 @@ public interface PrefectureRepository extends JpaRepository<Prefecture, Long> {
      * 
      * @return 地域のリスト（例: ["北海道", "東北", "関東", ...]）
      */
-    @Query("SELECT DISTINCT p.region FROM Prefecture p ORDER BY p.id")
+    // ※ DISTINCT と ORDER BY p.id を組み合わせると、MySQL 8 でもエラーになる
+    //    （並び替えに使う列は、SELECTする列に含まれている必要がある）。
+    //    GROUP BY で地域をまとめ、各地域の最小IDで並び替える
+    @Query("SELECT p.region FROM Prefecture p GROUP BY p.region ORDER BY MIN(p.id)")
     List<String> findAllRegions();
     
     /**

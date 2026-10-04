@@ -263,6 +263,10 @@ public class DailyForecast {
 
 APIレスポンスをJavaオブジェクトにマッピングするDTOを設計
 
+> 📝 **この設計書は「考え方の整理」です。** 実装（Day 20）では、Day 18で作る画面用DTOと名前がぶつからないよう、
+> API受信用のDTOは `OpenMeteoResponseDto` の内部クラス（`Current` / `Daily`）としてまとめて作ります。
+> ここでは、「APIのレスポンスをどんな形のJavaオブジェクトで受け取るか」を考えるのが目的です。
+
 `dto-design.md`を作成：
 
 ```markdown

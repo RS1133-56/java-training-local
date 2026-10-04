@@ -84,7 +84,126 @@ public class RestTemplateConfig {
 
 ---
 
-### 3. OpenMeteoClient実装（11:00-12:00）
+### 3. API受信用DTOと例外クラスの作成（11:00-11:30）
+
+OpenMeteoClientが使う2つのクラスを、先に作ります。
+
+> ⚠️ **Day 7で作った設計書（dto-design.md）との違いに注意**
+> Day 7の設計書では、API受信用のDTOを `CurrentWeatherDto` / `DailyWeatherDto` という名前にしていましたが、
+> Day 18で作った**画面表示用**の `CurrentWeatherDto` と名前が同じになり、衝突してしまいます。
+> そのため実装では、API受信用のDTOを `OpenMeteoResponseDto` の**内部クラス**（`Current` / `Daily`）としてまとめ、
+> `dto.api` パッケージに置きます。
+
+**API受信用DTO:** `src/main/java/com/example/weatherapp/dto/api/OpenMeteoResponseDto.java`
+
+```java
+package com.example.weatherapp.dto.api;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+
+import java.util.List;
+
+/**
+ * Open-Meteo APIのレスポンス全体を受け取るDTO
+ *
+ * JSONの項目名(snake_case)とJavaのフィールド名(camelCase)は、
+ * @JsonProperty で対応づける
+ */
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)  // DTOにない項目があってもエラーにしない
+public class OpenMeteoResponseDto {
+
+    private Double latitude;
+    private Double longitude;
+    private String timezone;
+
+    /** 現在の天気 */
+    private Current current;
+
+    /** 日次予報（項目ごとの配列形式） */
+    private Daily daily;
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Current {
+        private String time;
+
+        @JsonProperty("temperature_2m")
+        private Double temperature2m;
+
+        private Integer weathercode;
+
+        @JsonProperty("windspeed_10m")
+        private Double windspeed10m;
+
+        @JsonProperty("relativehumidity_2m")
+        private Integer relativehumidity2m;
+
+        @JsonProperty("apparent_temperature")
+        private Double apparentTemperature;
+
+        private Double precipitation;
+
+        @JsonProperty("cloud_cover")
+        private Integer cloudCover;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Daily {
+        private List<String> time;
+
+        @JsonProperty("temperature_2m_max")
+        private List<Double> temperature2mMax;
+
+        @JsonProperty("temperature_2m_min")
+        private List<Double> temperature2mMin;
+
+        private List<Integer> weathercode;
+
+        @JsonProperty("precipitation_sum")
+        private List<Double> precipitationSum;
+
+        @JsonProperty("windspeed_10m_max")
+        private List<Double> windspeed10mMax;
+
+        private List<String> sunrise;
+        private List<String> sunset;
+    }
+}
+```
+
+**ポイント:**
+- **@JsonProperty**: JSONの項目名（`temperature_2m` のようなsnake_case）と、Javaのフィールド名（camelCase）を対応づける
+- **@JsonIgnoreProperties(ignoreUnknown = true)**: DTOにない項目があってもエラーにしない
+- **内部クラス（static class）**: `Current` / `Daily` を `OpenMeteoResponseDto` の中にまとめて、画面用DTOと名前がぶつからないようにする
+- `daily` は「項目ごとの配列」なので `List<...>` で受ける（Day 7で確認したレスポンスの形）
+
+**カスタム例外:** `src/main/java/com/example/weatherapp/exception/ExternalApiException.java`
+
+```java
+package com.example.weatherapp.exception;
+
+/**
+ * 外部API（Open-Meteo）との連携で発生した例外
+ */
+public class ExternalApiException extends RuntimeException {
+
+    public ExternalApiException(String message) {
+        super(message);
+    }
+
+    public ExternalApiException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+```
+
+---
+
+### 4. OpenMeteoClient実装（11:30-12:30）
 
 **Clientクラス作成:** `src/main/java/com/example/weatherapp/client/OpenMeteoClient.java`
 
@@ -173,7 +292,7 @@ public class OpenMeteoClient {
 
 ## 午後の作業（13:00-17:00）
 
-### 4. テスト作成（13:00-16:00）
+### 5. テスト作成（13:00-16:00）
 
 `src/test/java/com/example/weatherapp/client/OpenMeteoClientTest.java`:
 
@@ -191,6 +310,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
@@ -242,6 +362,7 @@ class OpenMeteoClientTest {
 ## ✅ チェックリスト
 
 - [ ] RestTemplateConfig作成
+- [ ] API受信用DTO（OpenMeteoResponseDto）作成
 - [ ] OpenMeteoClient実装
 - [ ] ExternalApiException作成
 - [ ] テスト作成・実行

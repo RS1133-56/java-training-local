@@ -343,6 +343,83 @@ public class GlobalExceptionHandler {
 
 ---
 
+### 2-2. WeatherControllerのリファクタリング（12:00-13:00）
+
+**なぜ必要か:**
+Day 23の `WeatherController` は、Controllerの中で `try-catch` して、自分でエラーページを返していました。
+このままだと例外がControllerの外に出ないため、今作った `GlobalExceptionHandler` が**一度も呼ばれません**。
+（`GlobalExceptionHandlerTest` を実行すると、期待した 404/503/500 ではなく `200` になって失敗します）
+
+そこで、Controllerからエラー処理を取り除き、例外はそのまま投げて `GlobalExceptionHandler` に任せます。
+
+**修正後の `WeatherController`:** `src/main/java/com/example/weatherapp/controller/WeatherController.java`
+
+`showWeather` と `showLatestWeather` の2つのメソッドを、次のように置き換えます。
+
+```java
+    @GetMapping("/{id}")
+    public String showWeather(
+        @PathVariable Long id,
+        Model model
+    ) {
+        log.info("天気詳細ページ表示: prefectureId={}", id);
+
+        // 例外は処理せず、そのまま投げる（GlobalExceptionHandlerが処理する）
+        WeatherDetailDto weather = weatherService.getWeatherByPrefectureId(id);
+        model.addAttribute("weather", weather);
+
+        log.debug("天気情報取得成功: {}", weather.getPrefecture().getName());
+        return "weather-detail";
+    }
+
+    /**
+     * DB保存済みの最新天気を表示（API呼び出しなし）
+     *
+     * URL: /weather/{id}/latest
+     */
+    @GetMapping("/{id}/latest")
+    public String showLatestWeather(
+        @PathVariable Long id,
+        Model model
+    ) {
+        log.info("最新天気表示（DB）: prefectureId={}", id);
+
+        WeatherDetailDto weather = weatherService.getLatestWeatherFromDb(id);
+
+        if (weather == null) {
+            // 存在しない場合は例外を投げ、GlobalExceptionHandlerに404ページを表示させる
+            throw new ResourceNotFoundException("天気データがまだ取得されていません: id=" + id);
+        }
+
+        model.addAttribute("weather", weather);
+        return "weather-detail";
+    }
+```
+
+> 💡 `catch` するのをやめたので、`import ...ExternalApiException;` は不要になります（未使用のimportは削除してOK）。
+
+**Day 23のテストも更新が必要です:**
+エラーページを表示するときのHTTPステータスが `200` から本来の値（404/503/500）に変わるため、
+`WeatherControllerTest` の次の4つのテストで、`status().isOk()` を書き換えます。
+
+| テスト | 変更前 | 変更後 |
+|---|---|---|
+| 存在しない都道府県で404エラーが表示される | `status().isOk()` | `status().isNotFound()` |
+| API呼び出し失敗時にエラーページが表示される | `status().isOk()` | `status().isServiceUnavailable()` |
+| 予期しないエラーで500エラーが表示される | `status().isOk()` | `status().isInternalServerError()` |
+| DBに天気データがない場合404エラー | `status().isOk()` | `status().isNotFound()` |
+
+さらに、「API呼び出し失敗時にエラーページが表示される」のテストでは、`prefectureId` の型も変わります。
+`GlobalExceptionHandler` はURLから取り出した**文字列**を `prefectureId` に入れるため、期待値を `13L`（数値）から `"13"`（文字列）に書き換えます。
+
+```java
+.andExpect(model().attribute("prefectureId", "13"));
+```
+
+`./gradlew test --tests WeatherControllerTest --tests GlobalExceptionHandlerTest` で、どちらも成功することを確認します。
+
+---
+
 ## 📋 午後の作業（13:00-17:00）
 
 ### 3. エラーページ作成（13:00-15:00）
@@ -703,6 +780,7 @@ class GlobalExceptionHandlerTest {
 ## ✅ チェックリスト
 
 - [ ] @ControllerAdviceの仕組みを理解した
+- [ ] WeatherControllerから `try-catch` を取り除いた（Day 23のテストの期待値も更新した）
 - [ ] GlobalExceptionHandlerを実装した
 - [ ] 各種例外のハンドリングを実装した
 - [ ] エラーページ（404, 503, 500）を作成した
