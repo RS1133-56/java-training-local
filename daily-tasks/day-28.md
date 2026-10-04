@@ -612,100 +612,32 @@ public WeatherDetailDto getWeatherByPrefectureId(Long prefectureId) {
 
 ---
 
-### 4. 天気コード変換ユーティリティ作成（13:30-15:00）
+### 4. 天気コードの説明・アイコンの確認（13:30-15:00）
 
-**天気コード変換:** `src/main/java/com/example/weatherapp/util/WeatherCodeUtil.java`
+天気コード（WMOコード）を日本語の説明やアイコンに変換する処理は、**Day 18で作った `WeatherCodeMapper` をそのまま使います**。
+新しく別のクラスを作る必要はありません。
 
-```java
-package com.example.weatherapp.util;
+**なぜ新しく作らないのか:**
+同じ「天気コードの対応表」を2か所に書いてしまうと、片方だけ直したときに表示が食い違ってしまいます
+（例: 同じコード61なのに、画面ごとに違う絵文字が出てしまう）。対応表は**1か所だけ**で管理します。
 
-import java.util.Map;
+**データの流れ:**
 
-/**
- * 天気コード変換ユーティリティ
- * WMO天気コードを日本語と絵文字に変換
- */
-public class WeatherCodeUtil {
-    
-    private static final Map<Integer, String> WEATHER_DESCRIPTIONS = Map.ofEntries(
-        Map.entry(0, "快晴"),
-        Map.entry(1, "晴れ"),
-        Map.entry(2, "一部曇り"),
-        Map.entry(3, "曇り"),
-        Map.entry(45, "霧"),
-        Map.entry(48, "霧氷"),
-        Map.entry(51, "小雨"),
-        Map.entry(53, "雨"),
-        Map.entry(55, "大雨"),
-        Map.entry(61, "小雨"),
-        Map.entry(63, "雨"),
-        Map.entry(65, "大雨"),
-        Map.entry(71, "小雪"),
-        Map.entry(73, "雪"),
-        Map.entry(75, "大雪"),
-        Map.entry(80, "にわか雨"),
-        Map.entry(81, "にわか雨"),
-        Map.entry(82, "激しいにわか雨"),
-        Map.entry(85, "にわか雪"),
-        Map.entry(86, "にわか雪"),
-        Map.entry(95, "雷雨"),
-        Map.entry(96, "雷雨（雹）"),
-        Map.entry(99, "激しい雷雨（雹）")
-    );
-    
-    private static final Map<Integer, String> WEATHER_EMOJIS = Map.ofEntries(
-        Map.entry(0, "☀️"),
-        Map.entry(1, "🌤️"),
-        Map.entry(2, "⛅"),
-        Map.entry(3, "☁️"),
-        Map.entry(45, "🌫️"),
-        Map.entry(48, "🌫️"),
-        Map.entry(51, "🌦️"),
-        Map.entry(53, "🌧️"),
-        Map.entry(55, "🌧️"),
-        Map.entry(61, "🌧️"),
-        Map.entry(63, "🌧️"),
-        Map.entry(65, "🌧️"),
-        Map.entry(71, "🌨️"),
-        Map.entry(73, "❄️"),
-        Map.entry(75, "❄️"),
-        Map.entry(80, "🌦️"),
-        Map.entry(81, "🌦️"),
-        Map.entry(82, "⛈️"),
-        Map.entry(85, "🌨️"),
-        Map.entry(86, "🌨️"),
-        Map.entry(95, "⛈️"),
-        Map.entry(96, "⛈️"),
-        Map.entry(99, "⛈️")
-    );
-    
-    public static String getDescription(Integer weatherCode) {
-        return WEATHER_DESCRIPTIONS.getOrDefault(weatherCode, "不明");
-    }
-    
-    public static String getEmoji(Integer weatherCode) {
-        return WEATHER_EMOJIS.getOrDefault(weatherCode, "❓");
-    }
-}
+```
+WeatherRecord（DBのデータ：天気コードの数値だけ）
+    ↓ WeatherMapper（Day 18）が WeatherCodeMapper を使って変換
+CurrentWeatherDto（weatherCode / weatherDescription / weatherIcon を持つ）
+    ↓
+weather-detail.html（${weather.current.weatherDescription} で表示）
 ```
 
-**Mapperで使用:**
+**確認すること:**
 
-```java
-// WeatherMapperImpl内
-import com.example.weatherapp.util.WeatherCodeUtil;
-
-@Override
-public CurrentWeatherDto toCurrentWeatherDto(WeatherRecord record) {
-    return CurrentWeatherDto.builder()
-        .time(record.getCurrentTime())
-        .temperature(record.getCurrentTemperature())
-        .weatherCode(record.getCurrentWeatherCode())
-        .weatherDescription(WeatherCodeUtil.getDescription(record.getCurrentWeatherCode()))
-        // ... 他のフィールド
-        .build();
-}
-```
+1. `WeatherMapper`（Day 18）が、`WeatherCodeMapper.getDescription(...)` と `getIcon(...)` で
+   `weatherDescription` / `weatherIcon` を設定していることを確認する
+2. テンプレートでは、DTOの `weatherDescription` を表示している（コードの数値を自分で変換していない）ことを確認する
+3. Day 7の天気コード表と、`WeatherCodeMapper` に登録されているコードを見比べて、足りないコードがないか確認する
+   （未登録のコードは「不明」と表示される）
 
 ---
 
@@ -781,7 +713,7 @@ class WeatherDetailPageTest {
 - [ ] weather-detail.htmlを実装した
 - [ ] 現在の天気が表示される
 - [ ] 7日間の予報が表示される
-- [ ] WeatherCodeUtilを実装した
+- [ ] 天気の説明・アイコンが画面に表示されることを確認した（Day 18の `WeatherCodeMapper` を使用）
 - [ ] レスポンシブデザイン対応
 - [ ] ブラウザで動作確認した
 - [ ] E2Eテストを作成した
@@ -840,12 +772,12 @@ git push origin main
    - 天気詳細ページ
    - 現在の天気表示
    - 7日間の予報表示
-   - WeatherCodeUtil
+   - 天気コードの表示（Day 18の WeatherCodeMapper を再利用）
 
 2. **学んだこと:**
    - 複雑なグリッドレイアウト
    - レスポンシブデザイン
-   - ユーティリティクラスの作成
+   - 同じ対応表を2か所に書かない（1か所で管理する）考え方
 
 3. **明日への引き継ぎ:**
    - Day 29でCSS改善・スタイリング

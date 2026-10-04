@@ -211,34 +211,49 @@ public class PrefectureServiceImpl implements PrefectureService {
 }
 ```
 
-**天気データキャッシュ:**
+**天気データ（外部API呼び出し）のキャッシュ:**
 
-Day 21で作った `WeatherServiceImpl` の `getWeatherByPrefectureId` に追加します。
+天気データのキャッシュは、`WeatherServiceImpl` 全体ではなく、**外部APIを呼ぶ `OpenMeteoClient.fetchWeather` だけ**に付けます。
+Day 20で作った `OpenMeteoClient` のメソッドに、アノテーションを追加します。
 
 ```java
-@Service
-@Transactional
-public class WeatherServiceImpl implements WeatherService {
+@Component
+public class OpenMeteoClient {
     
-    @Override
-    @Cacheable(
-        value = "weather",
-        key = "#prefectureId",
-        unless = "#result == null"
-    )
-    public WeatherDetailDto getWeatherByPrefectureId(Long prefectureId) {
-        // API呼び出しをキャッシュ
-        // 10分間は同じデータを返す
+    // 緯度・経度が同じなら、10分間は同じAPIレスポンスを再利用する
+    // 失敗時は例外になるため、エラーはキャッシュされない
+    @Cacheable(value = "weather", key = "#latitude + ',' + #longitude")
+    public OpenMeteoResponseDto fetchWeather(Double latitude, Double longitude) {
+        // （既存のAPI呼び出し処理はそのまま）
     }
 }
 ```
 
-> ⚠️ **キャッシュの影響に注意**
-> キャッシュが効いている10分間は、同じ都道府県で外部API呼び出しもDB保存も行われません。
-> つまり、天気の**履歴は同じ都道府県につき10分に1件**になります（Day 14で設計した履歴保存の動作が変わります）。
-> また、テストでは前のテストのキャッシュが残って結果が変わることがあるため、
-> テスト用の `src/test/resources/application.properties` に `spring.cache.type=none` を追加しておくと安全です
+**なぜ `WeatherServiceImpl` ではなく `OpenMeteoClient` に付けるのか:**
+
+| | Service全体にキャッシュ | Clientのみにキャッシュ（採用） |
+|---|---|---|
+| 外部APIの呼び出し | 10分間は呼ばれない | 10分間は呼ばれない（同じ） |
+| DBへの履歴保存 | **10分間は保存されない** | **表示のたびに保存される** |
+| Day 14の設計（表示のたびに履歴を保存） | 崩れる | 守られる |
+
+外部APIの利用制限（`429 Too Many Requests`）を避けたいのは「API呼び出し」の回数なので、そこだけをキャッシュします。
+
+> ⚠️ **注意: 履歴に同じ値が入ることがあります**
+> 10分以内に同じ都道府県を何度も開くと、**同じ天気データ**の履歴が、開いた回数ぶん保存されます。
+> 研修では「表示した記録を残す」仕様として、このまま進めてOKです。
+> （気になる場合は、「直近10分以内の履歴があれば保存しない」という発展課題を考えてみましょう）
+
+> 💡 **テストではキャッシュを無効にする**
+> 前のテストのキャッシュが残って結果が変わることがあるため、
+> `src/test/resources/application.properties` に `spring.cache.type=none` を追加しておくと安全です
 > （上の `CacheConfig` は、この指定のときにキャッシュを無効にできるように作ってあります）。
+
+**キャッシュ動作の確認:**
+
+1. 東京都の詳細ページ（`/weather/13`）を開き、ログに「Open-Meteo API呼び出し」が出ることを確認する
+2. すぐにもう一度開く → 今度は**API呼び出しのログが出ない**ことを確認する
+3. データベースの `weather_records` には、開いた回数ぶんの履歴が保存されていることを確認する
 
 ---
 
@@ -513,9 +528,14 @@ git push origin main
 ## 🆘 トラブルシューティング
 
 ### キャッシュが効かない
-**原因:** @Cacheableの条件が合わない
+**原因:** `@Cacheable` が効く条件を満たしていない
 
-**解決策:** unless条件を確認
+**解決策:**
+1. `CacheConfig` に `@EnableCaching` が付いているか確認
+2. `@Cacheable` を、Springが管理するBean（`@Component` / `@Service`）の `public` メソッドに付けているか確認
+3. **同じクラスの中**のメソッドから呼んでいないか確認（クラスの外から呼ばれないとキャッシュは効きません）
+4. `key` の指定（`#latitude + ',' + #longitude`）と、メソッドの引数名が一致しているか確認
+5. `spring.cache.type=none` になっていないか確認（テスト用の設定を本番に入れていないか）
 
 ### 画像が表示されない
 **原因:** WebP非対応ブラウザ

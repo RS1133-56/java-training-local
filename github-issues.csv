@@ -16516,100 +16516,32 @@ public WeatherDetailDto getWeatherByPrefectureId(Long prefectureId) {
 
 ---
 
-### 4. 天気コード変換ユーティリティ作成（13:30-15:00）
+### 4. 天気コードの説明・アイコンの確認（13:30-15:00）
 
-**天気コード変換:** `src/main/java/com/example/weatherapp/util/WeatherCodeUtil.java`
+天気コード（WMOコード）を日本語の説明やアイコンに変換する処理は、**Day 18で作った `WeatherCodeMapper` をそのまま使います**。
+新しく別のクラスを作る必要はありません。
 
-```java
-package com.example.weatherapp.util;
+**なぜ新しく作らないのか:**
+同じ「天気コードの対応表」を2か所に書いてしまうと、片方だけ直したときに表示が食い違ってしまいます
+（例: 同じコード61なのに、画面ごとに違う絵文字が出てしまう）。対応表は**1か所だけ**で管理します。
 
-import java.util.Map;
+**データの流れ:**
 
-/**
- * 天気コード変換ユーティリティ
- * WMO天気コードを日本語と絵文字に変換
- */
-public class WeatherCodeUtil {
-    
-    private static final Map<Integer, String> WEATHER_DESCRIPTIONS = Map.ofEntries(
-        Map.entry(0, ""快晴""),
-        Map.entry(1, ""晴れ""),
-        Map.entry(2, ""一部曇り""),
-        Map.entry(3, ""曇り""),
-        Map.entry(45, ""霧""),
-        Map.entry(48, ""霧氷""),
-        Map.entry(51, ""小雨""),
-        Map.entry(53, ""雨""),
-        Map.entry(55, ""大雨""),
-        Map.entry(61, ""小雨""),
-        Map.entry(63, ""雨""),
-        Map.entry(65, ""大雨""),
-        Map.entry(71, ""小雪""),
-        Map.entry(73, ""雪""),
-        Map.entry(75, ""大雪""),
-        Map.entry(80, ""にわか雨""),
-        Map.entry(81, ""にわか雨""),
-        Map.entry(82, ""激しいにわか雨""),
-        Map.entry(85, ""にわか雪""),
-        Map.entry(86, ""にわか雪""),
-        Map.entry(95, ""雷雨""),
-        Map.entry(96, ""雷雨（雹）""),
-        Map.entry(99, ""激しい雷雨（雹）"")
-    );
-    
-    private static final Map<Integer, String> WEATHER_EMOJIS = Map.ofEntries(
-        Map.entry(0, ""☀️""),
-        Map.entry(1, ""🌤️""),
-        Map.entry(2, ""⛅""),
-        Map.entry(3, ""☁️""),
-        Map.entry(45, ""🌫️""),
-        Map.entry(48, ""🌫️""),
-        Map.entry(51, ""🌦️""),
-        Map.entry(53, ""🌧️""),
-        Map.entry(55, ""🌧️""),
-        Map.entry(61, ""🌧️""),
-        Map.entry(63, ""🌧️""),
-        Map.entry(65, ""🌧️""),
-        Map.entry(71, ""🌨️""),
-        Map.entry(73, ""❄️""),
-        Map.entry(75, ""❄️""),
-        Map.entry(80, ""🌦️""),
-        Map.entry(81, ""🌦️""),
-        Map.entry(82, ""⛈️""),
-        Map.entry(85, ""🌨️""),
-        Map.entry(86, ""🌨️""),
-        Map.entry(95, ""⛈️""),
-        Map.entry(96, ""⛈️""),
-        Map.entry(99, ""⛈️"")
-    );
-    
-    public static String getDescription(Integer weatherCode) {
-        return WEATHER_DESCRIPTIONS.getOrDefault(weatherCode, ""不明"");
-    }
-    
-    public static String getEmoji(Integer weatherCode) {
-        return WEATHER_EMOJIS.getOrDefault(weatherCode, ""❓"");
-    }
-}
+```
+WeatherRecord（DBのデータ：天気コードの数値だけ）
+    ↓ WeatherMapper（Day 18）が WeatherCodeMapper を使って変換
+CurrentWeatherDto（weatherCode / weatherDescription / weatherIcon を持つ）
+    ↓
+weather-detail.html（${weather.current.weatherDescription} で表示）
 ```
 
-**Mapperで使用:**
+**確認すること:**
 
-```java
-// WeatherMapperImpl内
-import com.example.weatherapp.util.WeatherCodeUtil;
-
-@Override
-public CurrentWeatherDto toCurrentWeatherDto(WeatherRecord record) {
-    return CurrentWeatherDto.builder()
-        .time(record.getCurrentTime())
-        .temperature(record.getCurrentTemperature())
-        .weatherCode(record.getCurrentWeatherCode())
-        .weatherDescription(WeatherCodeUtil.getDescription(record.getCurrentWeatherCode()))
-        // ... 他のフィールド
-        .build();
-}
-```
+1. `WeatherMapper`（Day 18）が、`WeatherCodeMapper.getDescription(...)` と `getIcon(...)` で
+   `weatherDescription` / `weatherIcon` を設定していることを確認する
+2. テンプレートでは、DTOの `weatherDescription` を表示している（コードの数値を自分で変換していない）ことを確認する
+3. Day 7の天気コード表と、`WeatherCodeMapper` に登録されているコードを見比べて、足りないコードがないか確認する
+   （未登録のコードは「不明」と表示される）
 
 ---
 
@@ -16685,7 +16617,7 @@ class WeatherDetailPageTest {
 - [ ] weather-detail.htmlを実装した
 - [ ] 現在の天気が表示される
 - [ ] 7日間の予報が表示される
-- [ ] WeatherCodeUtilを実装した
+- [ ] 天気の説明・アイコンが画面に表示されることを確認した（Day 18の `WeatherCodeMapper` を使用）
 - [ ] レスポンシブデザイン対応
 - [ ] ブラウザで動作確認した
 - [ ] E2Eテストを作成した
@@ -16744,12 +16676,12 @@ git push origin main
    - 天気詳細ページ
    - 現在の天気表示
    - 7日間の予報表示
-   - WeatherCodeUtil
+   - 天気コードの表示（Day 18の WeatherCodeMapper を再利用）
 
 2. **学んだこと:**
    - 複雑なグリッドレイアウト
    - レスポンシブデザイン
-   - ユーティリティクラスの作成
+   - 同じ対応表を2か所に書かない（1か所で管理する）考え方
 
 3. **明日への引き継ぎ:**
    - Day 29でCSS改善・スタイリング
@@ -22071,7 +22003,7 @@ class WeatherServiceTest {
 }
 ```
 
-**Utilityクラスのテスト:**
+**天気コード変換（WeatherCodeMapper）のテスト:**
 
 ```java
 package com.example.weatherapp.util;
@@ -22084,10 +22016,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.assertj.core.api.Assertions.*;
 
 /**
- * WeatherCodeUtilの単体テスト
+ * WeatherCodeMapperの単体テスト（Day 18で作成）
  */
-@DisplayName(""WeatherCodeUtil単体テスト"")
-class WeatherCodeUtilTest {
+@DisplayName(""WeatherCodeMapper単体テスト"")
+class WeatherCodeMapperTest {
     
     @ParameterizedTest
     @CsvSource({
@@ -22102,14 +22034,14 @@ class WeatherCodeUtilTest {
     })
     @DisplayName(""天気コードから説明文を取得"")
     void testGetDescription(int code, String expected) {
-        assertThat(WeatherCodeUtil.getDescription(code))
+        assertThat(WeatherCodeMapper.getDescription(code))
             .isEqualTo(expected);
     }
     
     @Test
     @DisplayName(""不明なコードの場合"")
     void testGetDescription_Unknown() {
-        assertThat(WeatherCodeUtil.getDescription(999))
+        assertThat(WeatherCodeMapper.getDescription(999))
             .isEqualTo(""不明"");
     }
     
@@ -22120,9 +22052,9 @@ class WeatherCodeUtilTest {
         ""61, 🌧️"",
         ""95, ⛈️""
     })
-    @DisplayName(""天気コードから絵文字を取得"")
-    void testGetEmoji(int code, String expected) {
-        assertThat(WeatherCodeUtil.getEmoji(code))
+    @DisplayName(""天気コードからアイコン（絵文字）を取得"")
+    void testGetIcon(int code, String expected) {
+        assertThat(WeatherCodeMapper.getIcon(code))
             .isEqualTo(expected);
     }
 }
@@ -23417,34 +23349,49 @@ public class PrefectureServiceImpl implements PrefectureService {
 }
 ```
 
-**天気データキャッシュ:**
+**天気データ（外部API呼び出し）のキャッシュ:**
 
-Day 21で作った `WeatherServiceImpl` の `getWeatherByPrefectureId` に追加します。
+天気データのキャッシュは、`WeatherServiceImpl` 全体ではなく、**外部APIを呼ぶ `OpenMeteoClient.fetchWeather` だけ**に付けます。
+Day 20で作った `OpenMeteoClient` のメソッドに、アノテーションを追加します。
 
 ```java
-@Service
-@Transactional
-public class WeatherServiceImpl implements WeatherService {
+@Component
+public class OpenMeteoClient {
     
-    @Override
-    @Cacheable(
-        value = ""weather"",
-        key = ""#prefectureId"",
-        unless = ""#result == null""
-    )
-    public WeatherDetailDto getWeatherByPrefectureId(Long prefectureId) {
-        // API呼び出しをキャッシュ
-        // 10分間は同じデータを返す
+    // 緯度・経度が同じなら、10分間は同じAPIレスポンスを再利用する
+    // 失敗時は例外になるため、エラーはキャッシュされない
+    @Cacheable(value = ""weather"", key = ""#latitude + ',' + #longitude"")
+    public OpenMeteoResponseDto fetchWeather(Double latitude, Double longitude) {
+        // （既存のAPI呼び出し処理はそのまま）
     }
 }
 ```
 
-> ⚠️ **キャッシュの影響に注意**
-> キャッシュが効いている10分間は、同じ都道府県で外部API呼び出しもDB保存も行われません。
-> つまり、天気の**履歴は同じ都道府県につき10分に1件**になります（Day 14で設計した履歴保存の動作が変わります）。
-> また、テストでは前のテストのキャッシュが残って結果が変わることがあるため、
-> テスト用の `src/test/resources/application.properties` に `spring.cache.type=none` を追加しておくと安全です
+**なぜ `WeatherServiceImpl` ではなく `OpenMeteoClient` に付けるのか:**
+
+| | Service全体にキャッシュ | Clientのみにキャッシュ（採用） |
+|---|---|---|
+| 外部APIの呼び出し | 10分間は呼ばれない | 10分間は呼ばれない（同じ） |
+| DBへの履歴保存 | **10分間は保存されない** | **表示のたびに保存される** |
+| Day 14の設計（表示のたびに履歴を保存） | 崩れる | 守られる |
+
+外部APIの利用制限（`429 Too Many Requests`）を避けたいのは「API呼び出し」の回数なので、そこだけをキャッシュします。
+
+> ⚠️ **注意: 履歴に同じ値が入ることがあります**
+> 10分以内に同じ都道府県を何度も開くと、**同じ天気データ**の履歴が、開いた回数ぶん保存されます。
+> 研修では「表示した記録を残す」仕様として、このまま進めてOKです。
+> （気になる場合は、「直近10分以内の履歴があれば保存しない」という発展課題を考えてみましょう）
+
+> 💡 **テストではキャッシュを無効にする**
+> 前のテストのキャッシュが残って結果が変わることがあるため、
+> `src/test/resources/application.properties` に `spring.cache.type=none` を追加しておくと安全です
 > （上の `CacheConfig` は、この指定のときにキャッシュを無効にできるように作ってあります）。
+
+**キャッシュ動作の確認:**
+
+1. 東京都の詳細ページ（`/weather/13`）を開き、ログに「Open-Meteo API呼び出し」が出ることを確認する
+2. すぐにもう一度開く → 今度は**API呼び出しのログが出ない**ことを確認する
+3. データベースの `weather_records` には、開いた回数ぶんの履歴が保存されていることを確認する
 
 ---
 
@@ -23719,9 +23666,14 @@ git push origin main
 ## 🆘 トラブルシューティング
 
 ### キャッシュが効かない
-**原因:** @Cacheableの条件が合わない
+**原因:** `@Cacheable` が効く条件を満たしていない
 
-**解決策:** unless条件を確認
+**解決策:**
+1. `CacheConfig` に `@EnableCaching` が付いているか確認
+2. `@Cacheable` を、Springが管理するBean（`@Component` / `@Service`）の `public` メソッドに付けているか確認
+3. **同じクラスの中**のメソッドから呼んでいないか確認（クラスの外から呼ばれないとキャッシュは効きません）
+4. `key` の指定（`#latitude + ',' + #longitude`）と、メソッドの引数名が一致しているか確認
+5. `spring.cache.type=none` になっていないか確認（テスト用の設定を本番に入れていないか）
 
 ### 画像が表示されない
 **原因:** WebP非対応ブラウザ

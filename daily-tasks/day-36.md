@@ -207,7 +207,7 @@ class WeatherServiceTest {
 }
 ```
 
-**Utilityクラスのテスト:**
+**天気コード変換（WeatherCodeMapper）のテスト:**
 
 ```java
 package com.example.weatherapp.util;
@@ -220,10 +220,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.assertj.core.api.Assertions.*;
 
 /**
- * WeatherCodeUtilの単体テスト
+ * WeatherCodeMapperの単体テスト（Day 18で作成）
  */
-@DisplayName("WeatherCodeUtil単体テスト")
-class WeatherCodeUtilTest {
+@DisplayName("WeatherCodeMapper単体テスト")
+class WeatherCodeMapperTest {
     
     @ParameterizedTest
     @CsvSource({
@@ -238,14 +238,14 @@ class WeatherCodeUtilTest {
     })
     @DisplayName("天気コードから説明文を取得")
     void testGetDescription(int code, String expected) {
-        assertThat(WeatherCodeUtil.getDescription(code))
+        assertThat(WeatherCodeMapper.getDescription(code))
             .isEqualTo(expected);
     }
     
     @Test
     @DisplayName("不明なコードの場合")
     void testGetDescription_Unknown() {
-        assertThat(WeatherCodeUtil.getDescription(999))
+        assertThat(WeatherCodeMapper.getDescription(999))
             .isEqualTo("不明");
     }
     
@@ -256,9 +256,9 @@ class WeatherCodeUtilTest {
         "61, 🌧️",
         "95, ⛈️"
     })
-    @DisplayName("天気コードから絵文字を取得")
-    void testGetEmoji(int code, String expected) {
-        assertThat(WeatherCodeUtil.getEmoji(code))
+    @DisplayName("天気コードからアイコン（絵文字）を取得")
+    void testGetIcon(int code, String expected) {
+        assertThat(WeatherCodeMapper.getIcon(code))
             .isEqualTo(expected);
     }
 }
