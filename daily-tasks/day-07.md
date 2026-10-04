@@ -861,6 +861,39 @@ git push origin main
 
 ---
 
+## 🆘 トラブルシューティング
+
+### JSONの項目名（`temperature_2m`）とJavaのフィールド名（`temperature2m`）が合わず、値が `null` になる
+**原因:** JSONはsnake_case、JavaはcamelCaseで、自動では対応づかない
+
+**解決策:**
+1. DTOのフィールドに `@JsonProperty("temperature_2m")` を付けて、JSON側の名前を明示する
+2. 項目名の綴り（`windspeed_10m` など）をレスポンスの実物と1文字ずつ比較する
+
+### `UnrecognizedPropertyException: Unrecognized field ...`
+**原因:** JSONにあるのにDTOに存在しない項目があり、変換でエラーになっている
+
+**解決策:**
+1. DTOクラスに `@JsonIgnoreProperties(ignoreUnknown = true)` を付ける
+2. 必要な項目だけDTOに定義すればよい（全項目を網羅しなくてよい）
+
+### `Cannot deserialize value of type ...` で変換できない
+**原因:** DTOの型がJSONの型と合っていない（配列なのに単一値で受けている、など）
+
+**解決策:**
+1. `daily.time` のような配列は `List<String>`、`List<Double>` で受ける
+2. 数値は `Double` / `Integer`、日時文字列は一旦 `String` で受けてから変換する
+3. レスポンスのJSONを見て、`[ ]`（配列）か `{ }`（オブジェクト）かを確認
+
+### 天気コードが想定外の値で、説明が引けない
+**原因:** 定義していないコードが返ってきた
+
+**解決策:**
+1. WMO天気コード表（このDayの表）を再確認
+2. 表にないコードは「不明」を返すデフォルト処理を用意しておく
+
+---
+
 ## 🎉 完了後
 
 次は [Day 8](day-08.md) へ進む

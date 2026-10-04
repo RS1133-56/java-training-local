@@ -334,6 +334,45 @@ class WeatherServiceImplTest {
 
 ---
 
+## 🆘 トラブルシューティング
+
+### `NoSuchBeanDefinitionException: ... OpenMeteoClient`
+**原因:** Day 20で作ったClientがSpringに登録されていない、または未実装
+
+**解決策:**
+1. `OpenMeteoClient` に `@Component` が付いているか確認
+2. Day 20のClient・設定クラス（`RestTemplateConfig`）が完成しているか確認
+
+### `TransientPropertyValueException` / `object references an unsaved transient instance`
+**原因:** 親（WeatherRecord）を保存する前に、子（DailyForecast）を参照している
+
+**解決策:**
+1. `cascade = CascadeType.ALL` が親側の関連に付いているか確認
+2. 子の追加は、Entityのヘルパーメソッド（`addDailyForecast`）を使い、**親に子を追加してから親を保存**する
+
+### `DataIntegrityViolationException`（NOT NULL違反など）
+**原因:** 必須の列（取得日時、都道府県など）に値が入っていない
+
+**解決策:**
+1. エラーメッセージの `Column 'xxx' cannot be null` で、列名を特定する
+2. Entityの組み立て（`buildWeatherRecord`）で、その列に値を設定しているか確認
+
+### `LazyInitializationException`
+**原因:** トランザクションの外で、遅延読み込みの関連データにアクセスしている
+
+**解決策:**
+1. Serviceのメソッドに `@Transactional` があるか確認
+2. DTOに変換する処理も、トランザクションの範囲内で行う
+
+### Mockitoテストで `NullPointerException`／`Wanted but not invoked`
+**原因:** 必要なモックの設定（`when`）が足りない、または呼び出しの引数が違う
+
+**解決策:**
+1. Serviceが呼ぶ全ての依存先（Client・Repository・Mapperなど）について、`when(...).thenReturn(...)` を設定したか確認
+2. `verify(...)` に渡す引数が、実際に渡された値と同じか確認
+
+---
+
 ## 🎉 完了後
 
 次は [Day 22](day-22.md) へ

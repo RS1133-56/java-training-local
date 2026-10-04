@@ -190,6 +190,40 @@ public class TestController {
 
 ---
 
+## 🆘 トラブルシューティング
+
+### `Duplicate entry '1' for key 'PRIMARY'`
+**原因:** 同じデータを2回投入しようとしている（再実行した）
+
+**解決策:**
+1. 先に `DELETE FROM テーブル名;` で空にしてから投入する（子テーブル → 親テーブルの順）
+2. または `TRUNCATE` を使う場合は、外部キーのチェックを一時的に外す必要がある（慣れるまで `DELETE` が安全）
+
+### 日本語が `????` になる／文字化けする
+**原因:** DB・接続・ファイルのどこかで文字コードが `UTF-8` になっていない
+
+**解決策:**
+1. DBとテーブルが `utf8mb4` か確認（`SHOW CREATE TABLE prefectures;`）
+2. JDBCのURLに `characterEncoding=UTF-8` を付ける
+3. SQLファイルをUTF-8で保存し直す（Windowsのメモ帳は要注意。VS CodeやIntelliJで保存）
+
+### `Cannot add or update a child row: a foreign key constraint fails`
+**原因:** 親テーブルにまだ存在しないIDを、子テーブルで参照している
+
+**解決策:**
+1. 投入順を「親（prefectures）→ 子」にする
+2. 子テーブルの `prefecture_id` が、親に実在するIDか確認
+
+### `SELECT COUNT(*)` が47件にならない
+**原因:** INSERT文の一部が実行されていない（区切りの誤り）
+
+**解決策:**
+1. 行の区切りは `,`、最後の行だけ `;` になっているか確認
+2. 一部の文だけ選択して実行していないか確認（全体を選択して実行）
+3. エラーが出た行は、出力パネルのメッセージで特定する
+
+---
+
 ## 🎉 完了後
 
 次は [Day 13](day-13.md) へ

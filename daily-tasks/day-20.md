@@ -265,6 +265,55 @@ git push origin main
 
 ---
 
+## 🆘 トラブルシューティング
+
+### `ResourceAccessException: I/O error ... Connect timed out`
+**原因:** APIに接続できない（ネットワーク・プロキシ・タイムアウト）
+
+**解決策:**
+1. ブラウザやPostmanで同じURLが開けるか確認（開けない場合はネットワークの問題）
+2. 社内ネットワークのプロキシ設定を確認
+3. タイムアウト値（接続5秒・読み取り10秒）が短すぎないか確認
+
+### `UnknownHostException: api.open-meteo.com`
+**原因:** ホスト名の綴りの誤り、またはインターネットに接続できていない
+
+**解決策:**
+1. `API_BASE_URL` の定数を、公式ドキュメントのURLと1文字ずつ比較
+2. PCがインターネットに接続されているか確認
+
+### `HttpClientErrorException: 400 Bad Request`
+**原因:** リクエストのパラメータが不正
+
+**解決策:**
+1. ログに出したURLをPostmanやブラウザにそのまま貼り、返ってくるエラーJSONの `reason` を読む
+2. パラメータ名・値（緯度経度の範囲など）を確認
+
+### レスポンスは取れているのに、DTOの値が `null` になる
+**原因:** JSONの項目名とDTOのフィールド名が対応していない
+
+**解決策:**
+1. `@JsonProperty("...")` の名前が、実際のJSONの項目名と一致しているか確認
+2. `log.debug` でレスポンスのJSON全文を出力して、実物を目で確認する
+3. `UnrecognizedPropertyException` が出る場合は `@JsonIgnoreProperties(ignoreUnknown = true)` を付ける
+
+### `429 Too Many Requests`
+**原因:** 短時間にAPIを呼びすぎた（無料APIには利用制限がある）
+
+**解決策:**
+1. 数分待ってから再実行する
+2. 開発中は、同じ地点を何度も連続で呼ばない。テストは `MockRestServiceServer` で行い、本物のAPIを呼ばない
+
+### `MockRestServiceServer` のテストが「期待した呼び出しがない」で失敗する
+**原因:** モックの期待（URL・回数）と、実際の呼び出しが一致していない
+
+**解決策:**
+1. `requestTo(...)` の条件が、実際のURLの一部と合っているか確認
+2. テストの最後に `mockServer.verify()` を呼んでいるか確認
+3. `RestTemplate` を、`MockRestServiceServer.createServer(restTemplate)` に渡したものと同じインスタンスで使っているか確認
+
+---
+
 ## 🎉 完了後
 
 次は [Day 21](day-21.md) で、このClientを使うWeatherServiceを実装します

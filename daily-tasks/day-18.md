@@ -726,6 +726,45 @@ class WeatherMapperTest {
 
 ---
 
+## 🆘 トラブルシューティング
+
+### `@Builder` を付けたら `no suitable constructor` / デフォルトコンストラクタがないエラー
+**原因:** `@Builder` と `@NoArgsConstructor` を併用すると、全引数のコンストラクタが必要になる
+
+**解決策:**
+1. `@Builder` / `@NoArgsConstructor` / `@AllArgsConstructor` の3つをセットで付ける
+
+### MapperでNullPointerException
+**原因:** Entityの項目や関連が `null` のまま、メソッドを呼んでいる
+
+**解決策:**
+1. 変換の入口で `if (entity == null) return null;` を入れる
+2. `null` になりうる項目（任意の列）は、呼び出す前に `null` チェックをする
+
+### `StackOverflowError`（`toString` やJSON変換で無限ループ）
+**原因:** EntityとEntityが双方向に参照し合っている
+
+**解決策:**
+1. DTOには、Entityそのものではなく**必要な値だけ**を持たせる
+2. Entityの `@ToString` / `@EqualsAndHashCode` では、相手側の関連項目を除外する（`@ToString.Exclude`）
+
+### 天気の説明やアイコンが「不明」になる
+**原因:** 天気コードのMapのキーの型や、未定義のコードが原因
+
+**解決策:**
+1. Mapのキーが `Integer` か確認（`Long` や `String` と混ざっていないか）
+2. 対象のコードがMapに登録されているか確認（Day 7の天気コード表と照合）
+
+### テストが失敗した（`expected` と `actual` が違う）
+**原因:** 実装かテスト（期待値）のどちらかが間違っている
+
+**解決策:**
+1. エラーメッセージの `Expecting ... to be equal to ...` の**2つの値**を読む
+2. 仕様として正しいのは実装の値か期待値か、根拠（仕様・計算式・API仕様）で確認する
+3. どの入力でどの値になるかを、`System.out.println` かデバッガで1つずつ確認する
+
+---
+
 ## 🎉 完了後
 
 次は [Day 19](day-19.md) でPrefectureServiceを実装する

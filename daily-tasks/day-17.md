@@ -1044,6 +1044,59 @@ List<Object[]> findAllPrefecturesWithLatestWeather();
 
 ---
 
+## 🆘 トラブルシューティング
+
+### `./gradlew test` で `Failed to replace DataSource with an embedded database`
+**原因:** テスト用DB（H2）が依存関係に入っていない
+
+**解決策:**
+1. `build.gradle` に `testRuntimeOnly 'com.h2database:h2'` を追加し、Gradleを再読み込み
+2. このDayの「5-0. テスト用データベース（H2）の準備」を、①〜②の順に実施
+
+### `wrong column type encountered in column [...]`
+**原因:** DBの列の型とEntityのフィールドの型が一致していない（DECIMALとDoubleなど）
+
+**解決策:**
+1. Day 11のDDLとEntityの型を見比べる（`DOUBLE` ⇔ `Double`、`BIGINT` ⇔ `Long`）
+2. テスト用DBでは `ddl-auto=create-drop` のため、Entityから自動作成される。本番のMySQL側（DDL）がずれていないかも確認
+
+### `Schema-validation: missing table` / MySQLに接続しようとして失敗する
+**原因:** テストが本番用の設定（MySQL・`validate`）で動いている
+
+**解決策:**
+1. `src/test/resources/application.properties` を作成したか、場所・ファイル名が合っているか確認
+2. テスト用設定で `ddl-auto=create-drop` と `spring.sql.init.mode=never` になっているか確認
+
+### `PropertyReferenceException: No property 'xxx' found for type 'Prefecture'`
+**原因:** メソッド名のプロパティ名がEntityのフィールド名と一致していない
+
+**解決策:**
+1. `findByRegion` の `Region` が、Entityのフィールド `region` と一致しているか確認（綴り・大文字小文字）
+2. Entityのフィールド名を変えた場合は、Repositoryのメソッド名も合わせて直す
+
+### `QuerySyntaxException: Prefecture is not mapped`
+**原因:** JPQLの書き方の誤り（テーブル名で書いている、クラス名の綴りが違う）
+
+**解決策:**
+1. JPQLでは**テーブル名ではなくEntityのクラス名**を書く（`FROM Prefecture p`）
+2. 列名ではなくフィールド名（`p.nameEn`）で書く
+
+### `LazyInitializationException`
+**原因:** トランザクションの外で、遅延読み込み（LAZY）の関連データにアクセスしている
+
+**解決策:**
+1. Service層のメソッドに `@Transactional` を付ける
+2. 必要なデータを `JOIN FETCH` や `@EntityGraph` で最初にまとめて取得する
+
+### `Duplicate entry` / 保存テストで主キーが重複する
+**原因:** テストデータで固定IDを入れたため、自動採番のIDとぶつかっている
+
+**解決策:**
+1. `test-data.sql` の末尾の `ALTER TABLE ... RESTART WITH 100;` があるか確認
+2. テストメソッドに `@Transactional`（`@DataJpaTest` は標準で付く）が効いているか確認
+
+---
+
 ## 🎉 完了後
 
 次は [Day 18](day-18.md) でDTO設計と実装を行う

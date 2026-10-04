@@ -644,6 +644,44 @@ class PrefectureServiceIntegrationTest {
 
 ---
 
+## 🆘 トラブルシューティング
+
+### テストで `NullPointerException`（`@Mock` の対象がnull）
+**原因:** Mockitoの初期化がされていない
+
+**解決策:**
+1. テストクラスに `@ExtendWith(MockitoExtension.class)` が付いているか確認
+2. テスト対象に `@InjectMocks`、依存先に `@Mock` を付けているか確認
+
+### `UnnecessaryStubbingException` / `Strict stubbing argument mismatch`
+**原因:** 使われていないスタブがある、またはスタブの引数と実際の呼び出し引数が違う
+
+**解決策:**
+1. そのテストで呼ばれない `when(...)` を削除する
+2. `when(repo.findById(13L))` の引数が、実際に渡される値（`13L`、`Long`）と同じか確認
+
+### `NoSuchBeanDefinitionException`（統合テスト）
+**原因:** `@SpringBootTest` で必要なBeanが登録されていない
+
+**解決策:**
+1. Service・Repositoryに `@Service` / `@Repository` が付いているか確認
+2. テストクラスに `@SpringBootTest` が付いているか確認
+
+### `@Transactional` が効かない（ロールバックされない／遅延読み込みでエラー）
+**原因:** 同じクラス内のメソッド呼び出しや、`private` メソッドには効かない
+
+**解決策:**
+1. `@Transactional` は `public` メソッドに付ける
+2. 同じクラス内の別メソッドを呼んでも効かない（外から呼び出すこと）
+
+### カスタム例外が `catch` できない／`throws` が必要と言われる
+**原因:** 例外クラスの親が違う
+
+**解決策:**
+1. `RuntimeException` を継承しているか確認（検査例外にしない）
+
+---
+
 ## 🎉 完了後
 
 次は [Day 20](day-20.md) でOpenMeteoClient（外部API連携）を実装する

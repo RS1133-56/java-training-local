@@ -231,7 +231,7 @@ Day 1: 開発環境のセットアップ,"# Day 1: 開発環境のセットア�
 - ポート3306が使用可能か確認
 
 ### その他の問題
-- このDayの「トラブルシューティング」欄を参照し、解決しなければTeamsで質問する
+- 解決しない場合は、README の「質問の仕方」を参考に状況をまとめて、Teamsで質問する
 - メンターに相談
 
 ---
@@ -1364,6 +1364,49 @@ public class TestController {
 - [Spring Data JPA公式ドキュメント](https://spring.io/projects/spring-data-jpa)
 - [Lombok公式ドキュメント](https://projectlombok.org/)
 - [Thymeleaf + Spring統合ガイド](https://www.thymeleaf.org/doc/tutorials/3.1/thymeleafspring.html)
+
+---
+
+## 🆘 トラブルシューティング
+
+### Lombokのアノテーション（@Getter など）が効かない／getterが見つからない
+**原因:** IntelliJ IDEAのLombokプラグインやアノテーション処理が有効になっていない、または `build.gradle` に依存関係がない
+
+**解決策:**
+1. `build.gradle` に `compileOnly 'org.projectlombok:lombok'` と `annotationProcessor 'org.projectlombok:lombok'` があるか確認
+2. Settings → Build, Execution, Deployment → Compiler → Annotation Processors → 「Enable annotation processing」にチェック
+3. Gradleを再読み込み（Gradleタブの🔄）し、IntelliJ IDEAを再起動
+
+### `Failed to configure a DataSource: 'url' attribute is not specified`
+**原因:** `application.properties` にDB接続設定がない、またはファイルの場所・名前が違う
+
+**解決策:**
+1. `src/main/resources/application.properties` に `spring.datasource.url / username / password` があるか確認
+2. MySQLサービスが起動しているか確認
+3. ファイル名のタイプミス（`application.propertis` など）がないか確認
+
+### `Port 8080 was already in use`
+**原因:** 以前起動したアプリが終了していない、または他のアプリが8080を使っている
+
+**解決策:**
+1. IntelliJ IDEAの実行ウィンドウで、前回のアプリを停止（■ボタン）する
+2. それでも解決しない場合は `application.properties` に `server.port=8081` を指定する
+3. 使用中のプロセスの確認: Macは `lsof -i :8080`、Windowsは `netstat -ano | findstr :8080`
+
+### `No qualifying bean of type ...` / `Consider defining a bean of type ...`
+**原因:** クラスがSpringに登録されていない（アノテーション不足）、またはメインクラスより外側のパッケージにある
+
+**解決策:**
+1. `@Service` / `@Repository` / `@Controller` を付け忘れていないか確認
+2. `@SpringBootApplication` が付いたクラスと**同じ階層かその配下**のパッケージにクラスがあるか確認
+
+### ブラウザで `Whitelabel Error Page`（404）が表示される
+**原因:** URLとControllerの `@GetMapping` が一致していない、または `@RestController` / `@Controller` の使い分けの誤り
+
+**解決策:**
+1. `@GetMapping(""/xxx"")` のパスとブラウザのURLを見比べる
+2. 文字列をそのまま画面に表示したい場合は `@RestController`、HTMLテンプレートを返す場合は `@Controller` を使う
+3. 起動ログに `Mapped ""{[/xxx]}""` のような行が出ているか確認
 
 ---
 
@@ -2861,6 +2904,43 @@ GET https://api.open-meteo.com/v1/forecast
 
 ---
 
+## 🆘 トラブルシューティング
+
+### Postmanでリクエストしても `Could not get response`／SSLエラーになる
+**原因:** 社内ネットワークのプロキシや証明書の検証でブロックされている可能性がある
+
+**解決策:**
+1. ブラウザで同じURLを開き、JSONが表示されるか確認（表示されるならPostman側の設定の問題）
+2. Postman: Settings → General → 「SSL certificate verification」をOFF（研修環境のみ）
+3. Postman: Settings → Proxy の設定を確認
+4. 解決しない場合はネットワーク環境の問題として、Teamsで質問する
+
+### `Latitude must be in range of -90 to 90` などのエラーJSONが返る
+**原因:** パラメータの値が不正（緯度と経度の取り違え、範囲外の値）
+
+**解決策:**
+1. `latitude=35.68`（緯度）、`longitude=139.69`（経度）の順・意味を確認
+2. エラーJSONの `reason` に原因が書いてあるので、まず全文を読む
+
+### 期待した項目がレスポンスに含まれない（`current` や `daily` がない）
+**原因:** パラメータ名の綴りが違う、または取得したい項目を指定していない
+
+**解決策:**
+1. API公式ドキュメントのパラメータ名と1文字ずつ比較（`temperature_2m`、`weathercode` など）
+2. `current=` や `daily=` に、欲しい項目をカンマ区切りで指定しているか確認
+3. URLの途中に空白や全角文字が入っていないか確認
+
+### 要件定義書に何を書けばいいか分からない
+**原因:** 最初から完璧な書き方を目指してしまっている
+
+**解決策:**
+1. 「誰が・何のために・何をできるようにするか」を1〜2行で書くところから始める
+2. 機能要件（できること）と非機能要件（速さ・安全性など）に分けて箇条書きにする
+3. 迷ったら、このDayのサンプルの見出し構成をまねて、自分のアプリの内容に置き換える
+4. 後のDayで見直す（Day 15）ので、今は粗くてOK
+
+---
+
 ## 🎉 完了後
 
 次は [Day 7](day-07.md) へ進む
@@ -3730,6 +3810,39 @@ git push origin main
 
 ---
 
+## 🆘 トラブルシューティング
+
+### JSONの項目名（`temperature_2m`）とJavaのフィールド名（`temperature2m`）が合わず、値が `null` になる
+**原因:** JSONはsnake_case、JavaはcamelCaseで、自動では対応づかない
+
+**解決策:**
+1. DTOのフィールドに `@JsonProperty(""temperature_2m"")` を付けて、JSON側の名前を明示する
+2. 項目名の綴り（`windspeed_10m` など）をレスポンスの実物と1文字ずつ比較する
+
+### `UnrecognizedPropertyException: Unrecognized field ...`
+**原因:** JSONにあるのにDTOに存在しない項目があり、変換でエラーになっている
+
+**解決策:**
+1. DTOクラスに `@JsonIgnoreProperties(ignoreUnknown = true)` を付ける
+2. 必要な項目だけDTOに定義すればよい（全項目を網羅しなくてよい）
+
+### `Cannot deserialize value of type ...` で変換できない
+**原因:** DTOの型がJSONの型と合っていない（配列なのに単一値で受けている、など）
+
+**解決策:**
+1. `daily.time` のような配列は `List<String>`、`List<Double>` で受ける
+2. 数値は `Double` / `Integer`、日時文字列は一旦 `String` で受けてから変換する
+3. レスポンスのJSONを見て、`[ ]`（配列）か `{ }`（オブジェクト）かを確認
+
+### 天気コードが想定外の値で、説明が引けない
+**原因:** 定義していないコードが返ってきた
+
+**解決策:**
+1. WMO天気コード表（このDayの表）を再確認
+2. 表にないコードは「不明」を返すデフォルト処理を用意しておく
+
+---
+
 ## 🎉 完了後
 
 次は [Day 8](day-08.md) へ進む
@@ -4281,6 +4394,41 @@ font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 ## 📝 本日のまとめ
 
 `day-08-summary.md`を作成
+
+---
+
+## 🆘 トラブルシューティング
+
+### draw.ioでPNGにエクスポートすると、文字や図が見切れる／背景が透明になる
+**原因:** エクスポート設定の余白・背景の指定が合っていない
+
+**解決策:**
+1. ファイル → エクスポート → PNG で、「境界線の幅」に余白（10px程度）を設定
+2. 「透明な背景」のチェックを外す
+3. 拡大率（Zoom）を150〜200%にすると文字がきれいに出る
+
+### draw.ioのファイルが保存できない／消えてしまった
+**原因:** ブラウザ版で保存先が未設定のまま閉じてしまった
+
+**解決策:**
+1. 最初に「ファイル → 名前を付けて保存」で保存先（デバイス）を指定する
+2. 編集のたびに `.drawio` ファイルも一緒にコミットしておく（PNGだけだと後で修正できない）
+
+### どこまで細かく描けばよいか分からない
+**原因:** 見た目を完璧にしようとしている
+
+**解決策:**
+1. まず「画面ID・URL・目的・表示要素・アクション」の5点を文章で書き出してから描く
+2. ワイヤーフレームは「何がどこにあるか」が伝われば十分。色・フォントは不要
+3. PC版とスマホ版を、それぞれ1枚ずつ描く
+
+### READMEなどに貼った画像が表示されない
+**原因:** 画像のパスの誤り、またはコミット・プッシュ漏れ
+
+**解決策:**
+1. 画像ファイルの場所とMarkdownの相対パス（`![説明](xxx.png)`）が合っているか確認
+2. ファイル名の大文字・小文字、日本語・スペースの有無を確認
+3. `git status` で画像が未追加になっていないか確認し、`git add` → コミット → プッシュ
 
 ---
 
@@ -4873,6 +5021,33 @@ Day 10: データベース設計（ER図）
 
 ---
 
+## 🆘 トラブルシューティング
+
+### 矢印が多くなって、図が読みにくい
+**原因:** 正常系・異常系・補助的な遷移をすべて1枚に詰め込んでいる
+
+**解決策:**
+1. 主要な遷移（一覧 → 詳細 → 一覧）だけの図と、エラー遷移の図を分ける
+2. 矢印には必ず「トリガー（クリック等）」をラベルで書く
+3. 画面の配置を「左から右」など一定の流れにそろえる
+
+### 遷移のURLやパラメータの書き方が分からない
+**原因:** URLの設計（パスパラメータ／クエリパラメータ）が決まっていない
+
+**解決策:**
+1. 一覧から詳細へは、都道府県を特定する値をURLに入れる（例: `/weather/13`）
+2. 絞り込みなど「条件」はクエリパラメータにする（例: `/?region=関東`）
+3. Day 8の画面一覧のURLと食い違っていないか確認
+
+### 「画面遷移図」と「処理の流れ」の区別がつかない
+**原因:** ユーザーの見える動きと、システム内部の動きが混ざっている
+
+**解決策:**
+1. 画面遷移図は「ユーザーがどの画面でどう操作し、どの画面に移るか」だけを描く
+2. Controller・Service・DBなど内部の動きは、Day 13・14のシーケンス図で描く
+
+---
+
 ## 🎉 完了後
 
 次は [Day 10](day-10.md) へ進む
@@ -4998,6 +5173,40 @@ ON daily_forecasts(forecast_date);
 - [ ] インデックス設計完了
 - [ ] ドキュメント作成
 - [ ] GitHubにプッシュ
+
+---
+
+## 🆘 トラブルシューティング
+
+### テーブルをどう分ければよいか迷う
+**原因:** 「何を1行として記録するか」が整理できていない
+
+**解決策:**
+1. 都道府県マスタ（変わらない情報）、天気履歴（取得のたびに増える）、日別予報（履歴に紐づく）に分けて考える
+2. 「1つの都道府県に天気履歴がたくさん」「1つの履歴に日別予報が7件」という**1対多**の関係を図で確認
+3. 同じ情報を複数のテーブルに重複して持たせない
+
+### 外部キーの向き（どちらが親か）が分からない
+**原因:** 1対多の「多」側に外部キーを置くルールが整理できていない
+
+**解決策:**
+1. 外部キーは必ず「多」側のテーブルに置く（例: 天気履歴 → 都道府県ID）
+2. 「この行は、どの親の行に属するか」を表す列、と覚える
+
+### インデックスをどの列に付けるか分からない
+**原因:** 付ける基準が整理できていない
+
+**解決策:**
+1. 検索条件（WHERE）、結合（JOIN）、並び替え（ORDER BY）で**よく使う列**に付ける
+2. 全列に付けない（書き込みが遅くなり、容量も増える）
+3. 外部キーの列には基本的に付ける
+
+### draw.ioでER図の記号（鳥の足記法）が見つからない
+**原因:** 図形ライブラリが有効になっていない
+
+**解決策:**
+1. 左下の「その他の図形」→ 「エンティティ・リレーション」にチェックを入れる
+2. 見つからない場合は、テーブルを四角で描き、線の端に `1` と `N` を書いてもよい
 
 ---
 
@@ -5167,6 +5376,54 @@ spring.jpa.hibernate.ddl-auto=none
 - [ ] MySQLでテーブル作成確認
 - [ ] Spring Boot設定完了
 - [ ] GitHubにプッシュ
+
+---
+
+## 🆘 トラブルシューティング
+
+### `ERROR 1046: No database selected`
+**原因:** どのデータベースを使うか指定していない
+
+**解決策:**
+1. SQLの先頭に `USE weather_app;` を書く
+2. MySQL Workbenchの左のスキーマ一覧で、対象のスキーマをダブルクリックして選択状態にする
+
+### `ERROR 1049: Unknown database 'weather_app'`
+**原因:** データベースがまだ作成されていない
+
+**解決策:**
+1. `CREATE DATABASE weather_app DEFAULT CHARACTER SET utf8mb4;` を先に実行する
+2. 左のスキーマ一覧の🔄ボタンで再読み込みして確認
+
+### `ERROR 1064: You have an error in your SQL syntax`
+**原因:** SQLの文法ミス。カンマの付け忘れ・余分なカンマ、全角スペース、引用符の閉じ忘れが多い
+
+**解決策:**
+1. エラー文の `near '...'` の**直前**を見る（その手前が原因のことが多い）
+2. 全角スペースが紛れていないか確認（コピペ時に起こりやすい）
+3. 最後の列の後ろに余計なカンマ `,` がないか確認
+
+### `ERROR 1215: Cannot add foreign key constraint`
+**原因:** 外部キーの条件が合っていない
+
+**解決策:**
+1. **親テーブルを先に作成**する（prefectures → weather_records → daily_forecasts の順）
+2. 外部キーの列と、参照先の列の型（`BIGINT` など）が完全に同じか確認
+3. 両方のテーブルが `ENGINE=InnoDB` か確認
+
+### `ERROR 1050: Table 'xxx' already exists`
+**原因:** すでに同名のテーブルが存在する
+
+**解決策:**
+1. やり直す場合は、子テーブルから順に `DROP TABLE IF EXISTS` する（外部キーがあるため順序が逆になる）
+2. DDLの先頭に `DROP TABLE IF EXISTS` を書いておくと、何度でも実行できる
+
+### Spring Boot起動時に `schema.sql` が実行されない
+**原因:** MySQLなど外部DBでは、SQLファイルの自動実行がデフォルトで無効
+
+**解決策:**
+1. `application.properties` に `spring.sql.init.mode=always` を追加
+2. `schema.sql` が `src/main/resources` 直下にあるか確認
 
 ---
 
@@ -5365,6 +5622,40 @@ public class TestController {
 - [ ] Repositoryでデータ取得確認
 - [ ] ドキュメント作成
 - [ ] GitHubにプッシュ
+
+---
+
+## 🆘 トラブルシューティング
+
+### `Duplicate entry '1' for key 'PRIMARY'`
+**原因:** 同じデータを2回投入しようとしている（再実行した）
+
+**解決策:**
+1. 先に `DELETE FROM テーブル名;` で空にしてから投入する（子テーブル → 親テーブルの順）
+2. または `TRUNCATE` を使う場合は、外部キーのチェックを一時的に外す必要がある（慣れるまで `DELETE` が安全）
+
+### 日本語が `????` になる／文字化けする
+**原因:** DB・接続・ファイルのどこかで文字コードが `UTF-8` になっていない
+
+**解決策:**
+1. DBとテーブルが `utf8mb4` か確認（`SHOW CREATE TABLE prefectures;`）
+2. JDBCのURLに `characterEncoding=UTF-8` を付ける
+3. SQLファイルをUTF-8で保存し直す（Windowsのメモ帳は要注意。VS CodeやIntelliJで保存）
+
+### `Cannot add or update a child row: a foreign key constraint fails`
+**原因:** 親テーブルにまだ存在しないIDを、子テーブルで参照している
+
+**解決策:**
+1. 投入順を「親（prefectures）→ 子」にする
+2. 子テーブルの `prefecture_id` が、親に実在するIDか確認
+
+### `SELECT COUNT(*)` が47件にならない
+**原因:** INSERT文の一部が実行されていない（区切りの誤り）
+
+**解決策:**
+1. 行の区切りは `,`、最後の行だけ `;` になっているか確認
+2. 一部の文だけ選択して実行していないか確認（全体を選択して実行）
+3. エラーが出た行は、出力パネルのメッセージで特定する
 
 ---
 
@@ -5763,6 +6054,32 @@ public class GlobalExceptionHandler {
 - [UML シーケンス図の書き方](https://www.uml-diagrams.org/sequence-diagrams.html)
 - [Mermaid Sequence Diagram](https://mermaid.js.org/syntax/sequenceDiagram.html)
 - [draw.io 使い方](https://drawio-app.com/)
+
+---
+
+## 🆘 トラブルシューティング
+
+### シーケンス図の登場人物（ライフライン）を、どの粒度で描くか分からない
+**原因:** どこまで細かく分けるかの基準がない
+
+**解決策:**
+1. 「ブラウザ / Controller / Service / Repository / DB / 外部API」の層を基本とする
+2. Day 4・15で決めたクラス名と合わせる（図と実装で名前をそろえる）
+
+### 矢印の種類（実線・点線）の使い分けが分からない
+**原因:** 呼び出しと戻りの表現を区別していない
+
+**解決策:**
+1. 実線の矢印 = 呼び出し（リクエスト）
+2. 点線の矢印 = 戻り（レスポンス・戻り値）
+3. 矢印のラベルには、メソッド名や処理内容を書く
+
+### 分岐（地域フィルタあり／なし、エラー時）の描き方が分からない
+**原因:** 条件分岐の表現を使っていない
+
+**解決策:**
+1. `alt`（どちらか一方）や `opt`（条件を満たすときだけ）の枠で囲み、条件をラベルに書く
+2. 図が複雑になる場合は、正常系の図とエラー系の図を**別の図**に分ける
 
 ---
 
@@ -6282,6 +6599,32 @@ public class GlobalExceptionHandler {
 
 ---
 
+## 🆘 トラブルシューティング
+
+### API呼び出しとDB保存のどちらを先にするか分からない
+**原因:** 処理の順序（天気取得 → 保存 → 表示）が整理できていない
+
+**解決策:**
+1. 「APIで取得 → Entityに変換 → DBに保存 → DTOに変換して画面へ」の流れを、先に文章で書く
+2. Day 13のシーケンス図と矛盾しないか見比べる
+
+### APIが失敗したときの動作が決まらない
+**原因:** エラー時の仕様が決まっていない
+
+**解決策:**
+1. 「失敗したらDBには保存せず、エラーページを表示する」など、まず仕様を1行で決める
+2. 決めた仕様を、エラーケースのシーケンス図に反映する
+3. 後のDay 20・24（例外処理）で実装する内容と合わせる
+
+### トランザクション（保存の単位）をどこに描くか分からない
+**原因:** どこからどこまでが1つの保存処理かが曖昧
+
+**解決策:**
+1. 履歴（親）と日別予報（子）は**まとめて1回の保存**として、Service層で囲む
+2. 図には「トランザクション開始 / コミット」を注記で書いておく
+
+---
+
 ## 📝 本日のまとめ
 
 `day-14-summary.md`を作成
@@ -6684,6 +7027,32 @@ User → Browser → WeatherController
 ## 📝 本日のまとめ
 
 設計フェーズが完了し、実装に移る準備が整った
+
+---
+
+## 🆘 トラブルシューティング
+
+### レビューで指摘事項が見つからない
+**原因:** 見る観点が決まっていない
+
+**解決策:**
+1. ドキュメント同士の**突き合わせ**をする（ER図 ↔ テーブル定義書 ↔ クラス設計 ↔ シーケンス図）
+2. 名前（テーブル名・列名・クラス名）、型、URLの表記ゆれがないか確認
+3. 「このとおりに実装できるか？」という目で、シーケンス図を最初から追ってみる
+
+### 1か所直したら、他の資料との食い違いが出た
+**原因:** 変更の影響範囲を確認していない
+
+**解決策:**
+1. 直す前に「この項目は他のどの資料に出てくるか」を検索で洗い出す
+2. 直した箇所は、修正履歴（いつ・何を・なぜ）としてメモに残す
+
+### 時間が足りない
+**原因:** 全部を同じ深さで見ようとしている
+
+**解決策:**
+1. 優先順位は「DB設計 → シーケンス図 → 画面設計」の順（実装への影響が大きい順）
+2. 終わらなかった分は、実装中に気づいたときに直せばよい
 
 ---
 
@@ -8697,6 +9066,59 @@ List<Object[]> findAllPrefecturesWithLatestWeather();
 
 ---
 
+## 🆘 トラブルシューティング
+
+### `./gradlew test` で `Failed to replace DataSource with an embedded database`
+**原因:** テスト用DB（H2）が依存関係に入っていない
+
+**解決策:**
+1. `build.gradle` に `testRuntimeOnly 'com.h2database:h2'` を追加し、Gradleを再読み込み
+2. このDayの「5-0. テスト用データベース（H2）の準備」を、①〜②の順に実施
+
+### `wrong column type encountered in column [...]`
+**原因:** DBの列の型とEntityのフィールドの型が一致していない（DECIMALとDoubleなど）
+
+**解決策:**
+1. Day 11のDDLとEntityの型を見比べる（`DOUBLE` ⇔ `Double`、`BIGINT` ⇔ `Long`）
+2. テスト用DBでは `ddl-auto=create-drop` のため、Entityから自動作成される。本番のMySQL側（DDL）がずれていないかも確認
+
+### `Schema-validation: missing table` / MySQLに接続しようとして失敗する
+**原因:** テストが本番用の設定（MySQL・`validate`）で動いている
+
+**解決策:**
+1. `src/test/resources/application.properties` を作成したか、場所・ファイル名が合っているか確認
+2. テスト用設定で `ddl-auto=create-drop` と `spring.sql.init.mode=never` になっているか確認
+
+### `PropertyReferenceException: No property 'xxx' found for type 'Prefecture'`
+**原因:** メソッド名のプロパティ名がEntityのフィールド名と一致していない
+
+**解決策:**
+1. `findByRegion` の `Region` が、Entityのフィールド `region` と一致しているか確認（綴り・大文字小文字）
+2. Entityのフィールド名を変えた場合は、Repositoryのメソッド名も合わせて直す
+
+### `QuerySyntaxException: Prefecture is not mapped`
+**原因:** JPQLの書き方の誤り（テーブル名で書いている、クラス名の綴りが違う）
+
+**解決策:**
+1. JPQLでは**テーブル名ではなくEntityのクラス名**を書く（`FROM Prefecture p`）
+2. 列名ではなくフィールド名（`p.nameEn`）で書く
+
+### `LazyInitializationException`
+**原因:** トランザクションの外で、遅延読み込み（LAZY）の関連データにアクセスしている
+
+**解決策:**
+1. Service層のメソッドに `@Transactional` を付ける
+2. 必要なデータを `JOIN FETCH` や `@EntityGraph` で最初にまとめて取得する
+
+### `Duplicate entry` / 保存テストで主キーが重複する
+**原因:** テストデータで固定IDを入れたため、自動採番のIDとぶつかっている
+
+**解決策:**
+1. `test-data.sql` の末尾の `ALTER TABLE ... RESTART WITH 100;` があるか確認
+2. テストメソッドに `@Transactional`（`@DataJpaTest` は標準で付く）が効いているか確認
+
+---
+
 ## 🎉 完了後
 
 次は [Day 18](day-18.md) でDTO設計と実装を行う
@@ -9431,6 +9853,45 @@ class WeatherMapperTest {
 
 ---
 
+## 🆘 トラブルシューティング
+
+### `@Builder` を付けたら `no suitable constructor` / デフォルトコンストラクタがないエラー
+**原因:** `@Builder` と `@NoArgsConstructor` を併用すると、全引数のコンストラクタが必要になる
+
+**解決策:**
+1. `@Builder` / `@NoArgsConstructor` / `@AllArgsConstructor` の3つをセットで付ける
+
+### MapperでNullPointerException
+**原因:** Entityの項目や関連が `null` のまま、メソッドを呼んでいる
+
+**解決策:**
+1. 変換の入口で `if (entity == null) return null;` を入れる
+2. `null` になりうる項目（任意の列）は、呼び出す前に `null` チェックをする
+
+### `StackOverflowError`（`toString` やJSON変換で無限ループ）
+**原因:** EntityとEntityが双方向に参照し合っている
+
+**解決策:**
+1. DTOには、Entityそのものではなく**必要な値だけ**を持たせる
+2. Entityの `@ToString` / `@EqualsAndHashCode` では、相手側の関連項目を除外する（`@ToString.Exclude`）
+
+### 天気の説明やアイコンが「不明」になる
+**原因:** 天気コードのMapのキーの型や、未定義のコードが原因
+
+**解決策:**
+1. Mapのキーが `Integer` か確認（`Long` や `String` と混ざっていないか）
+2. 対象のコードがMapに登録されているか確認（Day 7の天気コード表と照合）
+
+### テストが失敗した（`expected` と `actual` が違う）
+**原因:** 実装かテスト（期待値）のどちらかが間違っている
+
+**解決策:**
+1. エラーメッセージの `Expecting ... to be equal to ...` の**2つの値**を読む
+2. 仕様として正しいのは実装の値か期待値か、根拠（仕様・計算式・API仕様）で確認する
+3. どの入力でどの値になるかを、`System.out.println` かデバッガで1つずつ確認する
+
+---
+
 ## 🎉 完了後
 
 次は [Day 19](day-19.md) でPrefectureServiceを実装する
@@ -10083,6 +10544,44 @@ class PrefectureServiceIntegrationTest {
 
 ---
 
+## 🆘 トラブルシューティング
+
+### テストで `NullPointerException`（`@Mock` の対象がnull）
+**原因:** Mockitoの初期化がされていない
+
+**解決策:**
+1. テストクラスに `@ExtendWith(MockitoExtension.class)` が付いているか確認
+2. テスト対象に `@InjectMocks`、依存先に `@Mock` を付けているか確認
+
+### `UnnecessaryStubbingException` / `Strict stubbing argument mismatch`
+**原因:** 使われていないスタブがある、またはスタブの引数と実際の呼び出し引数が違う
+
+**解決策:**
+1. そのテストで呼ばれない `when(...)` を削除する
+2. `when(repo.findById(13L))` の引数が、実際に渡される値（`13L`、`Long`）と同じか確認
+
+### `NoSuchBeanDefinitionException`（統合テスト）
+**原因:** `@SpringBootTest` で必要なBeanが登録されていない
+
+**解決策:**
+1. Service・Repositoryに `@Service` / `@Repository` が付いているか確認
+2. テストクラスに `@SpringBootTest` が付いているか確認
+
+### `@Transactional` が効かない（ロールバックされない／遅延読み込みでエラー）
+**原因:** 同じクラス内のメソッド呼び出しや、`private` メソッドには効かない
+
+**解決策:**
+1. `@Transactional` は `public` メソッドに付ける
+2. 同じクラス内の別メソッドを呼んでも効かない（外から呼び出すこと）
+
+### カスタム例外が `catch` できない／`throws` が必要と言われる
+**原因:** 例外クラスの親が違う
+
+**解決策:**
+1. `RuntimeException` を継承しているか確認（検査例外にしない）
+
+---
+
 ## 🎉 完了後
 
 次は [Day 20](day-20.md) でOpenMeteoClient（外部API連携）を実装する
@@ -10353,6 +10852,55 @@ git push origin main
 - [RestTemplate使い方（日本語）](https://qiita.com/tag1216/items/437232338c0f7c4fcd57)
 - [MockRestServiceServer（日本語）](https://qiita.com/rubytomato@github/items/5f0f7e70a0b63380f7db)
 - [Open-Meteo API](https://open-meteo.com/en/docs)
+
+---
+
+## 🆘 トラブルシューティング
+
+### `ResourceAccessException: I/O error ... Connect timed out`
+**原因:** APIに接続できない（ネットワーク・プロキシ・タイムアウト）
+
+**解決策:**
+1. ブラウザやPostmanで同じURLが開けるか確認（開けない場合はネットワークの問題）
+2. 社内ネットワークのプロキシ設定を確認
+3. タイムアウト値（接続5秒・読み取り10秒）が短すぎないか確認
+
+### `UnknownHostException: api.open-meteo.com`
+**原因:** ホスト名の綴りの誤り、またはインターネットに接続できていない
+
+**解決策:**
+1. `API_BASE_URL` の定数を、公式ドキュメントのURLと1文字ずつ比較
+2. PCがインターネットに接続されているか確認
+
+### `HttpClientErrorException: 400 Bad Request`
+**原因:** リクエストのパラメータが不正
+
+**解決策:**
+1. ログに出したURLをPostmanやブラウザにそのまま貼り、返ってくるエラーJSONの `reason` を読む
+2. パラメータ名・値（緯度経度の範囲など）を確認
+
+### レスポンスは取れているのに、DTOの値が `null` になる
+**原因:** JSONの項目名とDTOのフィールド名が対応していない
+
+**解決策:**
+1. `@JsonProperty(""..."")` の名前が、実際のJSONの項目名と一致しているか確認
+2. `log.debug` でレスポンスのJSON全文を出力して、実物を目で確認する
+3. `UnrecognizedPropertyException` が出る場合は `@JsonIgnoreProperties(ignoreUnknown = true)` を付ける
+
+### `429 Too Many Requests`
+**原因:** 短時間にAPIを呼びすぎた（無料APIには利用制限がある）
+
+**解決策:**
+1. 数分待ってから再実行する
+2. 開発中は、同じ地点を何度も連続で呼ばない。テストは `MockRestServiceServer` で行い、本物のAPIを呼ばない
+
+### `MockRestServiceServer` のテストが「期待した呼び出しがない」で失敗する
+**原因:** モックの期待（URL・回数）と、実際の呼び出しが一致していない
+
+**解決策:**
+1. `requestTo(...)` の条件が、実際のURLの一部と合っているか確認
+2. テストの最後に `mockServer.verify()` を呼んでいるか確認
+3. `RestTemplate` を、`MockRestServiceServer.createServer(restTemplate)` に渡したものと同じインスタンスで使っているか確認
 
 ---
 
@@ -10695,6 +11243,45 @@ class WeatherServiceImplTest {
 ## 📚 参考リンク
 
 - [Spring @Transactional（日本語）](https://qiita.com/NagaokaKenichi/items/c3371ce8dea0a1f8fa5b)
+
+---
+
+## 🆘 トラブルシューティング
+
+### `NoSuchBeanDefinitionException: ... OpenMeteoClient`
+**原因:** Day 20で作ったClientがSpringに登録されていない、または未実装
+
+**解決策:**
+1. `OpenMeteoClient` に `@Component` が付いているか確認
+2. Day 20のClient・設定クラス（`RestTemplateConfig`）が完成しているか確認
+
+### `TransientPropertyValueException` / `object references an unsaved transient instance`
+**原因:** 親（WeatherRecord）を保存する前に、子（DailyForecast）を参照している
+
+**解決策:**
+1. `cascade = CascadeType.ALL` が親側の関連に付いているか確認
+2. 子の追加は、Entityのヘルパーメソッド（`addDailyForecast`）を使い、**親に子を追加してから親を保存**する
+
+### `DataIntegrityViolationException`（NOT NULL違反など）
+**原因:** 必須の列（取得日時、都道府県など）に値が入っていない
+
+**解決策:**
+1. エラーメッセージの `Column 'xxx' cannot be null` で、列名を特定する
+2. Entityの組み立て（`buildWeatherRecord`）で、その列に値を設定しているか確認
+
+### `LazyInitializationException`
+**原因:** トランザクションの外で、遅延読み込みの関連データにアクセスしている
+
+**解決策:**
+1. Serviceのメソッドに `@Transactional` があるか確認
+2. DTOに変換する処理も、トランザクションの範囲内で行う
+
+### Mockitoテストで `NullPointerException`／`Wanted but not invoked`
+**原因:** 必要なモックの設定（`when`）が足りない、または呼び出しの引数が違う
+
+**解決策:**
+1. Serviceが呼ぶ全ての依存先（Client・Repository・Mapperなど）について、`when(...).thenReturn(...)` を設定したか確認
+2. `verify(...)` に渡す引数が、実際に渡された値と同じか確認
 
 ---
 
@@ -16620,6 +17207,40 @@ git push origin main
 
 ---
 
+## 🆘 トラブルシューティング
+
+### CSSが反映されない
+**原因:** ファイルが読み込めていない、またはブラウザのキャッシュが残っている
+
+**解決策:**
+1. HTMLの `th:href=""@{/css/style.css}""` と、ファイルの場所 `src/main/resources/static/css/style.css` が合っているか確認
+2. ブラウザのF12 → Networkタブで、CSSが `404` になっていないか確認
+3. 強制再読み込み（Windows: `Ctrl+Shift+R` / Mac: `Cmd+Shift+R`）
+4. IntelliJ IDEAで、ビルド（Build → Rebuild Project）してから再起動
+
+### CSS変数（`var(--color-primary)`）が効かない
+**原因:** 変数の定義場所や綴りが違う
+
+**解決策:**
+1. `:root { --color-primary: ...; }` で定義しているか確認
+2. `--` のハイフン2つ、綴りが定義と使用箇所で同じか確認
+
+### 書いたスタイルが別のスタイルに上書きされる
+**原因:** CSSの優先順位（詳細度、記述順）の影響
+
+**解決策:**
+1. ブラウザのF12 → Elementsで要素を選び、Stylesパネルで**打ち消し線**が付いたルールを確認
+2. 同じ詳細度なら、後に書いたルールが優先される
+
+### レイアウト（flex / grid）が意図どおりに並ばない
+**原因:** 親要素に `display` を指定していない、または子要素の幅が足りない
+
+**解決策:**
+1. 並べたい要素の**親**に `display: flex;` / `display: grid;` を指定しているか確認
+2. F12で要素の枠を確認し、余白やはみ出しの原因を探す
+
+---
+
 ## 📝 本日のまとめ
 
 1. **実装した機能:**
@@ -17354,6 +17975,46 @@ git push origin main
 
 ### モバイルファースト
 - [モバイルファースト設計（日本語）](https://qiita.com/mrd-takahashi/items/b82a5c452fa5e41e33f4)
+
+---
+
+## 🆘 トラブルシューティング
+
+### スマホ表示でもPC用のレイアウトのまま縮小される
+**原因:** viewportメタタグがない
+
+**解決策:**
+1. `<head>` に `<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">` があるか確認
+
+### メディアクエリ（`@media`）が効かない
+**原因:** 書く順序や条件の書き方の誤り
+
+**解決策:**
+1. メディアクエリは、**通常のスタイルより後**に書く（後に書いたものが優先される）
+2. `min-width` と `max-width` を混在させていないか確認（どちらかに統一）
+3. 条件の括弧、単位（`px`）の書き忘れがないか確認
+
+### 横スクロールバーが出る
+**原因:** 画面幅より大きい要素がある
+
+**解決策:**
+1. F12の要素選択で、はみ出している要素を探す
+2. 固定幅（`width: 500px` など）を `max-width: 100%` に変える
+3. `box-sizing: border-box;` を全体に指定する
+
+### スマホ表示の確認方法が分からない
+**原因:** ブラウザの機能を使っていない
+
+**解決策:**
+1. Chromeでページを開き、F12 → 「デバイスツールバーの切り替え」（スマホ・タブレットのアイコン）をクリック
+2. 上部でデバイスや画面幅を切り替えて確認する
+3. 実機で確認する場合は、PCとスマホを同じWi-Fiにつなぎ、`http://PCのIPアドレス:8080` にアクセス（ファイアウォールで止まる場合は設定を確認）
+
+### ボタンが小さくてタップしづらい
+**原因:** タップ領域が小さい
+
+**解決策:**
+1. ボタン・リンクの高さと幅を**44px以上**にする（`min-height` / `padding` で調整）
 
 ---
 
@@ -18629,6 +19290,45 @@ git push origin main
 ### アイコンデザイン
 - [Weather Icons](https://erikflowers.github.io/weather-icons/)
 - [天気アイコンデザイン](https://www.flaticon.com/packs/weather-99)
+
+---
+
+## 🆘 トラブルシューティング
+
+### SVGアイコンが表示されない
+**原因:** ファイルのパスが違う、または読み込み方法の誤り
+
+**解決策:**
+1. ファイルが `src/main/resources/static/images/...` にあるか確認
+2. テンプレートでは `th:src=""@{/images/weather-icons/sun.svg}""` のようにパスを書く
+3. F12 → Networkタブで `404` になっていないか確認
+
+### アイコンが小さすぎる／大きすぎる／切れる
+**原因:** サイズ指定と `viewBox` の関係
+
+**解決策:**
+1. `<img>` や `<svg>` に `width` / `height` をCSSで指定する
+2. SVGファイルの `viewBox` が正しいか確認（図形が収まる範囲を指定する）
+
+### 天気コードに対応するアイコンがなく、何も表示されない
+**原因:** 未登録のコードが返ってきた
+
+**解決策:**
+1. 未登録のコードには、デフォルトのアイコン（❓など）を表示する処理を用意する
+2. Day 18の天気コードのマッピングと、アイコンの対応表を見比べる
+
+### 色を変えたいのに変わらない
+**原因:** SVG内で色が固定されている
+
+**解決策:**
+1. SVGの `fill` を `currentColor` にして、CSSの `color` で色を指定する
+
+### 絵文字アイコンが環境によって違って見える／文字化けする
+**原因:** OSやブラウザによる絵文字の違い、文字コードの問題
+
+**解決策:**
+1. HTMLの `<meta charset=""UTF-8"">` があるか確認
+2. 見た目をそろえたい場合は、SVGアイコンを使う
 
 ---
 
@@ -20268,6 +20968,45 @@ git push origin main
 
 ---
 
+## 🆘 トラブルシューティング
+
+### 作ったエラーページが表示されず、`Whitelabel Error Page` が出る
+**原因:** テンプレートの配置場所・ファイル名が規約と合っていない、または例外ハンドラが動いていない
+
+**解決策:**
+1. `src/main/resources/templates/error/404.html` のように、`error` フォルダ配下に**ステータスコードのファイル名**で置く
+2. Controller（またはDay 24の `@ControllerAdvice`）が `return ""error/404"";` と、テンプレート名を正しく返しているか確認
+3. 存在しないURL（例: `/abc123`）にアクセスして確認する
+
+### エラーページを表示しても、HTTPステータスが200のまま
+**原因:** ステータスコードを設定していない
+
+**解決策:**
+1. 例外ハンドラに `@ResponseStatus(HttpStatus.NOT_FOUND)` を付ける
+2. F12 → Networkタブで、ステータスが `404` になっているか確認
+
+### エラーページのCSSやアイコンが崩れる／読み込めない
+**原因:** 相対パスで書いているため、URLの階層によって参照先がずれる
+
+**解決策:**
+1. `th:href=""@{/css/style.css}""` のように、`@{/...}` で書く（先頭を `/` にする）
+
+### エラーページを表示しようとして、さらにエラーになる
+**原因:** テンプレート内で `null` の値を参照している
+
+**解決策:**
+1. `th:text=""${requestUrl}""` などの変数が、Controller側で `model.addAttribute` されているか確認
+2. `null` になりうる値は `${xxx ?: '不明'}` や `${xxx?.name}` のように安全に書く
+
+### 500エラーページの動作確認ができない
+**原因:** わざとエラーを起こす方法が分からない
+
+**解決策:**
+1. 確認用のテストエンドポイント（例外を投げるメソッド）を作り、500ページを確認する
+2. **確認が終わったら、そのエンドポイントは必ず削除する**（本番に残さない）
+
+---
+
 ## 📝 本日のまとめ
 
 1. **実装した機能:**
@@ -21515,6 +22254,54 @@ git push origin main
 
 ### Spring Test
 - [Spring Boot Testing（日本語）](https://spring.pleiades.io/spring-boot/docs/current/reference/html/features.html#features.testing)
+
+---
+
+## 🆘 トラブルシューティング
+
+### JaCoCoのレポートが生成されない
+**原因:** テストだけを実行していて、レポート生成のタスクを実行していない
+
+**解決策:**
+1. `./gradlew test jacocoTestReport` を実行する
+2. レポートは `build/reports/jacoco/test/html/index.html` をブラウザで開く
+3. `build.gradle` に `jacoco` プラグインが入っているか確認
+
+### カバレッジがなかなか上がらない
+**原因:** どこが未テストか把握できていない
+
+**解決策:**
+1. JaCoCoのレポートで、**赤・黄色の行**（未実行・一部のみ）を確認する
+2. 全体を均等に上げようとせず、Serviceなどロジックの多い部分から優先する
+3. 目標の数字そのものより、「重要な分岐がテストされているか」を重視する
+
+### `Failed to load ApplicationContext`
+**原因:** アプリの起動に失敗している（原因は別にある）
+
+**解決策:**
+1. エラーメッセージの**一番下の `Caused by:`** を読む（そこに本当の原因がある）
+2. Beanの不足、設定ファイルの値、DBの接続設定が主な原因
+
+### テストを単独だと通るのに、全体で実行すると失敗する
+**原因:** テスト同士がデータや状態を共有してしまっている
+
+**解決策:**
+1. 各テストの `@BeforeEach` でデータを準備し直す
+2. DBを使うテストには `@Transactional` を付けて、テスト後にロールバックする
+3. テストが実行順に依存しないようにする
+
+### テストが遅い／ネットワークの状態で不安定になる
+**原因:** `@SpringBootTest` の使いすぎ、または本物の外部APIを呼んでいる
+
+**解決策:**
+1. Controllerは `@WebMvcTest`、Repositoryは `@DataJpaTest`、Serviceはモックのみで、軽いテストにする
+2. 外部APIは必ずモックにする（本物のAPIを呼ばない）
+
+### 特定のテストだけ実行したい
+**原因:** 実行方法を知らない
+
+**解決策:**
+1. `./gradlew test --tests クラス名` でクラス単位、`--tests クラス名.メソッド名` でメソッド単位に実行できる
 
 ---
 
@@ -23264,6 +24051,46 @@ git push origin main
 ### セキュリティ
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [Spring Security](https://spring.io/projects/spring-security)
+
+---
+
+## 🆘 トラブルシューティング
+
+### 総合テストで、想定外の動作や不具合が見つかった
+**原因:** 原因の層が特定できていない
+
+**解決策:**
+1. 再現手順（URL・操作・期待結果・実際の結果）をメモに書き出す
+2. 画面 → Controller → Service → DB / 外部API の順に、**どこまでは正しい値か**をログやデバッガで切り分ける
+3. 1つずつ修正し、修正のたびに関連するテストを再実行する
+
+### 画面に表示される値が、元のデータ（APIの値）と違う
+**原因:** どこかの変換処理で値が変わっている
+
+**解決策:**
+1. APIの生のレスポンス、DBに保存された値、画面に出ている値を**3つ並べて**比較する
+2. 値が最初に変わった段階（取得 → 変換 → 保存 → 表示）を特定し、その処理を見直す
+
+### `./gradlew build` が失敗する
+**原因:** テストの失敗がビルド失敗の原因になっていることが多い
+
+**解決策:**
+1. `build/reports/tests/test/index.html` で、失敗したテストを確認する
+2. ビルドログの `FAILED` の行と、直前のエラー内容を読む
+
+### 自分のPCでは動くのに、他の人の環境では動かない
+**原因:** 環境依存の設定（パスワード、パス、ポート）が含まれている
+
+**解決策:**
+1. READMEの手順だけで、新しくクローンしたフォルダで起動できるか確認する
+2. DBのパスワードなど機密情報をコードやコミットに含めていないか確認する
+
+### 修正したい点が多すぎて、時間が足りない
+**原因:** すべてを同じ優先度で扱っている
+
+**解決策:**
+1. 不具合を「致命的（動かない）／重要（誤った表示）／軽微（見た目）」に分類し、上から直す
+2. 直しきれなかったものは、「既知の課題」としてドキュメントに残す（Day 40の振り返りに使える）
 
 ---
 

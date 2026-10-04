@@ -341,6 +341,49 @@ public class TestController {
 
 ---
 
+## 🆘 トラブルシューティング
+
+### Lombokのアノテーション（@Getter など）が効かない／getterが見つからない
+**原因:** IntelliJ IDEAのLombokプラグインやアノテーション処理が有効になっていない、または `build.gradle` に依存関係がない
+
+**解決策:**
+1. `build.gradle` に `compileOnly 'org.projectlombok:lombok'` と `annotationProcessor 'org.projectlombok:lombok'` があるか確認
+2. Settings → Build, Execution, Deployment → Compiler → Annotation Processors → 「Enable annotation processing」にチェック
+3. Gradleを再読み込み（Gradleタブの🔄）し、IntelliJ IDEAを再起動
+
+### `Failed to configure a DataSource: 'url' attribute is not specified`
+**原因:** `application.properties` にDB接続設定がない、またはファイルの場所・名前が違う
+
+**解決策:**
+1. `src/main/resources/application.properties` に `spring.datasource.url / username / password` があるか確認
+2. MySQLサービスが起動しているか確認
+3. ファイル名のタイプミス（`application.propertis` など）がないか確認
+
+### `Port 8080 was already in use`
+**原因:** 以前起動したアプリが終了していない、または他のアプリが8080を使っている
+
+**解決策:**
+1. IntelliJ IDEAの実行ウィンドウで、前回のアプリを停止（■ボタン）する
+2. それでも解決しない場合は `application.properties` に `server.port=8081` を指定する
+3. 使用中のプロセスの確認: Macは `lsof -i :8080`、Windowsは `netstat -ano | findstr :8080`
+
+### `No qualifying bean of type ...` / `Consider defining a bean of type ...`
+**原因:** クラスがSpringに登録されていない（アノテーション不足）、またはメインクラスより外側のパッケージにある
+
+**解決策:**
+1. `@Service` / `@Repository` / `@Controller` を付け忘れていないか確認
+2. `@SpringBootApplication` が付いたクラスと**同じ階層かその配下**のパッケージにクラスがあるか確認
+
+### ブラウザで `Whitelabel Error Page`（404）が表示される
+**原因:** URLとControllerの `@GetMapping` が一致していない、または `@RestController` / `@Controller` の使い分けの誤り
+
+**解決策:**
+1. `@GetMapping("/xxx")` のパスとブラウザのURLを見比べる
+2. 文字列をそのまま画面に表示したい場合は `@RestController`、HTMLテンプレートを返す場合は `@Controller` を使う
+3. 起動ログに `Mapped "{[/xxx]}"` のような行が出ているか確認
+
+---
+
 ## 🎉 完了後
 
 [Day 5](day-05.md)の準備をする

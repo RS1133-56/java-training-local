@@ -161,6 +161,54 @@ spring.jpa.hibernate.ddl-auto=none
 
 ---
 
+## 🆘 トラブルシューティング
+
+### `ERROR 1046: No database selected`
+**原因:** どのデータベースを使うか指定していない
+
+**解決策:**
+1. SQLの先頭に `USE weather_app;` を書く
+2. MySQL Workbenchの左のスキーマ一覧で、対象のスキーマをダブルクリックして選択状態にする
+
+### `ERROR 1049: Unknown database 'weather_app'`
+**原因:** データベースがまだ作成されていない
+
+**解決策:**
+1. `CREATE DATABASE weather_app DEFAULT CHARACTER SET utf8mb4;` を先に実行する
+2. 左のスキーマ一覧の🔄ボタンで再読み込みして確認
+
+### `ERROR 1064: You have an error in your SQL syntax`
+**原因:** SQLの文法ミス。カンマの付け忘れ・余分なカンマ、全角スペース、引用符の閉じ忘れが多い
+
+**解決策:**
+1. エラー文の `near '...'` の**直前**を見る（その手前が原因のことが多い）
+2. 全角スペースが紛れていないか確認（コピペ時に起こりやすい）
+3. 最後の列の後ろに余計なカンマ `,` がないか確認
+
+### `ERROR 1215: Cannot add foreign key constraint`
+**原因:** 外部キーの条件が合っていない
+
+**解決策:**
+1. **親テーブルを先に作成**する（prefectures → weather_records → daily_forecasts の順）
+2. 外部キーの列と、参照先の列の型（`BIGINT` など）が完全に同じか確認
+3. 両方のテーブルが `ENGINE=InnoDB` か確認
+
+### `ERROR 1050: Table 'xxx' already exists`
+**原因:** すでに同名のテーブルが存在する
+
+**解決策:**
+1. やり直す場合は、子テーブルから順に `DROP TABLE IF EXISTS` する（外部キーがあるため順序が逆になる）
+2. DDLの先頭に `DROP TABLE IF EXISTS` を書いておくと、何度でも実行できる
+
+### Spring Boot起動時に `schema.sql` が実行されない
+**原因:** MySQLなど外部DBでは、SQLファイルの自動実行がデフォルトで無効
+
+**解決策:**
+1. `application.properties` に `spring.sql.init.mode=always` を追加
+2. `schema.sql` が `src/main/resources` 直下にあるか確認
+
+---
+
 ## 🎉 完了後
 
 次は [Day 12](day-12.md) へ
