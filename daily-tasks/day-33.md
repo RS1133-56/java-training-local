@@ -135,7 +135,7 @@ class FavoritesManager {
      * @returns {boolean}
      */
     isFavorite(prefectureId) {
-        return this.favorites.includes(parseInt(prefectureId));
+        return this.favorites.includes(prefectureId);
     }
     
     /**

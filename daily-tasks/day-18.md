@@ -502,9 +502,8 @@ public class WeatherMapper {
         }
         
         // 曜日を日本語で取得
-        String dayOfWeek = forecast.getForecastDate()
-            .getDayOfWeek()
-            .getDisplayName(TextStyle.SHORT, Locale.JAPANESE);
+        String[] weekNames = {"月", "火", "水", "木", "金", "土", "日"};
+        String dayOfWeek = weekNames[forecast.getForecastDate().getDayOfWeek().getValue()];
         
         // 降水確率を計算（降水量から推定）
         Integer precipProb = calculatePrecipitationProbability(

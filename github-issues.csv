@@ -9207,9 +9207,8 @@ public class WeatherMapper {
         }
         
         // 曜日を日本語で取得
-        String dayOfWeek = forecast.getForecastDate()
-            .getDayOfWeek()
-            .getDisplayName(TextStyle.SHORT, Locale.JAPANESE);
+        String[] weekNames = {""月"", ""火"", ""水"", ""木"", ""金"", ""土"", ""日""};
+        String dayOfWeek = weekNames[forecast.getForecastDate().getDayOfWeek().getValue()];
         
         // 降水確率を計算（降水量から推定）
         Integer precipProb = calculatePrecipitationProbability(
@@ -10254,7 +10253,7 @@ public class OpenMeteoClient {
                 ""temperature_2m_max,temperature_2m_min,weathercode,"" +
                 ""precipitation_sum,windspeed_10m_max,sunrise,sunset""
             )
-            .queryParam(""timezone"", ""Asia/Tokyo"")
+            .queryParam(""timezone"", ""UTC"")
             .queryParam(""forecast_days"", 7)
             .toUriString();
     }
@@ -18788,7 +18787,7 @@ class FavoritesManager {
      * @returns {boolean}
      */
     isFavorite(prefectureId) {
-        return this.favorites.includes(parseInt(prefectureId));
+        return this.favorites.includes(prefectureId);
     }
     
     /**
@@ -22861,10 +22860,14 @@ public class WeatherService {
 4. **天気詳細ページ遷移**
    - 都道府県: 東京都
    - 期待結果: 天気詳細ページが表示される
+   - **表示内容の妥当性も確認する**（画面が出るだけで終わらせない）
+     - 週間予報の日付と曜日が、実際のカレンダーと一致している
+     - 日の出・日の入りの時刻が、天気予報サイト等の実際の時刻と近い
+     - 気温・風速などの値が現実的な範囲である
 
 5. **お気に入り追加**
    - 操作: お気に入りボタンクリック
-   - 期待結果: お気に入りに追加される
+   - 期待結果: お気に入りに追加され、ボタンの見た目が変わる（もう一度押すと元に戻る）
 
 6. **ページリロード**
    - 期待結果: お気に入りが保持されている

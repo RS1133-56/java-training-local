@@ -162,7 +162,7 @@ public class OpenMeteoClient {
                 "temperature_2m_max,temperature_2m_min,weathercode," +
                 "precipitation_sum,windspeed_10m_max,sunrise,sunset"
             )
-            .queryParam("timezone", "Asia/Tokyo")
+            .queryParam("timezone", "UTC")
             .queryParam("forecast_days", 7)
             .toUriString();
     }
