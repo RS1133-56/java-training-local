@@ -65,11 +65,11 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
 - Day 35: [アクセシビリティ対応](daily-tasks/day-35.md)
 
 ### Week 8: テスト・完成（Day 36-40）
-- Day 36: [統合テスト作成](daily-tasks/day-36.md)
-- Day 37: [E2Eテスト（任意）](daily-tasks/day-37.md)
-- Day 38: [ドキュメント整備](daily-tasks/day-38.md)
-- Day 39: [最終レビューと修正](daily-tasks/day-39.md)
-- Day 40: [成果発表準備と振り返り](daily-tasks/day-40.md)
+- Day 36: [テスト・品質保証](daily-tasks/day-36.md)
+- Day 37: [ドキュメント作成](daily-tasks/day-37.md)
+- Day 38: [パフォーマンス最適化](daily-tasks/day-38.md)
+- Day 39: [最終レビュー・総合テスト](daily-tasks/day-39.md)
+- Day 40: [成果発表準備・プロジェクト完成](daily-tasks/day-40.md)
 
 ## 🛠️ 使用技術
 
@@ -108,10 +108,9 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
 
 ## 🎓 学習リソース
 
-- [Git操作ガイド](docs/git-guide.md)
-- [Spring Boot入門](docs/spring-boot-intro.md)
-- [API設計ガイド](docs/api-design-guide.md)
-- [データベース設計パターン](docs/database-design-patterns.md)
+- [GitHubインポートガイド](GITHUB_IMPORT_GUIDE.md)（Issue一括登録・運用）
+- [進捗管理ガイド](PROGRESS_GUIDE.md)（実績時間の記録と分析）
+- 各Dayファイル内の「参考リンク」「トラブルシューティング」
 
 ## ✅ 完了基準
 
@@ -169,7 +168,7 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
    git push origin main
    ```
 
-4. **チェックリストを更新**
+3. **チェックリストを更新**
    - 完了したタスクにチェック
 
 #### 終業前
@@ -324,6 +323,37 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
 3. 完了: 完了報告 → Close
 ```
 
+#### 週次振り返り
+
+毎週末（金曜日）に：
+
+```markdown
+# Week X 振り返り
+
+## 進捗
+- 完了: 5/5日
+- 予定時間: 40h
+- 実績時間: 45h
+
+## 今週の学び
+1. XXX
+2. YYY
+3. ZZZ
+
+## 来週の目標
+- XXXを重点的に
+```
+
+#### 進捗分析
+
+各Dayファイルの「実施日」「実績時間」を記入したら、週次で分析スクリプトを実行：
+
+```bash
+python3 analyze_progress.py
+```
+
+詳細は [進捗管理ガイド](PROGRESS_GUIDE.md) を参照
+
 ### 🎓 学習リソースの活用
 
 #### 公式ドキュメント
@@ -347,7 +377,7 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
 
 **良い質問:**
 ```markdown
-## Day 15で発生した問題
+## Day 16で発生した問題
 
 ### 環境
 - OS: Windows 11
