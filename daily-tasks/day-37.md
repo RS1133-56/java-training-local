@@ -37,7 +37,7 @@
 
 ### バックエンド
 - Java 17
-- Spring Boot 3.2.0
+- Spring Boot 3.5.x
 - Spring Data JPA
 - MySQL 8.0
 - Gradle
@@ -553,7 +553,7 @@ mysql -u root -p weather_app < backup_20240105.sql
 
 ### 技術スタック
 - Java 17
-- Spring Boot 3.2.0
+- Spring Boot 3.5.x
 - MySQL 8.0
 - Thymeleaf
 - Open-Meteo API

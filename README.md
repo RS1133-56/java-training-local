@@ -41,10 +41,10 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
 - Day 17: [Repository層実装](daily-tasks/day-17.md)
 - Day 18: [DTO設計と実装](daily-tasks/day-18.md)
 - Day 19: [Service層実装（Prefecture）](daily-tasks/day-19.md)
-- Day 20: [Service層実装（Weather）](daily-tasks/day-20.md)
+- Day 20: [外部API連携（OpenMeteoClient）](daily-tasks/day-20.md)
 
 ### Week 5: API実装（Day 21-25）
-- Day 21: [外部API連携（OpenMeteoClient）](daily-tasks/day-21.md)
+- Day 21: [Service層実装（Weather）](daily-tasks/day-21.md)
 - Day 22: [Controller実装（Home）](daily-tasks/day-22.md)
 - Day 23: [Controller実装（Weather）](daily-tasks/day-23.md)
 - Day 24: [例外ハンドリング実装](daily-tasks/day-24.md)
@@ -131,10 +131,36 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
 
 ## 🚀 始め方
 
-1. このリポジトリをフォーク
-2. [Day 1の手順](daily-tasks/day-01.md)に従って環境構築を開始
-3. 毎日のタスクを順番に進める
-4. 困ったら上記サポートを活用
+### 1. 準備（最初の1回だけ）
+
+1. このリポジトリを**フォーク**する（自分のGitHubアカウントにコピーされます）
+2. フォークした**自分のリポジトリ**をローカルにクローンする
+   ```bash
+   git clone https://github.com/<自分のユーザー名>/<リポジトリ名>.git
+   cd <リポジトリ名>
+   ```
+3. 40日分のIssueを**一括作成**する（Git Bash / ターミナルで、クローンしたフォルダ内で実行）
+   ```bash
+   gh auth login                      # 初回のみ。ログインしておく
+   ./create-github-issues.sh --dry-run   # 宛先とタイトルの確認（まだ作成しない）
+   ./create-github-issues.sh             # 本番実行（宛先リポジトリが自分のものか確認して y）
+   ```
+   - ラベルとマイルストーンは自動で作られます
+   - 手順の詳細・うまくいかない場合は [GitHubインポートガイド](GITHUB_IMPORT_GUIDE.md)
+
+### 2. 毎日の作業場所
+
+- 作業は**自分のリポジトリの「Issues」タブ**から、その日の Day の Issue を開いて進めます
+  - ⚠️ 他の人のリポジトリや、フォーク元の Issue ではなく、**自分のリポジトリ**の Issue です
+  - Issue の内容を手でコピーして新しく作る必要はありません（一括作成で作られています）
+- 日次レポートは、その Day の Issue の**コメント**に書き、作業が終わったら Issue を**クローズ**します
+  （詳しくは下の「毎日の進め方」）
+
+### 3. 困ったとき
+
+- Issue 内のリンク（`day-XX.md` など）が「ページが見つかりません（404）」になるときは、
+  リンクを辿らず、自分のリポジトリの **Issues タブ** から Day の Issue を直接開いてください
+- それ以外は上の「サポート」を参照してください
 
 ---
 

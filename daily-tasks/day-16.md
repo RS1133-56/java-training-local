@@ -84,7 +84,7 @@ public class User {
 - `nullable`: NULL許可（デフォルトtrue）
 - `unique`: ユニーク制約
 - `length`: 文字列の最大長
-- `precision`, `scale`: 数値の精度
+- `precision`, `scale`: 数値の精度（`BigDecimal` / `DECIMAL` のカラム用。`Double` には指定しない）
 
 ### リレーションシップ
 
@@ -187,16 +187,16 @@ public class Prefecture {
     
     /**
      * 緯度（例: 35.689487）
-     * DECIMAL(9,6)型
+     * DOUBLE型
      */
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = false)
     private Double latitude;
     
     /**
      * 経度（例: 139.691706）
-     * DECIMAL(9,6)型
+     * DOUBLE型
      */
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = false)
     private Double longitude;
     
     /**
@@ -248,9 +248,13 @@ public class Prefecture {
    - JavaではキャメルケースだがDBではスネークケース
    - `name`属性でカラム名を明示的に指定
 
-2. **precision と scale**
-   - `DECIMAL(9,6)` = 全体9桁、小数点以下6桁
-   - 緯度・経度に適切な精度
+2. **数値カラムの型の対応（重要）**
+   - DBの `DOUBLE` 型 ⇔ Javaの `Double` 型 で揃えます
+   - `ddl-auto=validate` では、DBの型とEntityの型が一致しているかチェックされます
+   - DBが `DECIMAL`、Entityが `Double`（または逆）だと、起動やテストで
+     `wrong column type encountered` というエラーになります
+   - 緯度・経度・気温のように「多少の誤差が許される値」は `DOUBLE` / `Double` で十分です
+   - 金額のように1円もずれてはいけない値は `DECIMAL` ⇔ `BigDecimal` を使います
 
 3. **updatable = false**
    - `createdAt`は一度設定したら変更不可
@@ -313,7 +317,7 @@ public class WeatherRecord {
      * 気温（℃）
      * 例: 15.5
      */
-    @Column(precision = 5, scale = 2)
+    @Column
     private Double temperature;
     
     /**
@@ -327,7 +331,7 @@ public class WeatherRecord {
      * 風速（m/s）
      * 例: 3.2
      */
-    @Column(name = "wind_speed", precision = 5, scale = 2)
+    @Column(name = "wind_speed")
     private Double windSpeed;
     
     /**
@@ -340,14 +344,14 @@ public class WeatherRecord {
      * 体感温度（℃）
      * 例: 13.8
      */
-    @Column(name = "apparent_temperature", precision = 5, scale = 2)
+    @Column(name = "apparent_temperature")
     private Double apparentTemperature;
     
     /**
      * 降水量（mm）
      * 例: 0.0
      */
-    @Column(precision = 5, scale = 2)
+    @Column
     private Double precipitation;
     
     /**
@@ -472,14 +476,14 @@ public class DailyForecast {
      * 最高気温（℃）
      * 例: 15.2
      */
-    @Column(name = "temperature_max", precision = 5, scale = 2)
+    @Column(name = "temperature_max")
     private Double temperatureMax;
     
     /**
      * 最低気温（℃）
      * 例: 8.1
      */
-    @Column(name = "temperature_min", precision = 5, scale = 2)
+    @Column(name = "temperature_min")
     private Double temperatureMin;
     
     /**
@@ -492,14 +496,14 @@ public class DailyForecast {
      * 降水量合計（mm）
      * 例: 5.2
      */
-    @Column(name = "precipitation_sum", precision = 5, scale = 2)
+    @Column(name = "precipitation_sum")
     private Double precipitationSum;
     
     /**
      * 最大風速（m/s）
      * 例: 8.1
      */
-    @Column(name = "wind_speed_max", precision = 5, scale = 2)
+    @Column(name = "wind_speed_max")
     private Double windSpeedMax;
     
     /**

@@ -20,6 +20,11 @@
 
 `table-definitions.md`を作成：
 
+> 💡 **数値カラムの型について**
+> 緯度・経度・気温・風速などは `DOUBLE`（Javaでは `Double`）で定義します。
+> DBの型とJavaのEntityの型がずれていると、Day 16以降でSpring Bootの `ddl-auto=validate` やテストがエラーになります。
+> （金額のように誤差が許されない値は `DECIMAL` ⇔ `BigDecimal` を使いますが、この研修の天気データでは不要です）
+
 #### prefectures（都道府県マスタ）
 
 | 列名 | データ型 | NULL | デフォルト | 説明 |
@@ -27,8 +32,8 @@
 | id | BIGINT | NO | AUTO_INCREMENT | 主キー |
 | name | VARCHAR(10) | NO | - | 都道府県名 |
 | name_en | VARCHAR(50) | NO | - | 英語名 |
-| latitude | DECIMAL(9,6) | NO | - | 緯度 |
-| longitude | DECIMAL(9,6) | NO | - | 経度 |
+| latitude | DOUBLE | NO | - | 緯度 |
+| longitude | DOUBLE | NO | - | 経度 |
 | region | VARCHAR(20) | NO | - | 地域区分 |
 | created_at | TIMESTAMP | NO | CURRENT_TIMESTAMP | 作成日時 |
 | updated_at | TIMESTAMP | NO | ON UPDATE | 更新日時 |
@@ -56,8 +61,8 @@ CREATE TABLE prefectures (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(10) NOT NULL COMMENT '都道府県名',
     name_en VARCHAR(50) NOT NULL COMMENT '英語名',
-    latitude DECIMAL(9, 6) NOT NULL COMMENT '緯度',
-    longitude DECIMAL(9, 6) NOT NULL COMMENT '経度',
+    latitude DOUBLE NOT NULL COMMENT '緯度',
+    longitude DOUBLE NOT NULL COMMENT '経度',
     region VARCHAR(20) NOT NULL COMMENT '地域区分',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -69,12 +74,12 @@ CREATE TABLE weather_records (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     prefecture_id BIGINT NOT NULL COMMENT '都道府県ID',
     fetched_at TIMESTAMP NOT NULL COMMENT '取得日時',
-    temperature DECIMAL(5, 2) COMMENT '気温（℃）',
+    temperature DOUBLE COMMENT '気温（℃）',
     weather_code INT COMMENT '天気コード',
-    wind_speed DECIMAL(5, 2) COMMENT '風速（m/s）',
+    wind_speed DOUBLE COMMENT '風速（m/s）',
     humidity INT COMMENT '湿度（%）',
-    apparent_temperature DECIMAL(5, 2) COMMENT '体感温度（℃）',
-    precipitation DECIMAL(5, 2) COMMENT '降水量（mm）',
+    apparent_temperature DOUBLE COMMENT '体感温度（℃）',
+    precipitation DOUBLE COMMENT '降水量（mm）',
     cloud_cover INT COMMENT '雲量（%）',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY fk_prefecture (prefecture_id) 
@@ -88,11 +93,11 @@ CREATE TABLE daily_forecasts (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     weather_record_id BIGINT NOT NULL COMMENT '天気記録ID',
     forecast_date DATE NOT NULL COMMENT '予報日',
-    temperature_max DECIMAL(5, 2) COMMENT '最高気温（℃）',
-    temperature_min DECIMAL(5, 2) COMMENT '最低気温（℃）',
+    temperature_max DOUBLE COMMENT '最高気温（℃）',
+    temperature_min DOUBLE COMMENT '最低気温（℃）',
     weather_code INT COMMENT '天気コード',
-    precipitation_sum DECIMAL(5, 2) COMMENT '降水量合計（mm）',
-    wind_speed_max DECIMAL(5, 2) COMMENT '最大風速（m/s）',
+    precipitation_sum DOUBLE COMMENT '降水量合計（mm）',
+    wind_speed_max DOUBLE COMMENT '最大風速（m/s）',
     sunrise TIME COMMENT '日の出時刻',
     sunset TIME COMMENT '日の入り時刻',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

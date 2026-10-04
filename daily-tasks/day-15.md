@@ -179,10 +179,10 @@ public class Prefecture {
     @Column(name = "name_en", nullable = false, length = 50)
     private String nameEn;
     
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = false)
     private Double latitude;
     
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = false)
     private Double longitude;
     
     @Column(nullable = false, length = 20)

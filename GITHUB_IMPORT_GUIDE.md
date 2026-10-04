@@ -39,8 +39,9 @@ gh auth login
 
 #### 3. スクリプト実行
 
-宛先リポジトリとマイルストーンは、デフォルトで `kn-fd-creator/java-training-template` / `40日間研修` になっています。
-別のリポジトリに作る場合は環境変数で指定します（スクリプトの編集は不要）。
+**宛先は、スクリプトを置いたフォルダの `git remote origin`（＝フォークした自分のリポジトリ）になります。** スクリプトの編集は不要です。
+ラベル（`training`、`day-1`〜`day-40`）とマイルストーン（`40日間研修`）が無ければ自動で作成され、既に同じタイトルのIssueがある場合はスキップされます。
+別のリポジトリに作る場合だけ `REPO="owner/name"` を指定します。
 
 まず `--dry-run` で件数とタイトルを確認：
 ```bash
@@ -54,7 +55,7 @@ chmod +x create-github-issues.sh
 ./create-github-issues.sh
 ```
 
-※ 事前に「ラベル」と「マイルストーン」の作成が必要です（下記「ラベルとマイルストーン」参照）。未作成だとエラーになります。
+※ ラベルとマイルストーンは自動で作成されます（手動で作る場合は下記「ラベルとマイルストーン」参照）。
 
 これだけ！40件のissueが自動作成されます 🎉
 
@@ -81,7 +82,7 @@ chmod +x create-github-issues.sh
 トークンはスクリプトに書かず、環境変数で渡します（誤ってコミットしないため）：
 ```bash
 export GITHUB_TOKEN=ghp_xxxxxxxxxxxxx
-# 別リポジトリの場合: export REPO_OWNER=xxx REPO_NAME=yyy
+# 宛先はgit remote originから自動判定。別リポジトリの場合のみ: export REPO_OWNER=xxx REPO_NAME=yyy
 ```
 
 #### 3. 実行

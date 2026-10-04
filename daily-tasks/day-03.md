@@ -44,7 +44,9 @@ Gradleのインストールと設定を完了し、初めてのHello Worldペー
 2. プロジェクト設定
    - **Project**: Gradle - Groovy
    - **Language**: Java
-   - **Spring Boot**: 3.2.x（最新の安定版）
+   - **Spring Boot**: **3.5.x の最新の安定版**（例: 3.5.9。画面に表示される 3.5.x のうち、`(SNAPSHOT)` が付いていない最新を選ぶ）
+     - ⚠️ `4.x` や `(SNAPSHOT)` は選ばないでください。この研修の教材は Spring Boot 3.x 系を前提に書かれています
+     - Spring Initializr の選択肢は時期によって変わります。`3.2.x` が表示されない場合も、上記の方針で選べば問題ありません
    - **Project Metadata**:
      - Group: `com.example`
      - Artifact: `weather-app`

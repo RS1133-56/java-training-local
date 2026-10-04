@@ -646,6 +646,6 @@ class PrefectureServiceIntegrationTest {
 
 ## 🎉 完了後
 
-次は [Day 20](day-20.md) でWeatherServiceを実装する
+次は [Day 20](day-20.md) でOpenMeteoClient（外部API連携）を実装する
 
 お疲れさまでした！

@@ -58,7 +58,7 @@
 
 ### バックエンド
 - Java 17
-- Spring Boot 3.2.0
+- Spring Boot 3.5.x
 - Spring Data JPA
 - MySQL 8.0
 

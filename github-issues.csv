@@ -1,8 +1,11 @@
 title,body,labels,milestone
 Day 1: 開発環境のセットアップ,"# Day 1: 開発環境のセットアップ
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 1 - Day 1
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 開発に必要なすべてのツールをインストールし、動作確認を完了する
@@ -244,8 +247,11 @@ Day 1: 開発環境のセットアップ,"# Day 1: 開発環境のセットア�
 ","training,day-1",40日間研修
 Day 2: Gitの基本操作をマスターする,"# Day 2: Gitの基本操作をマスターする
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 1 - Day 2
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 Gitの基本操作（clone, branch, commit, push, pull, fetch, rebase, merge）を習得し、GitHubでの開発フローを理解する
@@ -609,8 +615,11 @@ git reset --hard HEAD^
 ","training,day-2",40日間研修
 Day 3: 環境構築完了とHello World,"# Day 3: 環境構築完了とHello World
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 1 - Day 3
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 Gradleのインストールと設定を完了し、初めてのHello Worldページを表示する
@@ -650,7 +659,9 @@ Gradleのインストールと設定を完了し、初めてのHello Worldペー
 2. プロジェクト設定
    - **Project**: Gradle - Groovy
    - **Language**: Java
-   - **Spring Boot**: 3.2.x（最新の安定版）
+   - **Spring Boot**: **3.5.x の最新の安定版**（例: 3.5.9。画面に表示される 3.5.x のうち、`(SNAPSHOT)` が付いていない最新を選ぶ）
+     - ⚠️ `4.x` や `(SNAPSHOT)` は選ばないでください。この研修の教材は Spring Boot 3.x 系を前提に書かれています
+     - Spring Initializr の選択肢は時期によって変わります。`3.2.x` が表示されない場合も、上記の方針で選べば問題ありません
    - **Project Metadata**:
      - Group: `com.example`
      - Artifact: `weather-app`
@@ -1015,6 +1026,12 @@ lsof -i :8080
 ","training,day-3",40日間研修
 Day 4: Spring Boot基礎とプロジェクト作成,"# Day 4: Spring Boot基礎とプロジェクト作成
 
+## 📅 実施日
+- 予定: Week 1 - Day 4
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
+
 ## 📅 所要時間
 8時間
 
@@ -1358,8 +1375,11 @@ public class TestController {
 ","training,day-4",40日間研修
 Day 5: Spring Boot Hello Worldの理解,"# Day 5: Spring Boot Hello Worldの理解
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 1 - Day 5
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 Spring Bootの動作原理を深く理解し、アノテーションの役割を学ぶ
@@ -2176,8 +2196,11 @@ git push origin main
 ","training,day-5",40日間研修
 Day 6: 要件定義とAPI調査,"# Day 6: 要件定義とAPI調査
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 2 - Day 6
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 天気アプリの要件を定義し、Open-Meteo APIの仕様を詳しく調査する
@@ -2846,8 +2869,11 @@ GET https://api.open-meteo.com/v1/forecast
 ","training,day-6",40日間研修
 Day 7: API調査の詳細と動作確認,"# Day 7: API調査の詳細と動作確認
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 2 - Day 7
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 Open-Meteo APIのレスポンスを詳細に解析し、実装に必要な情報を整理する
@@ -3712,8 +3738,11 @@ git push origin main
 ","training,day-7",40日間研修
 Day 8: 画面設計（ワイヤーフレーム）,"# Day 8: 画面設計（ワイヤーフレーム）
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 2 - Day 8
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 天気アプリの画面設計（ワイヤーフレーム）を作成する
@@ -4263,8 +4292,11 @@ font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 ","training,day-8",40日間研修
 Day 9: 画面遷移図の作成,"# Day 9: 画面遷移図の作成
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 2 - Day 9
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 画面間の遷移を図で表現し、ユーザーの操作フローを明確にする
@@ -4849,6 +4881,12 @@ Day 10: データベース設計（ER図）
 ","training,day-9",40日間研修
 Day 10: データベース設計（ER図）,"# Day 10: データベース設計（ER図）
 
+## 📅 実施日
+- 予定: Week 2 - Day 10
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
+
 ## 📅 所要時間
 8時間
 
@@ -4867,8 +4905,8 @@ CREATE TABLE prefectures (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(10) NOT NULL,
     name_en VARCHAR(50) NOT NULL,
-    latitude DECIMAL(9, 6) NOT NULL,
-    longitude DECIMAL(9, 6) NOT NULL,
+    latitude DOUBLE NOT NULL,
+    longitude DOUBLE NOT NULL,
     region VARCHAR(20) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -4881,12 +4919,12 @@ CREATE TABLE weather_records (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     prefecture_id BIGINT NOT NULL,
     fetched_at TIMESTAMP NOT NULL,
-    temperature DECIMAL(5, 2),
+    temperature DOUBLE,
     weather_code INT,
-    wind_speed DECIMAL(5, 2),
+    wind_speed DOUBLE,
     humidity INT,
-    apparent_temperature DECIMAL(5, 2),
-    precipitation DECIMAL(5, 2),
+    apparent_temperature DOUBLE,
+    precipitation DOUBLE,
     cloud_cover INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (prefecture_id) REFERENCES prefectures(id)
@@ -4899,11 +4937,11 @@ CREATE TABLE daily_forecasts (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     weather_record_id BIGINT NOT NULL,
     forecast_date DATE NOT NULL,
-    temperature_max DECIMAL(5, 2),
-    temperature_min DECIMAL(5, 2),
+    temperature_max DOUBLE,
+    temperature_min DOUBLE,
     weather_code INT,
-    precipitation_sum DECIMAL(5, 2),
-    wind_speed_max DECIMAL(5, 2),
+    precipitation_sum DOUBLE,
+    wind_speed_max DOUBLE,
     sunrise TIME,
     sunset TIME,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -4971,6 +5009,12 @@ ON daily_forecasts(forecast_date);
 ","training,day-10",40日間研修
 Day 11: テーブル定義書とDDL作成,"# Day 11: テーブル定義書とDDL作成
 
+## 📅 実施日
+- 予定: Week 3 - Day 11
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
+
 ## 📅 所要時間
 8時間
 
@@ -4985,6 +5029,11 @@ Day 11: テーブル定義書とDDL作成,"# Day 11: テーブル定義書とDDL
 
 `table-definitions.md`を作成：
 
+> 💡 **数値カラムの型について**
+> 緯度・経度・気温・風速などは `DOUBLE`（Javaでは `Double`）で定義します。
+> DBの型とJavaのEntityの型がずれていると、Day 16以降でSpring Bootの `ddl-auto=validate` やテストがエラーになります。
+> （金額のように誤差が許されない値は `DECIMAL` ⇔ `BigDecimal` を使いますが、この研修の天気データでは不要です）
+
 #### prefectures（都道府県マスタ）
 
 | 列名 | データ型 | NULL | デフォルト | 説明 |
@@ -4992,8 +5041,8 @@ Day 11: テーブル定義書とDDL作成,"# Day 11: テーブル定義書とDDL
 | id | BIGINT | NO | AUTO_INCREMENT | 主キー |
 | name | VARCHAR(10) | NO | - | 都道府県名 |
 | name_en | VARCHAR(50) | NO | - | 英語名 |
-| latitude | DECIMAL(9,6) | NO | - | 緯度 |
-| longitude | DECIMAL(9,6) | NO | - | 経度 |
+| latitude | DOUBLE | NO | - | 緯度 |
+| longitude | DOUBLE | NO | - | 経度 |
 | region | VARCHAR(20) | NO | - | 地域区分 |
 | created_at | TIMESTAMP | NO | CURRENT_TIMESTAMP | 作成日時 |
 | updated_at | TIMESTAMP | NO | ON UPDATE | 更新日時 |
@@ -5021,8 +5070,8 @@ CREATE TABLE prefectures (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(10) NOT NULL COMMENT '都道府県名',
     name_en VARCHAR(50) NOT NULL COMMENT '英語名',
-    latitude DECIMAL(9, 6) NOT NULL COMMENT '緯度',
-    longitude DECIMAL(9, 6) NOT NULL COMMENT '経度',
+    latitude DOUBLE NOT NULL COMMENT '緯度',
+    longitude DOUBLE NOT NULL COMMENT '経度',
     region VARCHAR(20) NOT NULL COMMENT '地域区分',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -5034,12 +5083,12 @@ CREATE TABLE weather_records (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     prefecture_id BIGINT NOT NULL COMMENT '都道府県ID',
     fetched_at TIMESTAMP NOT NULL COMMENT '取得日時',
-    temperature DECIMAL(5, 2) COMMENT '気温（℃）',
+    temperature DOUBLE COMMENT '気温（℃）',
     weather_code INT COMMENT '天気コード',
-    wind_speed DECIMAL(5, 2) COMMENT '風速（m/s）',
+    wind_speed DOUBLE COMMENT '風速（m/s）',
     humidity INT COMMENT '湿度（%）',
-    apparent_temperature DECIMAL(5, 2) COMMENT '体感温度（℃）',
-    precipitation DECIMAL(5, 2) COMMENT '降水量（mm）',
+    apparent_temperature DOUBLE COMMENT '体感温度（℃）',
+    precipitation DOUBLE COMMENT '降水量（mm）',
     cloud_cover INT COMMENT '雲量（%）',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY fk_prefecture (prefecture_id) 
@@ -5053,11 +5102,11 @@ CREATE TABLE daily_forecasts (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     weather_record_id BIGINT NOT NULL COMMENT '天気記録ID',
     forecast_date DATE NOT NULL COMMENT '予報日',
-    temperature_max DECIMAL(5, 2) COMMENT '最高気温（℃）',
-    temperature_min DECIMAL(5, 2) COMMENT '最低気温（℃）',
+    temperature_max DOUBLE COMMENT '最高気温（℃）',
+    temperature_min DOUBLE COMMENT '最低気温（℃）',
     weather_code INT COMMENT '天気コード',
-    precipitation_sum DECIMAL(5, 2) COMMENT '降水量合計（mm）',
-    wind_speed_max DECIMAL(5, 2) COMMENT '最大風速（m/s）',
+    precipitation_sum DOUBLE COMMENT '降水量合計（mm）',
+    wind_speed_max DOUBLE COMMENT '最大風速（m/s）',
     sunrise TIME COMMENT '日の出時刻',
     sunset TIME COMMENT '日の入り時刻',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -5128,6 +5177,12 @@ spring.jpa.hibernate.ddl-auto=none
 お疲れさまでした！
 ","training,day-11",40日間研修
 Day 12: 初期データ投入,"# Day 12: 初期データ投入
+
+## 📅 実施日
+- 予定: Week 3 - Day 12
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 📅 所要時間
 8時間
@@ -5321,8 +5376,11 @@ public class TestController {
 ","training,day-12",40日間研修
 Day 13: シーケンス図作成（一覧表示）,"# Day 13: シーケンス図作成（一覧表示）
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 3 - Day 13
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 トップページ（都道府県一覧）のシーケンス図を作成する
@@ -5726,8 +5784,11 @@ public class GlobalExceptionHandler {
 ","training,day-13",40日間研修
 Day 14: シーケンス図作成（詳細表示と履歴保存）,"# Day 14: シーケンス図作成（詳細表示と履歴保存）
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 3 - Day 14
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 天気詳細ページのシーケンス図を作成し、API連携と履歴保存の流れを明確にする
@@ -6235,6 +6296,12 @@ public class GlobalExceptionHandler {
 ","training,day-14",40日間研修
 Day 15: 設計レビューと修正,"# Day 15: 設計レビューと修正
 
+## 📅 実施日
+- 予定: Week 3 - Day 15
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
+
 ## 📅 所要時間
 8時間
 
@@ -6408,10 +6475,10 @@ public class Prefecture {
     @Column(name = ""name_en"", nullable = false, length = 50)
     private String nameEn;
     
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = false)
     private Double latitude;
     
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = false)
     private Double longitude;
     
     @Column(nullable = false, length = 20)
@@ -6628,8 +6695,11 @@ User → Browser → WeatherController
 ","training,day-15",40日間研修
 Day 16: Entityクラス実装,"# Day 16: Entityクラス実装
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 4 - Day 16
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 Prefecture、WeatherRecord、DailyForecastの3つのEntityクラスを実装し、JPAでデータベースとマッピングする
@@ -6709,7 +6779,7 @@ public class User {
 - `nullable`: NULL許可（デフォルトtrue）
 - `unique`: ユニーク制約
 - `length`: 文字列の最大長
-- `precision`, `scale`: 数値の精度
+- `precision`, `scale`: 数値の精度（`BigDecimal` / `DECIMAL` のカラム用。`Double` には指定しない）
 
 ### リレーションシップ
 
@@ -6812,16 +6882,16 @@ public class Prefecture {
     
     /**
      * 緯度（例: 35.689487）
-     * DECIMAL(9,6)型
+     * DOUBLE型
      */
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = false)
     private Double latitude;
     
     /**
      * 経度（例: 139.691706）
-     * DECIMAL(9,6)型
+     * DOUBLE型
      */
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = false)
     private Double longitude;
     
     /**
@@ -6873,9 +6943,13 @@ public class Prefecture {
    - JavaではキャメルケースだがDBではスネークケース
    - `name`属性でカラム名を明示的に指定
 
-2. **precision と scale**
-   - `DECIMAL(9,6)` = 全体9桁、小数点以下6桁
-   - 緯度・経度に適切な精度
+2. **数値カラムの型の対応（重要）**
+   - DBの `DOUBLE` 型 ⇔ Javaの `Double` 型 で揃えます
+   - `ddl-auto=validate` では、DBの型とEntityの型が一致しているかチェックされます
+   - DBが `DECIMAL`、Entityが `Double`（または逆）だと、起動やテストで
+     `wrong column type encountered` というエラーになります
+   - 緯度・経度・気温のように「多少の誤差が許される値」は `DOUBLE` / `Double` で十分です
+   - 金額のように1円もずれてはいけない値は `DECIMAL` ⇔ `BigDecimal` を使います
 
 3. **updatable = false**
    - `createdAt`は一度設定したら変更不可
@@ -6938,7 +7012,7 @@ public class WeatherRecord {
      * 気温（℃）
      * 例: 15.5
      */
-    @Column(precision = 5, scale = 2)
+    @Column
     private Double temperature;
     
     /**
@@ -6952,7 +7026,7 @@ public class WeatherRecord {
      * 風速（m/s）
      * 例: 3.2
      */
-    @Column(name = ""wind_speed"", precision = 5, scale = 2)
+    @Column(name = ""wind_speed"")
     private Double windSpeed;
     
     /**
@@ -6965,14 +7039,14 @@ public class WeatherRecord {
      * 体感温度（℃）
      * 例: 13.8
      */
-    @Column(name = ""apparent_temperature"", precision = 5, scale = 2)
+    @Column(name = ""apparent_temperature"")
     private Double apparentTemperature;
     
     /**
      * 降水量（mm）
      * 例: 0.0
      */
-    @Column(precision = 5, scale = 2)
+    @Column
     private Double precipitation;
     
     /**
@@ -7097,14 +7171,14 @@ public class DailyForecast {
      * 最高気温（℃）
      * 例: 15.2
      */
-    @Column(name = ""temperature_max"", precision = 5, scale = 2)
+    @Column(name = ""temperature_max"")
     private Double temperatureMax;
     
     /**
      * 最低気温（℃）
      * 例: 8.1
      */
-    @Column(name = ""temperature_min"", precision = 5, scale = 2)
+    @Column(name = ""temperature_min"")
     private Double temperatureMin;
     
     /**
@@ -7117,14 +7191,14 @@ public class DailyForecast {
      * 降水量合計（mm）
      * 例: 5.2
      */
-    @Column(name = ""precipitation_sum"", precision = 5, scale = 2)
+    @Column(name = ""precipitation_sum"")
     private Double precipitationSum;
     
     /**
      * 最大風速（m/s）
      * 例: 8.1
      */
-    @Column(name = ""wind_speed_max"", precision = 5, scale = 2)
+    @Column(name = ""wind_speed_max"")
     private Double windSpeedMax;
     
     /**
@@ -7579,8 +7653,11 @@ private WeatherRecord weatherRecord;
 ","training,day-16",40日間研修
 Day 17: Repository層実装,"# Day 17: Repository層実装
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 4 - Day 17
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 Spring Data JPAのRepositoryインターフェースを実装し、データベースアクセス層を完成させる
@@ -8156,6 +8233,52 @@ public interface DailyForecastRepository extends JpaRepository<DailyForecast, Lo
 
 ### 5. Repositoryの動作確認テスト（13:30-15:30）
 
+#### 5-0. テスト用データベース（H2）の準備
+
+> ⚠️ **ここを飛ばすと `./gradlew test` が失敗します。** 先に必ず設定してください。
+
+`@DataJpaTest` は、**本物のMySQLではなく、メモリ上のテスト用DB（H2）** に自動で差し替えて動きます。
+そのため、次の3つが必要です。
+
+**① `build.gradle` にH2を追加**（`dependencies { ... }` の中）:
+
+```groovy
+testRuntimeOnly 'com.h2database:h2'
+```
+
+追加したらGradleを再読み込み（IntelliJ右側のGradleタブの🔄ボタン）します。
+
+**② テスト専用の設定ファイルを作成**: `src/test/resources/application.properties`
+
+```properties
+# テスト用DB（メモリ上のH2。MySQL互換モード）
+spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# テーブルはEntityの定義から自動作成し、テスト終了後に破棄する
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
+
+# 本番用のschema.sql / data.sql はテストでは実行しない
+spring.sql.init.mode=never
+```
+
+**③ このファイルが `src/main/resources/application.properties`（本番用・MySQL・`ddl-auto=validate`）より優先される** ことを理解しておきます。
+テストでは `src/test/resources` 側の設定が使われます。
+
+**よくあるエラーと原因:**
+
+| エラーメッセージ | 原因 | 対処 |
+|---|---|---|
+| `Failed to replace DataSource with an embedded database` | H2が依存関係にない | ① を実施 |
+| `wrong column type encountered in column [latitude]` | DBの型とEntityの型が不一致（DECIMAL ⇔ Double など） | Day 11のDDLとDay 16のEntityで `DOUBLE` ⇔ `Double` に揃える |
+| `Schema-validation: missing table` | テストでも `ddl-auto=validate` になっている | ② の `create-drop` を確認 |
+| MySQLに接続しようとして失敗する | `src/test/resources/application.properties` がない・場所が違う | ② のパスとファイル名を確認 |
+
+#### 5-1. テストクラスの作成
+
 **統合テスト作成:** `src/test/java/com/example/weatherapp/repository/PrefectureRepositoryTest.java`
 
 ```java
@@ -8192,7 +8315,7 @@ class PrefectureRepositoryTest {
         List<Prefecture> prefectures = prefectureRepository.findAll();
         
         // Then
-        assertThat(prefectures).hasSize(47);
+        assertThat(prefectures).hasSize(11);  // test-data.sql に入れた11件
     }
     
     @Test
@@ -8262,7 +8385,7 @@ class PrefectureRepositoryTest {
         );
         
         // Then
-        assertThat(result).hasSize(14);  // 関東7 + 関西7
+        assertThat(result).hasSize(9);  // 関東7 + 関西2（京都・大阪）
     }
     
     @Test
@@ -8272,9 +8395,8 @@ class PrefectureRepositoryTest {
         List<String> regions = prefectureRepository.findAllRegions();
         
         // Then
-        assertThat(regions).containsExactly(
-            ""北海道"", ""東北"", ""関東"", ""中部"", ""関西"", ""中国"", ""四国"", ""九州"", ""沖縄""
-        );
+        // test-data.sql には4地域分のデータだけが入っている
+        assertThat(regions).containsExactly(""北海道"", ""関東"", ""関西"", ""沖縄"");
     }
     
     @Test
@@ -8353,18 +8475,22 @@ DELETE FROM weather_records;
 DELETE FROM prefectures;
 
 -- 主要な都道府県のみ投入
-INSERT INTO prefectures (id, name, name_en, latitude, longitude, region) VALUES
-(1, '北海道', 'Hokkaido', 43.064, 141.347, '北海道'),
-(8, '茨城県', 'Ibaraki', 36.341, 140.447, '関東'),
-(9, '栃木県', 'Tochigi', 36.566, 139.883, '関東'),
-(10, '群馬県', 'Gunma', 36.391, 139.061, '関東'),
-(11, '埼玉県', 'Saitama', 35.857, 139.649, '関東'),
-(12, '千葉県', 'Chiba', 35.605, 140.123, '関東'),
-(13, '東京都', 'Tokyo', 35.689, 139.692, '関東'),
-(14, '神奈川県', 'Kanagawa', 35.448, 139.643, '関東'),
-(26, '京都府', 'Kyoto', 35.021, 135.756, '関西'),
-(27, '大阪府', 'Osaka', 34.686, 135.520, '関西'),
-(47, '沖縄県', 'Okinawa', 26.212, 127.681, '沖縄');
+-- created_at / updated_at はNOT NULLのため必ず値を入れる
+INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
+(1, '北海道', 'Hokkaido', 43.064, 141.347, '北海道', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(8, '茨城県', 'Ibaraki', 36.341, 140.447, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(9, '栃木県', 'Tochigi', 36.566, 139.883, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(10, '群馬県', 'Gunma', 36.391, 139.061, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(11, '埼玉県', 'Saitama', 35.857, 139.649, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(12, '千葉県', 'Chiba', 35.605, 140.123, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(13, '東京都', 'Tokyo', 35.689, 139.692, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(14, '神奈川県', 'Kanagawa', 35.448, 139.643, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(26, '京都府', 'Kyoto', 35.021, 135.756, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(27, '大阪府', 'Osaka', 34.686, 135.520, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(47, '沖縄県', 'Okinawa', 26.212, 127.681, '沖縄', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 新規保存（testSave）で採番されるIDが、上で入れたIDとぶつからないようにする
+ALTER TABLE prefectures ALTER COLUMN id RESTART WITH 100;
 ```
 
 **テスト実行:**
@@ -8578,6 +8704,12 @@ List<Object[]> findAllPrefecturesWithLatestWeather();
 お疲れさまでした！
 ","training,day-17",40日間研修
 Day 18: DTO設計と実装,"# Day 18: DTO設計と実装
+
+## 📅 実施日
+- 予定: Week 4 - Day 18
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 📅 所要時間
 8時間
@@ -9308,6 +9440,12 @@ class WeatherMapperTest {
 ","training,day-18",40日間研修
 Day 19: Service層実装（Prefecture）,"# Day 19: Service層実装（Prefecture）
 
+## 📅 実施日
+- 予定: Week 4 - Day 19
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
+
 ## 📅 所要時間
 8時間
 
@@ -9948,243 +10086,24 @@ class PrefectureServiceIntegrationTest {
 
 ## 🎉 完了後
 
-次は [Day 20](day-20.md) でWeatherServiceを実装する
+次は [Day 20](day-20.md) でOpenMeteoClient（外部API連携）を実装する
 
 お疲れさまでした！
 ","training,day-19",40日間研修
-Day 20: Service層実装（Weather）,"# Day 20: Service層実装（Weather）
+Day 20: 外部API連携（OpenMeteoClient）,"# Day 20: 外部API連携（OpenMeteoClient）
 
-## 📅 所要時間
-8時間
-
-## 🎯 目標
-WeatherServiceを実装し、外部API連携とデータベース保存のビジネスロジックを完成させる
-
----
-
-## 📋 午前の作業（9:00-13:00）
-
-### 1. WeatherServiceの設計（9:00-9:30）
-
-**WeatherServiceの責務:**
-1. Open-Meteo APIから天気データ取得
-2. APIレスポンスをEntityに変換
-3. データベースに保存（WeatherRecord + DailyForecast）
-4. EntityをDTOに変換して返却
-
-**処理フロー:**
-```
-Controller → WeatherService
-                ↓
-            OpenMeteoClient (API呼び出し)
-                ↓
-            APIレスポンス受信
-                ↓
-            Entity変換
-                ↓
-            Repository保存
-                ↓
-            DTO変換
-                ↓
-            Controller ← DTO返却
-```
-
----
-
-### 2. WeatherService実装（9:30-12:00）
-
-**インターフェース:** `src/main/java/com/example/weatherapp/service/WeatherService.java`
-
-```java
-package com.example.weatherapp.service;
-
-import com.example.weatherapp.dto.WeatherDetailDto;
-
-public interface WeatherService {
-    
-    WeatherDetailDto getWeatherByPrefectureId(Long prefectureId);
-    
-    WeatherDetailDto getLatestWeatherFromDb(Long prefectureId);
-}
-```
-
-**実装クラス:** `src/main/java/com/example/weatherapp/service/impl/WeatherServiceImpl.java`
-
-```java
-package com.example.weatherapp.service.impl;
-
-import com.example.weatherapp.client.OpenMeteoClient;
-import com.example.weatherapp.dto.WeatherDetailDto;
-import com.example.weatherapp.dto.api.OpenMeteoResponseDto;
-import com.example.weatherapp.entity.DailyForecast;
-import com.example.weatherapp.entity.Prefecture;
-import com.example.weatherapp.entity.WeatherRecord;
-import com.example.weatherapp.mapper.WeatherMapper;
-import com.example.weatherapp.repository.WeatherRecordRepository;
-import com.example.weatherapp.service.PrefectureService;
-import com.example.weatherapp.service.WeatherService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-
-@Service
-@Transactional
-@Slf4j
-public class WeatherServiceImpl implements WeatherService {
-    
-    private final OpenMeteoClient openMeteoClient;
-    private final WeatherRecordRepository weatherRecordRepository;
-    private final PrefectureService prefectureService;
-    private final WeatherMapper weatherMapper;
-    
-    public WeatherServiceImpl(
-        OpenMeteoClient openMeteoClient,
-        WeatherRecordRepository weatherRecordRepository,
-        PrefectureService prefectureService,
-        WeatherMapper weatherMapper
-    ) {
-        this.openMeteoClient = openMeteoClient;
-        this.weatherRecordRepository = weatherRecordRepository;
-        this.prefectureService = prefectureService;
-        this.weatherMapper = weatherMapper;
-    }
-    
-    @Override
-    public WeatherDetailDto getWeatherByPrefectureId(Long prefectureId) {
-        log.info(""天気情報取得開始: prefectureId={}"", prefectureId);
-        
-        Prefecture prefecture = prefectureService.findEntityById(prefectureId);
-        log.debug(""都道府県: {}"", prefecture.getName());
-        
-        OpenMeteoResponseDto apiResponse = openMeteoClient.fetchWeather(
-            prefecture.getLatitude(),
-            prefecture.getLongitude()
-        );
-        
-        WeatherRecord weatherRecord = buildWeatherRecord(apiResponse, prefecture);
-        List<DailyForecast> dailyForecasts = buildDailyForecasts(apiResponse, weatherRecord);
-        dailyForecasts.forEach(weatherRecord::addDailyForecast);
-        
-        WeatherRecord savedRecord = weatherRecordRepository.save(weatherRecord);
-        log.info(""天気情報保存完了: recordId={}"", savedRecord.getId());
-        
-        return weatherMapper.toDetailDto(savedRecord);
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public WeatherDetailDto getLatestWeatherFromDb(Long prefectureId) {
-        return weatherRecordRepository
-            .findLatestWithForecasts(prefectureId)
-            .map(weatherMapper::toDetailDto)
-            .orElse(null);
-    }
-    
-    private WeatherRecord buildWeatherRecord(
-        OpenMeteoResponseDto apiResponse, 
-        Prefecture prefecture
-    ) {
-        var current = apiResponse.getCurrent();
-        
-        return WeatherRecord.builder()
-            .prefecture(prefecture)
-            .fetchedAt(LocalDateTime.now())
-            .temperature(current.getTemperature2m())
-            .weatherCode(current.getWeathercode())
-            .windSpeed(current.getWindspeed10m())
-            .humidity(current.getRelativehumidity2m())
-            .apparentTemperature(current.getApparentTemperature())
-            .precipitation(current.getPrecipitation())
-            .cloudCover(current.getCloudCover())
-            .build();
-    }
-    
-    private List<DailyForecast> buildDailyForecasts(
-        OpenMeteoResponseDto apiResponse,
-        WeatherRecord weatherRecord
-    ) {
-        List<DailyForecast> forecasts = new ArrayList<>();
-        var daily = apiResponse.getDaily();
-        
-        for (int i = 0; i < daily.getTime().size(); i++) {
-            DailyForecast forecast = DailyForecast.builder()
-                .weatherRecord(weatherRecord)
-                .forecastDate(LocalDate.parse(daily.getTime().get(i)))
-                .temperatureMax(daily.getTemperature2mMax().get(i))
-                .temperatureMin(daily.getTemperature2mMin().get(i))
-                .weatherCode(daily.getWeathercode().get(i))
-                .precipitationSum(daily.getPrecipitationSum().get(i))
-                .windSpeedMax(getOrNull(daily.getWindspeed10mMax(), i))
-                .sunrise(parseTime(daily.getSunrise(), i))
-                .sunset(parseTime(daily.getSunset(), i))
-                .build();
-            
-            forecasts.add(forecast);
-        }
-        
-        return forecasts;
-    }
-    
-    private <T> T getOrNull(List<T> list, int index) {
-        if (list == null || index >= list.size()) {
-            return null;
-        }
-        return list.get(index);
-    }
-    
-    private LocalTime parseTime(List<String> timeList, int index) {
-        String timeStr = getOrNull(timeList, index);
-        if (timeStr == null) {
-            return null;
-        }
-        
-        try {
-            LocalDateTime dateTime = LocalDateTime.parse(timeStr);
-            return dateTime.toLocalTime();
-        } catch (Exception e) {
-            log.warn(""時刻パース失敗: {}"", timeStr, e);
-            return null;
-        }
-    }
-}
-```
-
----
-
-## ✅ チェックリスト
-
-- [ ] WeatherServiceインターフェース作成
-- [ ] WeatherServiceImpl実装
-- [ ] テスト作成
-- [ ] GitHubにプッシュ
-
----
-
-## 📚 参考リンク
-
-- [Spring @Transactional（日本語）](https://qiita.com/NagaokaKenichi/items/c3371ce8dea0a1f8fa5b)
-
----
-
-## 🎉 完了後
-
-次は [Day 21](day-21.md) へ
-
-お疲れさまでした！
-","training,day-20",40日間研修
-Day 21: 外部API連携（OpenMeteoClient）,"# Day 21: 外部API連携（OpenMeteoClient）
-
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 4 - Day 20
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 RestTemplateを使ってOpen-Meteo APIと連携するClientクラスを実装する
+
+> 📝 **このDayの位置づけ（Day 21への準備）**
+> 次のDay 21で作る `WeatherServiceImpl` は、このDayで作る `OpenMeteoClient` を呼び出します。
+> 先にClientを完成させておくことで、Day 21でServiceを実装したときにすぐ動作確認・テストができます。
 
 ---
 
@@ -10424,7 +10343,7 @@ class OpenMeteoClientTest {
 ```bash
 git add .
 git commit -m ""feat(client): OpenMeteoClient実装""
-git push origin feature/day-21
+git push origin feature/day-20
 ```
 
 ---
@@ -10440,14 +10359,359 @@ git push origin feature/day-21
 
 ## 🎉 完了後
 
+次は [Day 21](day-21.md) で、このClientを使うWeatherServiceを実装します
+
+お疲れさまでした！
+","training,day-20",40日間研修
+Day 21: Service層実装（Weather）,"# Day 21: Service層実装（Weather）
+
+## 📅 実施日
+- 予定: Week 5 - Day 21
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
+
+## 📅 所要時間
+8時間
+
+## 🎯 目標
+WeatherServiceを実装し、外部API連携（Day 20で作成したOpenMeteoClient）とデータベース保存のビジネスロジックを完成させる
+
+> 📝 **前提**: Day 20で `OpenMeteoClient` と `ExternalApiException` を作成済みであること。
+
+---
+
+## 📋 午前の作業（9:00-13:00）
+
+### 1. WeatherServiceの設計（9:00-9:30）
+
+**WeatherServiceの責務:**
+1. Open-Meteo APIから天気データ取得
+2. APIレスポンスをEntityに変換
+3. データベースに保存（WeatherRecord + DailyForecast）
+4. EntityをDTOに変換して返却
+
+**処理フロー:**
+```
+Controller → WeatherService
+                ↓
+            OpenMeteoClient (API呼び出し)
+                ↓
+            APIレスポンス受信
+                ↓
+            Entity変換
+                ↓
+            Repository保存
+                ↓
+            DTO変換
+                ↓
+            Controller ← DTO返却
+```
+
+---
+
+### 2. WeatherService実装（9:30-12:00）
+
+**インターフェース:** `src/main/java/com/example/weatherapp/service/WeatherService.java`
+
+```java
+package com.example.weatherapp.service;
+
+import com.example.weatherapp.dto.WeatherDetailDto;
+
+public interface WeatherService {
+    
+    WeatherDetailDto getWeatherByPrefectureId(Long prefectureId);
+    
+    WeatherDetailDto getLatestWeatherFromDb(Long prefectureId);
+}
+```
+
+**実装クラス:** `src/main/java/com/example/weatherapp/service/impl/WeatherServiceImpl.java`
+
+```java
+package com.example.weatherapp.service.impl;
+
+import com.example.weatherapp.client.OpenMeteoClient;
+import com.example.weatherapp.dto.WeatherDetailDto;
+import com.example.weatherapp.dto.api.OpenMeteoResponseDto;
+import com.example.weatherapp.entity.DailyForecast;
+import com.example.weatherapp.entity.Prefecture;
+import com.example.weatherapp.entity.WeatherRecord;
+import com.example.weatherapp.mapper.WeatherMapper;
+import com.example.weatherapp.repository.WeatherRecordRepository;
+import com.example.weatherapp.service.PrefectureService;
+import com.example.weatherapp.service.WeatherService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@Transactional
+@Slf4j
+public class WeatherServiceImpl implements WeatherService {
+    
+    private final OpenMeteoClient openMeteoClient;
+    private final WeatherRecordRepository weatherRecordRepository;
+    private final PrefectureService prefectureService;
+    private final WeatherMapper weatherMapper;
+    
+    public WeatherServiceImpl(
+        OpenMeteoClient openMeteoClient,
+        WeatherRecordRepository weatherRecordRepository,
+        PrefectureService prefectureService,
+        WeatherMapper weatherMapper
+    ) {
+        this.openMeteoClient = openMeteoClient;
+        this.weatherRecordRepository = weatherRecordRepository;
+        this.prefectureService = prefectureService;
+        this.weatherMapper = weatherMapper;
+    }
+    
+    @Override
+    public WeatherDetailDto getWeatherByPrefectureId(Long prefectureId) {
+        log.info(""天気情報取得開始: prefectureId={}"", prefectureId);
+        
+        Prefecture prefecture = prefectureService.findEntityById(prefectureId);
+        log.debug(""都道府県: {}"", prefecture.getName());
+        
+        OpenMeteoResponseDto apiResponse = openMeteoClient.fetchWeather(
+            prefecture.getLatitude(),
+            prefecture.getLongitude()
+        );
+        
+        WeatherRecord weatherRecord = buildWeatherRecord(apiResponse, prefecture);
+        List<DailyForecast> dailyForecasts = buildDailyForecasts(apiResponse, weatherRecord);
+        dailyForecasts.forEach(weatherRecord::addDailyForecast);
+        
+        WeatherRecord savedRecord = weatherRecordRepository.save(weatherRecord);
+        log.info(""天気情報保存完了: recordId={}"", savedRecord.getId());
+        
+        return weatherMapper.toDetailDto(savedRecord);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public WeatherDetailDto getLatestWeatherFromDb(Long prefectureId) {
+        return weatherRecordRepository
+            .findLatestWithForecasts(prefectureId)
+            .map(weatherMapper::toDetailDto)
+            .orElse(null);
+    }
+    
+    private WeatherRecord buildWeatherRecord(
+        OpenMeteoResponseDto apiResponse, 
+        Prefecture prefecture
+    ) {
+        var current = apiResponse.getCurrent();
+        
+        return WeatherRecord.builder()
+            .prefecture(prefecture)
+            .fetchedAt(LocalDateTime.now())
+            .temperature(current.getTemperature2m())
+            .weatherCode(current.getWeathercode())
+            .windSpeed(current.getWindspeed10m())
+            .humidity(current.getRelativehumidity2m())
+            .apparentTemperature(current.getApparentTemperature())
+            .precipitation(current.getPrecipitation())
+            .cloudCover(current.getCloudCover())
+            .build();
+    }
+    
+    private List<DailyForecast> buildDailyForecasts(
+        OpenMeteoResponseDto apiResponse,
+        WeatherRecord weatherRecord
+    ) {
+        List<DailyForecast> forecasts = new ArrayList<>();
+        var daily = apiResponse.getDaily();
+        
+        for (int i = 0; i < daily.getTime().size(); i++) {
+            DailyForecast forecast = DailyForecast.builder()
+                .weatherRecord(weatherRecord)
+                .forecastDate(LocalDate.parse(daily.getTime().get(i)))
+                .temperatureMax(daily.getTemperature2mMax().get(i))
+                .temperatureMin(daily.getTemperature2mMin().get(i))
+                .weatherCode(daily.getWeathercode().get(i))
+                .precipitationSum(daily.getPrecipitationSum().get(i))
+                .windSpeedMax(getOrNull(daily.getWindspeed10mMax(), i))
+                .sunrise(parseTime(daily.getSunrise(), i))
+                .sunset(parseTime(daily.getSunset(), i))
+                .build();
+            
+            forecasts.add(forecast);
+        }
+        
+        return forecasts;
+    }
+    
+    private <T> T getOrNull(List<T> list, int index) {
+        if (list == null || index >= list.size()) {
+            return null;
+        }
+        return list.get(index);
+    }
+    
+    private LocalTime parseTime(List<String> timeList, int index) {
+        String timeStr = getOrNull(timeList, index);
+        if (timeStr == null) {
+            return null;
+        }
+        
+        try {
+            LocalDateTime dateTime = LocalDateTime.parse(timeStr);
+            return dateTime.toLocalTime();
+        } catch (Exception e) {
+            log.warn(""時刻パース失敗: {}"", timeStr, e);
+            return null;
+        }
+    }
+}
+```
+
+---
+
+## 午後の作業（13:00-17:00）
+
+### 3. WeatherServiceImplのテスト作成（13:00-16:00）
+
+Day 20で `OpenMeteoClient` が完成しているので、`WeatherServiceImpl` もテストできます。
+外部API・DBには実際にアクセスせず、**Mockito** で依存クラスをモックにして、Serviceのロジックだけを確認します。
+
+`src/test/java/com/example/weatherapp/service/WeatherServiceImplTest.java`:
+
+```java
+package com.example.weatherapp.service;
+
+import com.example.weatherapp.client.OpenMeteoClient;
+import com.example.weatherapp.dto.WeatherDetailDto;
+import com.example.weatherapp.entity.WeatherRecord;
+import com.example.weatherapp.exception.ExternalApiException;
+import com.example.weatherapp.mapper.WeatherMapper;
+import com.example.weatherapp.repository.WeatherRecordRepository;
+import com.example.weatherapp.service.impl.WeatherServiceImpl;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class WeatherServiceImplTest {
+
+    @Mock
+    private OpenMeteoClient openMeteoClient;
+    @Mock
+    private WeatherRecordRepository weatherRecordRepository;
+    @Mock
+    private PrefectureService prefectureService;
+    @Mock
+    private WeatherMapper weatherMapper;
+
+    @InjectMocks
+    private WeatherServiceImpl weatherService;
+
+    @Test
+    @DisplayName(""DBに保存済みの最新データがあればDTOに変換して返す"")
+    void getLatestWeatherFromDb_found() {
+        // Given
+        WeatherRecord record = new WeatherRecord();
+        WeatherDetailDto dto = WeatherDetailDto.builder().build();
+        when(weatherRecordRepository.findLatestWithForecasts(13L))
+            .thenReturn(Optional.of(record));
+        when(weatherMapper.toDetailDto(record)).thenReturn(dto);
+
+        // When
+        WeatherDetailDto result = weatherService.getLatestWeatherFromDb(13L);
+
+        // Then
+        assertThat(result).isSameAs(dto);
+    }
+
+    @Test
+    @DisplayName(""DBにデータがなければnullを返す"")
+    void getLatestWeatherFromDb_notFound() {
+        // Given
+        when(weatherRecordRepository.findLatestWithForecasts(13L))
+            .thenReturn(Optional.empty());
+
+        // When & Then
+        assertThat(weatherService.getLatestWeatherFromDb(13L)).isNull();
+    }
+
+    @Test
+    @DisplayName(""外部APIが失敗したら例外が伝わり、DBには保存されない"")
+    void getWeatherByPrefectureId_apiError() {
+        // Given: 都道府県の取得は成功し、API呼び出しだけ失敗する
+        com.example.weatherapp.entity.Prefecture tokyo = new com.example.weatherapp.entity.Prefecture();
+        tokyo.setLatitude(35.689);
+        tokyo.setLongitude(139.692);
+        when(prefectureService.findEntityById(13L)).thenReturn(tokyo);
+        when(openMeteoClient.fetchWeather(35.689, 139.692))
+            .thenThrow(new ExternalApiException(""天気情報の取得に失敗しました""));
+
+        // When & Then
+        assertThatThrownBy(() -> weatherService.getWeatherByPrefectureId(13L))
+            .isInstanceOf(ExternalApiException.class);
+        verify(weatherRecordRepository, never()).save(any());
+    }
+}
+```
+
+> 💡 **ポイント**: `@Mock` で本物の代わりになるニセモノを作り、`@InjectMocks` で `WeatherServiceImpl` のコンストラクタに自動で渡します。
+> API正常系（レスポンスを組み立てて保存まで確認するテスト）は、余力があれば挑戦してみましょう。
+
+**実行:**
+
+```bash
+./gradlew test --tests WeatherServiceImplTest
+```
+
+---
+
+## ✅ チェックリスト
+
+- [ ] WeatherServiceインターフェース作成
+- [ ] WeatherServiceImpl実装
+- [ ] WeatherServiceImplのテスト作成・実行
+- [ ] GitHubにプッシュ
+
+---
+
+## 📚 参考リンク
+
+- [Spring @Transactional（日本語）](https://qiita.com/NagaokaKenichi/items/c3371ce8dea0a1f8fa5b)
+
+---
+
+## 🎉 完了後
+
 次は [Day 22](day-22.md) へ
 
 お疲れさまでした！
 ","training,day-21",40日間研修
 Day 22: Controller層実装（Home）,"# Day 22: Controller層実装（Home）
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 5 - Day 22
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 HomeControllerを実装し、トップページで47都道府県の一覧を表示する
@@ -11142,8 +11406,11 @@ void setUp() {
 ","training,day-22",40日間研修
 Day 23: Controller層実装（Weather）,"# Day 23: Controller層実装（Weather）
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 5 - Day 23
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 WeatherControllerを実装し、都道府県ごとの天気詳細ページを表示する
@@ -11752,8 +12019,11 @@ catch (ResourceNotFoundException e) {  // 正確な型を指定
 ","training,day-23",40日間研修
 Day 24: 例外ハンドリング統一化,"# Day 24: 例外ハンドリング統一化
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 5 - Day 24
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 @ControllerAdviceを使った統一的な例外ハンドリングを実装し、すべてのControllerで共通のエラー処理を行う
@@ -12542,8 +12812,11 @@ return ""error/404"";  // templates/error/404.html
 ","training,day-24",40日間研修
 Day 25: バックエンド統合テスト,"# Day 25: バックエンド統合テスト
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 5 - Day 25
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 @SpringBootTestを使った統合テストを作成し、バックエンド全体の動作を確認する
@@ -13327,8 +13600,11 @@ src/test/resources/
 ","training,day-25",40日間研修
 Day 26: Thymeleafテンプレート基礎,"# Day 26: Thymeleafテンプレート基礎
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 6 - Day 26
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 Thymeleafテンプレートエンジンの基本文法を習得し、動的なHTMLページを作成できるようになる
@@ -14127,8 +14403,11 @@ model.addAttribute(""variable"", value);
 ","training,day-26",40日間研修
 Day 27: トップページ実装（index.html）,"# Day 27: トップページ実装（index.html）
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 6 - Day 27
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 47都道府県を表示するトップページ（index.html）を実装し、地域別グループ化と検索機能を追加する
@@ -14818,8 +15097,11 @@ function filterPrefectures() { ... }
 ","training,day-27",40日間研修
 Day 28: 天気詳細ページ実装（weather-detail.html）,"# Day 28: 天気詳細ページ実装（weather-detail.html）
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 6 - Day 28
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 都道府県ごとの天気詳細ページを実装し、現在の天気と7日間の予報を表示する
@@ -15675,8 +15957,11 @@ git push origin feature/day-28
 ","training,day-28",40日間研修
 Day 29: CSS基礎とスタイリング,"# Day 29: CSS基礎とスタイリング
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 6 - Day 29
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 CSSファイルを分離し、デザインシステムを構築してアプリ全体のスタイリングを統一する
@@ -16356,8 +16641,11 @@ git push origin feature/day-29
 ","training,day-29",40日間研修
 Day 30: レスポンシブデザイン対応,"# Day 30: レスポンシブデザイン対応
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 6 - Day 30
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 メディアクエリを使ってモバイル、タブレット、PCに対応したレスポンシブデザインを実装する
@@ -17090,8 +17378,11 @@ git push origin feature/day-30
 ","training,day-30",40日間研修
 Day 31: ローディング機能実装,"# Day 31: ローディング機能実装
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 7 - Day 31
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 APIデータ取得中のローディング表示を実装し、ユーザー体験を向上させる
@@ -17863,8 +18154,11 @@ window.addEventListener('load', function() {
 ","training,day-31",40日間研修
 Day 32: 天気アイコン表示,"# Day 32: 天気アイコン表示
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 7 - Day 32
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 天気コードに対応したアイコンを動的に表示し、視覚的にわかりやすいUIを実現する
@@ -18359,8 +18653,11 @@ git push origin feature/day-32
 ","training,day-32",40日間研修
 Day 33: お気に入り機能実装,"# Day 33: お気に入り機能実装
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 7 - Day 33
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 LocalStorageを使ってお気に入り都道府県を保存し、素早くアクセスできる機能を実装する
@@ -19059,8 +19356,11 @@ favoritesManager.addListener(renderFavorites);
 ","training,day-33",40日間研修
 Day 34: エラーページの作成,"# Day 34: エラーページの作成
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 7 - Day 34
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 ユーザーフレンドリーなエラーページを作成し、エラー発生時の体験を向上させる
@@ -19988,8 +20288,11 @@ git push origin feature/day-34
 ","training,day-34",40日間研修
 Day 35: アクセシビリティ対応,"# Day 35: アクセシビリティ対応
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 7 - Day 35
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 WCAG 2.1準拠のアクセシビリティ対応を実装し、すべてのユーザーが使いやすいアプリを実現する
@@ -20600,8 +20903,11 @@ git push origin feature/day-35
 ","training,day-35",40日間研修
 Day 36: テスト・品質保証,"# Day 36: テスト・品質保証
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 8 - Day 36
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 包括的なテスト戦略を実装し、アプリケーションの品質を保証する
@@ -21234,8 +21540,11 @@ git push origin feature/day-36
 ","training,day-36",40日間研修
 Day 37: ドキュメント作成,"# Day 37: ドキュメント作成
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 8 - Day 37
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 プロジェクトの包括的なドキュメントを作成し、保守性と引き継ぎ性を高める
@@ -21268,7 +21577,7 @@ Day 37: ドキュメント作成,"# Day 37: ドキュメント作成
 
 ### バックエンド
 - Java 17
-- Spring Boot 3.2.0
+- Spring Boot 3.5.x
 - Spring Data JPA
 - MySQL 8.0
 - Gradle
@@ -21784,7 +22093,7 @@ mysql -u root -p weather_app < backup_20240105.sql
 
 ### 技術スタック
 - Java 17
-- Spring Boot 3.2.0
+- Spring Boot 3.5.x
 - MySQL 8.0
 - Thymeleaf
 - Open-Meteo API
@@ -21876,8 +22185,11 @@ git push origin feature/day-37
 ","training,day-37",40日間研修
 Day 38: パフォーマンス最適化,"# Day 38: パフォーマンス最適化
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 8 - Day 38
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 アプリケーションのパフォーマンスを測定し、最適化を実施してユーザー体験を向上させる
@@ -22357,8 +22669,11 @@ git push origin feature/day-38
 ","training,day-38",40日間研修
 Day 39: 最終レビュー・総合テスト,"# Day 39: 最終レビュー・総合テスト
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 8 - Day 39
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 プロジェクト全体をレビューし、本番デプロイに向けた最終確認を行う
@@ -22971,8 +23286,11 @@ git push origin main
 ","training,day-39",40日間研修
 Day 40: 成果発表準備・プロジェクト完成 🎉,"# Day 40: 成果発表準備・プロジェクト完成 🎉
 
-## 📅 所要時間
-8時間（午前4時間 + 午後4時間）
+## 📅 実施日
+- 予定: Week 8 - Day 40
+- 実施日: YYYY/MM/DD
+- 予定時間: 8h (午前4h + 午後4h)
+- 実績時間: ____h
 
 ## 🎯 目標
 40日間の成果をまとめ、プレゼンテーションを準備し、プロジェクトを完成させる
@@ -23026,7 +23344,7 @@ Day 40: 成果発表準備・プロジェクト完成 🎉,"# Day 40: 成果発�
 
 ### バックエンド
 - Java 17
-- Spring Boot 3.2.0
+- Spring Boot 3.5.x
 - Spring Data JPA
 - MySQL 8.0
 

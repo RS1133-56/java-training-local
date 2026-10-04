@@ -580,6 +580,52 @@ public interface DailyForecastRepository extends JpaRepository<DailyForecast, Lo
 
 ### 5. Repositoryの動作確認テスト（13:30-15:30）
 
+#### 5-0. テスト用データベース（H2）の準備
+
+> ⚠️ **ここを飛ばすと `./gradlew test` が失敗します。** 先に必ず設定してください。
+
+`@DataJpaTest` は、**本物のMySQLではなく、メモリ上のテスト用DB（H2）** に自動で差し替えて動きます。
+そのため、次の3つが必要です。
+
+**① `build.gradle` にH2を追加**（`dependencies { ... }` の中）:
+
+```groovy
+testRuntimeOnly 'com.h2database:h2'
+```
+
+追加したらGradleを再読み込み（IntelliJ右側のGradleタブの🔄ボタン）します。
+
+**② テスト専用の設定ファイルを作成**: `src/test/resources/application.properties`
+
+```properties
+# テスト用DB（メモリ上のH2。MySQL互換モード）
+spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# テーブルはEntityの定義から自動作成し、テスト終了後に破棄する
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
+
+# 本番用のschema.sql / data.sql はテストでは実行しない
+spring.sql.init.mode=never
+```
+
+**③ このファイルが `src/main/resources/application.properties`（本番用・MySQL・`ddl-auto=validate`）より優先される** ことを理解しておきます。
+テストでは `src/test/resources` 側の設定が使われます。
+
+**よくあるエラーと原因:**
+
+| エラーメッセージ | 原因 | 対処 |
+|---|---|---|
+| `Failed to replace DataSource with an embedded database` | H2が依存関係にない | ① を実施 |
+| `wrong column type encountered in column [latitude]` | DBの型とEntityの型が不一致（DECIMAL ⇔ Double など） | Day 11のDDLとDay 16のEntityで `DOUBLE` ⇔ `Double` に揃える |
+| `Schema-validation: missing table` | テストでも `ddl-auto=validate` になっている | ② の `create-drop` を確認 |
+| MySQLに接続しようとして失敗する | `src/test/resources/application.properties` がない・場所が違う | ② のパスとファイル名を確認 |
+
+#### 5-1. テストクラスの作成
+
 **統合テスト作成:** `src/test/java/com/example/weatherapp/repository/PrefectureRepositoryTest.java`
 
 ```java
@@ -616,7 +662,7 @@ class PrefectureRepositoryTest {
         List<Prefecture> prefectures = prefectureRepository.findAll();
         
         // Then
-        assertThat(prefectures).hasSize(47);
+        assertThat(prefectures).hasSize(11);  // test-data.sql に入れた11件
     }
     
     @Test
@@ -686,7 +732,7 @@ class PrefectureRepositoryTest {
         );
         
         // Then
-        assertThat(result).hasSize(14);  // 関東7 + 関西7
+        assertThat(result).hasSize(9);  // 関東7 + 関西2（京都・大阪）
     }
     
     @Test
@@ -696,9 +742,8 @@ class PrefectureRepositoryTest {
         List<String> regions = prefectureRepository.findAllRegions();
         
         // Then
-        assertThat(regions).containsExactly(
-            "北海道", "東北", "関東", "中部", "関西", "中国", "四国", "九州", "沖縄"
-        );
+        // test-data.sql には4地域分のデータだけが入っている
+        assertThat(regions).containsExactly("北海道", "関東", "関西", "沖縄");
     }
     
     @Test
@@ -777,18 +822,22 @@ DELETE FROM weather_records;
 DELETE FROM prefectures;
 
 -- 主要な都道府県のみ投入
-INSERT INTO prefectures (id, name, name_en, latitude, longitude, region) VALUES
-(1, '北海道', 'Hokkaido', 43.064, 141.347, '北海道'),
-(8, '茨城県', 'Ibaraki', 36.341, 140.447, '関東'),
-(9, '栃木県', 'Tochigi', 36.566, 139.883, '関東'),
-(10, '群馬県', 'Gunma', 36.391, 139.061, '関東'),
-(11, '埼玉県', 'Saitama', 35.857, 139.649, '関東'),
-(12, '千葉県', 'Chiba', 35.605, 140.123, '関東'),
-(13, '東京都', 'Tokyo', 35.689, 139.692, '関東'),
-(14, '神奈川県', 'Kanagawa', 35.448, 139.643, '関東'),
-(26, '京都府', 'Kyoto', 35.021, 135.756, '関西'),
-(27, '大阪府', 'Osaka', 34.686, 135.520, '関西'),
-(47, '沖縄県', 'Okinawa', 26.212, 127.681, '沖縄');
+-- created_at / updated_at はNOT NULLのため必ず値を入れる
+INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
+(1, '北海道', 'Hokkaido', 43.064, 141.347, '北海道', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(8, '茨城県', 'Ibaraki', 36.341, 140.447, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(9, '栃木県', 'Tochigi', 36.566, 139.883, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(10, '群馬県', 'Gunma', 36.391, 139.061, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(11, '埼玉県', 'Saitama', 35.857, 139.649, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(12, '千葉県', 'Chiba', 35.605, 140.123, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(13, '東京都', 'Tokyo', 35.689, 139.692, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(14, '神奈川県', 'Kanagawa', 35.448, 139.643, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(26, '京都府', 'Kyoto', 35.021, 135.756, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(27, '大阪府', 'Osaka', 34.686, 135.520, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(47, '沖縄県', 'Okinawa', 26.212, 127.681, '沖縄', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 新規保存（testSave）で採番されるIDが、上で入れたIDとぶつからないようにする
+ALTER TABLE prefectures ALTER COLUMN id RESTART WITH 100;
 ```
 
 **テスト実行:**

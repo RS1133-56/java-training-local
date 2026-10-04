@@ -1,4 +1,4 @@
-# Day 21: 外部API連携（OpenMeteoClient）
+# Day 21: Service層実装（Weather）
 
 ## 📅 実施日
 - 予定: Week 5 - Day 21
@@ -6,161 +6,205 @@
 - 予定時間: 8h (午前4h + 午後4h)
 - 実績時間: ____h
 
+## 📅 所要時間
+8時間
+
 ## 🎯 目標
-RestTemplateを使ってOpen-Meteo APIと連携するClientクラスを実装する
+WeatherServiceを実装し、外部API連携（Day 20で作成したOpenMeteoClient）とデータベース保存のビジネスロジックを完成させる
+
+> 📝 **前提**: Day 20で `OpenMeteoClient` と `ExternalApiException` を作成済みであること。
 
 ---
 
 ## 📋 午前の作業（9:00-13:00）
 
-### 1. RestTemplateの基礎理解（9:00-10:00）
+### 1. WeatherServiceの設計（9:00-9:30）
 
-**RestTemplateとは:**
-- SpringのHTTPクライアント
-- 外部APIを簡単に呼び出せる
-- 同期的な通信（レスポンスを待つ）
+**WeatherServiceの責務:**
+1. Open-Meteo APIから天気データ取得
+2. APIレスポンスをEntityに変換
+3. データベースに保存（WeatherRecord + DailyForecast）
+4. EntityをDTOに変換して返却
 
-**基本的な使い方:**
-
-```java
-RestTemplate restTemplate = new RestTemplate();
-
-// GETリクエスト
-String result = restTemplate.getForObject(
-    "https://api.example.com/data", 
-    String.class
-);
-
-// POSTリクエスト
-MyResponse response = restTemplate.postForObject(
-    "https://api.example.com/create",
-    requestBody,
-    MyResponse.class
-);
+**処理フロー:**
+```
+Controller → WeatherService
+                ↓
+            OpenMeteoClient (API呼び出し)
+                ↓
+            APIレスポンス受信
+                ↓
+            Entity変換
+                ↓
+            Repository保存
+                ↓
+            DTO変換
+                ↓
+            Controller ← DTO返却
 ```
 
 ---
 
-### 2. RestTemplateの設定（10:00-11:00）
+### 2. WeatherService実装（9:30-12:00）
 
-**設定クラス作成:** `src/main/java/com/example/weatherapp/config/RestTemplateConfig.java`
+**インターフェース:** `src/main/java/com/example/weatherapp/service/WeatherService.java`
 
 ```java
-package com.example.weatherapp.config;
+package com.example.weatherapp.service;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.BufferingClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
+import com.example.weatherapp.dto.WeatherDetailDto;
 
-import java.time.Duration;
-
-@Configuration
-public class RestTemplateConfig {
+public interface WeatherService {
     
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder
-            .setConnectTimeout(Duration.ofSeconds(5))
-            .setReadTimeout(Duration.ofSeconds(10))
-            .requestFactory(() -> new BufferingClientHttpRequestFactory(
-                new SimpleClientHttpRequestFactory()
-            ))
-            .build();
-    }
+    WeatherDetailDto getWeatherByPrefectureId(Long prefectureId);
+    
+    WeatherDetailDto getLatestWeatherFromDb(Long prefectureId);
 }
 ```
 
-**ポイント:**
-- **setConnectTimeout**: 接続確立の制限時間（5秒）
-- **setReadTimeout**: レスポンス待機の制限時間（10秒）
-- **BufferingClientHttpRequestFactory**: レスポンスの複数回読み取りを可能に
-
----
-
-### 3. OpenMeteoClient実装（11:00-12:00）
-
-**Clientクラス作成:** `src/main/java/com/example/weatherapp/client/OpenMeteoClient.java`
+**実装クラス:** `src/main/java/com/example/weatherapp/service/impl/WeatherServiceImpl.java`
 
 ```java
-package com.example.weatherapp.client;
+package com.example.weatherapp.service.impl;
 
+import com.example.weatherapp.client.OpenMeteoClient;
+import com.example.weatherapp.dto.WeatherDetailDto;
 import com.example.weatherapp.dto.api.OpenMeteoResponseDto;
-import com.example.weatherapp.exception.ExternalApiException;
+import com.example.weatherapp.entity.DailyForecast;
+import com.example.weatherapp.entity.Prefecture;
+import com.example.weatherapp.entity.WeatherRecord;
+import com.example.weatherapp.mapper.WeatherMapper;
+import com.example.weatherapp.repository.WeatherRecordRepository;
+import com.example.weatherapp.service.PrefectureService;
+import com.example.weatherapp.service.WeatherService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@Transactional
 @Slf4j
-public class OpenMeteoClient {
+public class WeatherServiceImpl implements WeatherService {
     
-    private static final String API_BASE_URL = "https://api.open-meteo.com/v1/forecast";
+    private final OpenMeteoClient openMeteoClient;
+    private final WeatherRecordRepository weatherRecordRepository;
+    private final PrefectureService prefectureService;
+    private final WeatherMapper weatherMapper;
     
-    private final RestTemplate restTemplate;
-    
-    public OpenMeteoClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public WeatherServiceImpl(
+        OpenMeteoClient openMeteoClient,
+        WeatherRecordRepository weatherRecordRepository,
+        PrefectureService prefectureService,
+        WeatherMapper weatherMapper
+    ) {
+        this.openMeteoClient = openMeteoClient;
+        this.weatherRecordRepository = weatherRecordRepository;
+        this.prefectureService = prefectureService;
+        this.weatherMapper = weatherMapper;
     }
     
-    public OpenMeteoResponseDto fetchWeather(Double latitude, Double longitude) {
-        String url = buildUrl(latitude, longitude);
+    @Override
+    public WeatherDetailDto getWeatherByPrefectureId(Long prefectureId) {
+        log.info("天気情報取得開始: prefectureId={}", prefectureId);
         
-        log.info("Open-Meteo API呼び出し: lat={}, lon={}", latitude, longitude);
-        log.debug("URL: {}", url);
+        Prefecture prefecture = prefectureService.findEntityById(prefectureId);
+        log.debug("都道府県: {}", prefecture.getName());
+        
+        OpenMeteoResponseDto apiResponse = openMeteoClient.fetchWeather(
+            prefecture.getLatitude(),
+            prefecture.getLongitude()
+        );
+        
+        WeatherRecord weatherRecord = buildWeatherRecord(apiResponse, prefecture);
+        List<DailyForecast> dailyForecasts = buildDailyForecasts(apiResponse, weatherRecord);
+        dailyForecasts.forEach(weatherRecord::addDailyForecast);
+        
+        WeatherRecord savedRecord = weatherRecordRepository.save(weatherRecord);
+        log.info("天気情報保存完了: recordId={}", savedRecord.getId());
+        
+        return weatherMapper.toDetailDto(savedRecord);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public WeatherDetailDto getLatestWeatherFromDb(Long prefectureId) {
+        return weatherRecordRepository
+            .findLatestWithForecasts(prefectureId)
+            .map(weatherMapper::toDetailDto)
+            .orElse(null);
+    }
+    
+    private WeatherRecord buildWeatherRecord(
+        OpenMeteoResponseDto apiResponse, 
+        Prefecture prefecture
+    ) {
+        var current = apiResponse.getCurrent();
+        
+        return WeatherRecord.builder()
+            .prefecture(prefecture)
+            .fetchedAt(LocalDateTime.now())
+            .temperature(current.getTemperature2m())
+            .weatherCode(current.getWeathercode())
+            .windSpeed(current.getWindspeed10m())
+            .humidity(current.getRelativehumidity2m())
+            .apparentTemperature(current.getApparentTemperature())
+            .precipitation(current.getPrecipitation())
+            .cloudCover(current.getCloudCover())
+            .build();
+    }
+    
+    private List<DailyForecast> buildDailyForecasts(
+        OpenMeteoResponseDto apiResponse,
+        WeatherRecord weatherRecord
+    ) {
+        List<DailyForecast> forecasts = new ArrayList<>();
+        var daily = apiResponse.getDaily();
+        
+        for (int i = 0; i < daily.getTime().size(); i++) {
+            DailyForecast forecast = DailyForecast.builder()
+                .weatherRecord(weatherRecord)
+                .forecastDate(LocalDate.parse(daily.getTime().get(i)))
+                .temperatureMax(daily.getTemperature2mMax().get(i))
+                .temperatureMin(daily.getTemperature2mMin().get(i))
+                .weatherCode(daily.getWeathercode().get(i))
+                .precipitationSum(daily.getPrecipitationSum().get(i))
+                .windSpeedMax(getOrNull(daily.getWindspeed10mMax(), i))
+                .sunrise(parseTime(daily.getSunrise(), i))
+                .sunset(parseTime(daily.getSunset(), i))
+                .build();
+            
+            forecasts.add(forecast);
+        }
+        
+        return forecasts;
+    }
+    
+    private <T> T getOrNull(List<T> list, int index) {
+        if (list == null || index >= list.size()) {
+            return null;
+        }
+        return list.get(index);
+    }
+    
+    private LocalTime parseTime(List<String> timeList, int index) {
+        String timeStr = getOrNull(timeList, index);
+        if (timeStr == null) {
+            return null;
+        }
         
         try {
-            OpenMeteoResponseDto response = restTemplate.getForObject(
-                url, 
-                OpenMeteoResponseDto.class
-            );
-            
-            if (response == null) {
-                throw new ExternalApiException("APIレスポンスがnullです");
-            }
-            
-            log.info("API呼び出し成功");
-            return response;
-            
-        } catch (ResourceAccessException e) {
-            log.error("APIタイムアウト: {}", e.getMessage());
-            throw new ExternalApiException("天気APIへの接続がタイムアウトしました", e);
-            
-        } catch (HttpClientErrorException e) {
-            log.error("APIクライアントエラー: status={}", e.getStatusCode());
-            throw new ExternalApiException("天気APIエラー: " + e.getStatusCode(), e);
-            
-        } catch (HttpServerErrorException e) {
-            log.error("APIサーバーエラー: status={}", e.getStatusCode());
-            throw new ExternalApiException("天気APIサーバーエラー", e);
-            
+            LocalDateTime dateTime = LocalDateTime.parse(timeStr);
+            return dateTime.toLocalTime();
         } catch (Exception e) {
-            log.error("API呼び出し失敗", e);
-            throw new ExternalApiException("天気情報の取得に失敗しました", e);
+            log.warn("時刻パース失敗: {}", timeStr, e);
+            return null;
         }
-    }
-    
-    private String buildUrl(Double latitude, Double longitude) {
-        return UriComponentsBuilder.fromHttpUrl(API_BASE_URL)
-            .queryParam("latitude", latitude)
-            .queryParam("longitude", longitude)
-            .queryParam("current", 
-                "temperature_2m,weathercode,windspeed_10m,relativehumidity_2m," +
-                "apparent_temperature,precipitation,cloud_cover"
-            )
-            .queryParam("daily",
-                "temperature_2m_max,temperature_2m_min,weathercode," +
-                "precipitation_sum,windspeed_10m_max,sunrise,sunset"
-            )
-            .queryParam("timezone", "Asia/Tokyo")
-            .queryParam("forecast_days", 7)
-            .toUriString();
     }
 }
 ```
@@ -169,95 +213,124 @@ public class OpenMeteoClient {
 
 ## 午後の作業（13:00-17:00）
 
-### 4. テスト作成（13:00-16:00）
+### 3. WeatherServiceImplのテスト作成（13:00-16:00）
 
-`src/test/java/com/example/weatherapp/client/OpenMeteoClientTest.java`:
+Day 20で `OpenMeteoClient` が完成しているので、`WeatherServiceImpl` もテストできます。
+外部API・DBには実際にアクセスせず、**Mockito** で依存クラスをモックにして、Serviceのロジックだけを確認します。
+
+`src/test/java/com/example/weatherapp/service/WeatherServiceImplTest.java`:
 
 ```java
-package com.example.weatherapp.client;
+package com.example.weatherapp.service;
 
-import com.example.weatherapp.dto.api.OpenMeteoResponseDto;
+import com.example.weatherapp.client.OpenMeteoClient;
+import com.example.weatherapp.dto.WeatherDetailDto;
+import com.example.weatherapp.entity.WeatherRecord;
 import com.example.weatherapp.exception.ExternalApiException;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.weatherapp.mapper.WeatherMapper;
+import com.example.weatherapp.repository.WeatherRecordRepository;
+import com.example.weatherapp.service.impl.WeatherServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.RestTemplate;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
+import java.util.Optional;
 
-class OpenMeteoClientTest {
-    
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class WeatherServiceImplTest {
+
+    @Mock
     private OpenMeteoClient openMeteoClient;
-    private MockRestServiceServer mockServer;
-    
-    @BeforeEach
-    void setUp() {
-        RestTemplate restTemplate = new RestTemplate();
-        openMeteoClient = new OpenMeteoClient(restTemplate);
-        mockServer = MockRestServiceServer.createServer(restTemplate);
-    }
-    
+    @Mock
+    private WeatherRecordRepository weatherRecordRepository;
+    @Mock
+    private PrefectureService prefectureService;
+    @Mock
+    private WeatherMapper weatherMapper;
+
+    @InjectMocks
+    private WeatherServiceImpl weatherService;
+
     @Test
-    @DisplayName("API呼び出しが成功する")
-    void testFetchWeather_Success() {
-        String jsonResponse = "{\"latitude\":35.689,\"longitude\":139.692}";
-        
-        mockServer.expect(requestTo(containsString("api.open-meteo.com")))
-            .andExpect(method(HttpMethod.GET))
-            .andExpect(queryParam("latitude", "35.689"))
-            .andExpect(queryParam("longitude", "139.692"))
-            .andRespond(withSuccess(jsonResponse, MediaType.APPLICATION_JSON));
-        
-        OpenMeteoResponseDto result = openMeteoClient.fetchWeather(35.689, 139.692);
-        
-        assertThat(result).isNotNull();
-        mockServer.verify();
+    @DisplayName("DBに保存済みの最新データがあればDTOに変換して返す")
+    void getLatestWeatherFromDb_found() {
+        // Given
+        WeatherRecord record = new WeatherRecord();
+        WeatherDetailDto dto = WeatherDetailDto.builder().build();
+        when(weatherRecordRepository.findLatestWithForecasts(13L))
+            .thenReturn(Optional.of(record));
+        when(weatherMapper.toDetailDto(record)).thenReturn(dto);
+
+        // When
+        WeatherDetailDto result = weatherService.getLatestWeatherFromDb(13L);
+
+        // Then
+        assertThat(result).isSameAs(dto);
     }
-    
+
     @Test
-    @DisplayName("タイムアウトエラー")
-    void testFetchWeather_Timeout() {
-        mockServer.expect(requestTo(containsString("api.open-meteo.com")))
-            .andRespond(withServerError());
-        
-        assertThatThrownBy(() -> openMeteoClient.fetchWeather(35.689, 139.692))
+    @DisplayName("DBにデータがなければnullを返す")
+    void getLatestWeatherFromDb_notFound() {
+        // Given
+        when(weatherRecordRepository.findLatestWithForecasts(13L))
+            .thenReturn(Optional.empty());
+
+        // When & Then
+        assertThat(weatherService.getLatestWeatherFromDb(13L)).isNull();
+    }
+
+    @Test
+    @DisplayName("外部APIが失敗したら例外が伝わり、DBには保存されない")
+    void getWeatherByPrefectureId_apiError() {
+        // Given: 都道府県の取得は成功し、API呼び出しだけ失敗する
+        com.example.weatherapp.entity.Prefecture tokyo = new com.example.weatherapp.entity.Prefecture();
+        tokyo.setLatitude(35.689);
+        tokyo.setLongitude(139.692);
+        when(prefectureService.findEntityById(13L)).thenReturn(tokyo);
+        when(openMeteoClient.fetchWeather(35.689, 139.692))
+            .thenThrow(new ExternalApiException("天気情報の取得に失敗しました"));
+
+        // When & Then
+        assertThatThrownBy(() -> weatherService.getWeatherByPrefectureId(13L))
             .isInstanceOf(ExternalApiException.class);
-        
-        mockServer.verify();
+        verify(weatherRecordRepository, never()).save(any());
     }
 }
+```
+
+> 💡 **ポイント**: `@Mock` で本物の代わりになるニセモノを作り、`@InjectMocks` で `WeatherServiceImpl` のコンストラクタに自動で渡します。
+> API正常系（レスポンスを組み立てて保存まで確認するテスト）は、余力があれば挑戦してみましょう。
+
+**実行:**
+
+```bash
+./gradlew test --tests WeatherServiceImplTest
 ```
 
 ---
 
 ## ✅ チェックリスト
 
-- [ ] RestTemplateConfig作成
-- [ ] OpenMeteoClient実装
-- [ ] ExternalApiException作成
-- [ ] テスト作成・実行
-- [ ] GitHubプッシュ
-
-**Gitコミット:**
-```bash
-git add .
-git commit -m "feat(client): OpenMeteoClient実装"
-git push origin feature/day-21
-```
+- [ ] WeatherServiceインターフェース作成
+- [ ] WeatherServiceImpl実装
+- [ ] WeatherServiceImplのテスト作成・実行
+- [ ] GitHubにプッシュ
 
 ---
 
 ## 📚 参考リンク
 
-- [RestTemplate公式ドキュメント](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html)
-- [RestTemplate使い方（日本語）](https://qiita.com/tag1216/items/437232338c0f7c4fcd57)
-- [MockRestServiceServer（日本語）](https://qiita.com/rubytomato@github/items/5f0f7e70a0b63380f7db)
-- [Open-Meteo API](https://open-meteo.com/en/docs)
+- [Spring @Transactional（日本語）](https://qiita.com/NagaokaKenichi/items/c3371ce8dea0a1f8fa5b)
 
 ---
 
