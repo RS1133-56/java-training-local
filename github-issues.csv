@@ -8691,7 +8691,7 @@ class PrefectureRepositoryTest {
         List<Prefecture> prefectures = prefectureRepository.findAll();
         
         // Then
-        assertThat(prefectures).hasSize(11);  // test-data.sql に入れた11件
+        assertThat(prefectures).hasSize(47);
     }
     
     @Test
@@ -8761,7 +8761,7 @@ class PrefectureRepositoryTest {
         );
         
         // Then
-        assertThat(result).hasSize(9);  // 関東7 + 関西2（京都・大阪）
+        assertThat(result).hasSize(14);  // 関東7 + 関西7
     }
     
     @Test
@@ -8771,8 +8771,9 @@ class PrefectureRepositoryTest {
         List<String> regions = prefectureRepository.findAllRegions();
         
         // Then
-        // test-data.sql には4地域分のデータだけが入っている
-        assertThat(regions).containsExactly(""北海道"", ""関東"", ""関西"", ""沖縄"");
+        assertThat(regions).containsExactly(
+            ""北海道"", ""東北"", ""関東"", ""中部"", ""関西"", ""中国"", ""四国"", ""九州"", ""沖縄""
+        );
     }
     
     @Test
@@ -8842,28 +8843,91 @@ class PrefectureRepositoryTest {
 }
 ```
 
-**テストデータ:** `src/test/resources/test-data.sql`
+**テストデータ（47都道府県）:** `src/test/resources/test-data.sql`
+
+> 💡 このファイルは、Day 19・Day 25のテストでも使い回します。ここで正しく作っておきましょう。
 
 ```sql
--- テスト用の最小限データ
+-- テスト用データ(47都道府県)
 DELETE FROM daily_forecasts;
 DELETE FROM weather_records;
 DELETE FROM prefectures;
 
--- 主要な都道府県のみ投入
 -- created_at / updated_at はNOT NULLのため必ず値を入れる
+
+-- 北海道
 INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
-(1, '北海道', 'Hokkaido', 43.064, 141.347, '北海道', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(8, '茨城県', 'Ibaraki', 36.341, 140.447, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(9, '栃木県', 'Tochigi', 36.566, 139.883, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(10, '群馬県', 'Gunma', 36.391, 139.061, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(11, '埼玉県', 'Saitama', 35.857, 139.649, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(12, '千葉県', 'Chiba', 35.605, 140.123, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(13, '東京都', 'Tokyo', 35.689, 139.692, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(14, '神奈川県', 'Kanagawa', 35.448, 139.643, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(26, '京都府', 'Kyoto', 35.021, 135.756, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(27, '大阪府', 'Osaka', 34.686, 135.520, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(47, '沖縄県', 'Okinawa', 26.212, 127.681, '沖縄', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+(1, '北海道', 'Hokkaido', 43.064167, 141.346944, '北海道', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 東北
+INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
+(2, '青森県', 'Aomori', 40.824444, 140.74, '東北', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(3, '岩手県', 'Iwate', 39.703611, 141.1525, '東北', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(4, '宮城県', 'Miyagi', 38.268889, 140.872222, '東北', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(5, '秋田県', 'Akita', 39.718611, 140.1025, '東北', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(6, '山形県', 'Yamagata', 38.240556, 140.363333, '東北', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(7, '福島県', 'Fukushima', 37.75, 140.467778, '東北', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 関東
+INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
+(8, '茨城県', 'Ibaraki', 36.341389, 140.446667, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(9, '栃木県', 'Tochigi', 36.565556, 139.883611, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(10, '群馬県', 'Gunma', 36.390833, 139.060556, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(11, '埼玉県', 'Saitama', 35.856944, 139.648889, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(12, '千葉県', 'Chiba', 35.605, 140.123333, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(13, '東京都', 'Tokyo', 35.689487, 139.691706, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(14, '神奈川県', 'Kanagawa', 35.447778, 139.6425, '関東', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 中部
+INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
+(15, '新潟県', 'Niigata', 37.902222, 139.023611, '中部', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(16, '富山県', 'Toyama', 36.695278, 137.211389, '中部', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(17, '石川県', 'Ishikawa', 36.594444, 136.625556, '中部', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(18, '福井県', 'Fukui', 36.065278, 136.221667, '中部', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(19, '山梨県', 'Yamanashi', 35.664167, 138.568333, '中部', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(20, '長野県', 'Nagano', 36.651389, 138.181111, '中部', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(21, '岐阜県', 'Gifu', 35.391111, 136.722222, '中部', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(22, '静岡県', 'Shizuoka', 34.976944, 138.383056, '中部', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(23, '愛知県', 'Aichi', 35.180278, 136.906389, '中部', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 関西
+INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
+(24, '三重県', 'Mie', 34.730278, 136.508611, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(25, '滋賀県', 'Shiga', 35.004444, 135.868333, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(26, '京都府', 'Kyoto', 35.021389, 135.755556, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(27, '大阪府', 'Osaka', 34.686389, 135.52, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(28, '兵庫県', 'Hyogo', 34.691389, 135.183056, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(29, '奈良県', 'Nara', 34.685278, 135.832778, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(30, '和歌山県', 'Wakayama', 34.225833, 135.1675, '関西', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 中国
+INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
+(31, '鳥取県', 'Tottori', 35.503889, 134.238056, '中国', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(32, '島根県', 'Shimane', 35.472222, 133.050556, '中国', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(33, '岡山県', 'Okayama', 34.661667, 133.934722, '中国', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(34, '広島県', 'Hiroshima', 34.396389, 132.459444, '中国', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(35, '山口県', 'Yamaguchi', 34.186111, 131.470556, '中国', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 四国
+INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
+(36, '徳島県', 'Tokushima', 34.065833, 134.559444, '四国', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(37, '香川県', 'Kagawa', 34.340278, 134.043333, '四国', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(38, '愛媛県', 'Ehime', 33.841667, 132.765556, '四国', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(39, '高知県', 'Kochi', 33.559722, 133.531111, '四国', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 九州
+INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
+(40, '福岡県', 'Fukuoka', 33.606389, 130.418056, '九州', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(41, '佐賀県', 'Saga', 33.249444, 130.299167, '九州', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(42, '長崎県', 'Nagasaki', 32.744722, 129.873611, '九州', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(43, '熊本県', 'Kumamoto', 32.789722, 130.741667, '九州', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(44, '大分県', 'Oita', 33.238056, 131.6125, '九州', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(45, '宮崎県', 'Miyazaki', 31.911111, 131.423889, '九州', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(46, '鹿児島県', 'Kagoshima', 31.560278, 130.558056, '九州', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 沖縄
+INSERT INTO prefectures (id, name, name_en, latitude, longitude, region, created_at, updated_at) VALUES
+(47, '沖縄県', 'Okinawa', 26.2125, 127.680833, '沖縄', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- 新規保存（testSave）で採番されるIDが、上で入れたIDとぶつからないようにする
 ALTER TABLE prefectures ALTER COLUMN id RESTART WITH 100;
@@ -13792,6 +13856,7 @@ class ApiTest {
 package com.example.weatherapp.integration;
 
 import com.example.weatherapp.dto.PrefectureDto;
+import com.example.weatherapp.exception.ResourceNotFoundException;
 import com.example.weatherapp.service.PrefectureService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13921,6 +13986,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -13965,12 +14031,12 @@ class WeatherServiceIntegrationTest {
         assertThat(result.getDailyForecasts()).hasSize(7);
         
         // DBに保存されているか確認
-        Optional<WeatherRecord> saved = weatherRecordRepository
-            .findFirstByPrefectureIdOrderByFetchedAtDesc(tokyoId);
+        List<WeatherRecord> saved = weatherRecordRepository
+            .findByPrefectureIdOrderByFetchedAtDesc(tokyoId);
         
-        assertThat(saved).isPresent();
-        assertThat(saved.get().getPrefecture().getId()).isEqualTo(tokyoId);
-        assertThat(saved.get().getDailyForecasts()).hasSize(7);
+        assertThat(saved).isNotEmpty();
+        assertThat(saved.get(0).getPrefecture().getId()).isEqualTo(tokyoId);
+        assertThat(saved.get(0).getDailyForecasts()).hasSize(7);
     }
     
     @Test
@@ -14077,6 +14143,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -14121,85 +14188,19 @@ class WeatherControllerIntegrationTest {
 
 ### 4. テストデータ準備（15:00-16:00）
 
-`src/test/resources/test-data.sql`:
+`src/test/resources/test-data.sql` は、**Day 17で作成したものをそのまま使います**（47都道府県が入っています）。
 
-```sql
--- 都道府県テストデータ
+次の内容になっているか確認しましょう。
 
--- 北海道
-INSERT INTO prefecture (id, name, name_en, latitude, longitude, region) VALUES 
-(1, '北海道', 'Hokkaido', 43.064167, 141.346944, '北海道');
+| 確認項目 | 期待値 |
+|---|---|
+| `prefectures` テーブルの件数 | 47件 |
+| 地域ごとの件数 | 北海道1 / 東北6 / 関東7 / 中部9 / 関西7 / 中国5 / 四国4 / 九州7 / 沖縄1 |
+| 東京都 | id=13 |
+| `created_at` / `updated_at` | すべての行に値が入っている（NOT NULLのため） |
 
--- 東北
-INSERT INTO prefecture (id, name, name_en, latitude, longitude, region) VALUES 
-(2, '青森県', 'Aomori', 40.824444, 140.74, '東北'),
-(3, '岩手県', 'Iwate', 39.703611, 141.1525, '東北'),
-(4, '宮城県', 'Miyagi', 38.268889, 140.872222, '東北'),
-(5, '秋田県', 'Akita', 39.718611, 140.1025, '東北'),
-(6, '山形県', 'Yamagata', 38.240556, 140.363333, '東北'),
-(7, '福島県', 'Fukushima', 37.75, 140.467778, '東北');
-
--- 関東
-INSERT INTO prefecture (id, name, name_en, latitude, longitude, region) VALUES 
-(8, '茨城県', 'Ibaraki', 36.341389, 140.446667, '関東'),
-(9, '栃木県', 'Tochigi', 36.565556, 139.883611, '関東'),
-(10, '群馬県', 'Gunma', 36.390833, 139.060556, '関東'),
-(11, '埼玉県', 'Saitama', 35.856944, 139.648889, '関東'),
-(12, '千葉県', 'Chiba', 35.605, 140.123333, '関東'),
-(13, '東京都', 'Tokyo', 35.689487, 139.691706, '関東'),
-(14, '神奈川県', 'Kanagawa', 35.447778, 139.6425, '関東');
-
--- 中部
-INSERT INTO prefecture (id, name, name_en, latitude, longitude, region) VALUES 
-(15, '新潟県', 'Niigata', 37.902222, 139.023611, '中部'),
-(16, '富山県', 'Toyama', 36.695278, 137.211389, '中部'),
-(17, '石川県', 'Ishikawa', 36.594444, 136.625556, '中部'),
-(18, '福井県', 'Fukui', 36.065278, 136.221667, '中部'),
-(19, '山梨県', 'Yamanashi', 35.664167, 138.568333, '中部'),
-(20, '長野県', 'Nagano', 36.651389, 138.181111, '中部'),
-(21, '岐阜県', 'Gifu', 35.391111, 136.722222, '中部'),
-(22, '静岡県', 'Shizuoka', 34.976944, 138.383056, '中部'),
-(23, '愛知県', 'Aichi', 35.180278, 136.906389, '中部');
-
--- 関西
-INSERT INTO prefecture (id, name, name_en, latitude, longitude, region) VALUES 
-(24, '三重県', 'Mie', 34.730278, 136.508611, '関西'),
-(25, '滋賀県', 'Shiga', 35.004444, 135.868333, '関西'),
-(26, '京都府', 'Kyoto', 35.021389, 135.755556, '関西'),
-(27, '大阪府', 'Osaka', 34.686389, 135.52, '関西'),
-(28, '兵庫県', 'Hyogo', 34.691389, 135.183056, '関西'),
-(29, '奈良県', 'Nara', 34.685278, 135.832778, '関西'),
-(30, '和歌山県', 'Wakayama', 34.225833, 135.1675, '関西');
-
--- 中国
-INSERT INTO prefecture (id, name, name_en, latitude, longitude, region) VALUES 
-(31, '鳥取県', 'Tottori', 35.503889, 134.238056, '中国'),
-(32, '島根県', 'Shimane', 35.472222, 133.050556, '中国'),
-(33, '岡山県', 'Okayama', 34.661667, 133.934722, '中国'),
-(34, '広島県', 'Hiroshima', 34.396389, 132.459444, '中国'),
-(35, '山口県', 'Yamaguchi', 34.186111, 131.470556, '中国');
-
--- 四国
-INSERT INTO prefecture (id, name, name_en, latitude, longitude, region) VALUES 
-(36, '徳島県', 'Tokushima', 34.065833, 134.559444, '四国'),
-(37, '香川県', 'Kagawa', 34.340278, 134.043333, '四国'),
-(38, '愛媛県', 'Ehime', 33.841667, 132.765556, '四国'),
-(39, '高知県', 'Kochi', 33.559722, 133.531111, '四国');
-
--- 九州
-INSERT INTO prefecture (id, name, name_en, latitude, longitude, region) VALUES 
-(40, '福岡県', 'Fukuoka', 33.606389, 130.418056, '九州'),
-(41, '佐賀県', 'Saga', 33.249444, 130.299167, '九州'),
-(42, '長崎県', 'Nagasaki', 32.744722, 129.873611, '九州'),
-(43, '熊本県', 'Kumamoto', 32.789722, 130.741667, '九州'),
-(44, '大分県', 'Oita', 33.238056, 131.6125, '九州'),
-(45, '宮崎県', 'Miyazaki', 31.911111, 131.423889, '九州'),
-(46, '鹿児島県', 'Kagoshima', 31.560278, 130.558056, '九州');
-
--- 沖縄
-INSERT INTO prefecture (id, name, name_en, latitude, longitude, region) VALUES 
-(47, '沖縄県', 'Okinawa', 26.2125, 127.680833, '沖縄');
-```
+> ⚠️ INSERT文のテーブル名は `prefectures`（複数形）です。`prefecture`（単数形）だと
+> `Table ""PREFECTURE"" not found` のエラーになります。
 
 ---
 
@@ -14215,11 +14216,20 @@ INSERT INTO prefecture (id, name, name_en, latitude, longitude, region) VALUES
 
 `build.gradle`にJaCoCo追加:
 
+> ⚠️ `build.gradle` の `plugins { }` ブロックは**ファイルに1つだけ**しか書けません。
+> 新しく `plugins { }` を書き足すのではなく、**すでにある `plugins { }` の中に `id 'jacoco'` の1行を追加**してください。
+> それ以外（`jacoco { }` など）は、ファイルの末尾に追加します。
+
 ```gradle
+// ① 既存の plugins { } ブロックの中に1行追加する
 plugins {
-    id 'jacoco'
+    id 'java'
+    id 'org.springframework.boot' version '...'   // 既存の行はそのまま
+    id 'io.spring.dependency-management' version '...'
+    id 'jacoco'                                    // ← これを追加
 }
 
+// ② 以降は、ファイルの末尾に追加する
 jacoco {
     toolVersion = ""0.8.10""
 }
@@ -16557,7 +16567,7 @@ public class WeatherCodeUtil {
         Map.entry(51, ""🌦️""),
         Map.entry(53, ""🌧️""),
         Map.entry(55, ""🌧️""),
-        Map.entry(61, ""🌦️""),
+        Map.entry(61, ""🌧️""),
         Map.entry(63, ""🌧️""),
         Map.entry(65, ""🌧️""),
         Map.entry(71, ""🌨️""),
@@ -21115,6 +21125,8 @@ Day 34: エラーページの作成,"# Day 34: エラーページの作成
 ```java
 package com.example.weatherapp.controller;
 
+import com.example.weatherapp.exception.ExternalApiException;
+import com.example.weatherapp.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21900,39 +21912,42 @@ Day 36: テスト・品質保証,"# Day 36: テスト・品質保証
 package com.example.weatherapp.service;
 
 import com.example.weatherapp.client.OpenMeteoClient;
-import com.example.weatherapp.dto.OpenMeteoResponseDto;
 import com.example.weatherapp.dto.WeatherDetailDto;
+import com.example.weatherapp.dto.api.OpenMeteoResponseDto;
 import com.example.weatherapp.entity.Prefecture;
 import com.example.weatherapp.entity.WeatherRecord;
 import com.example.weatherapp.exception.ExternalApiException;
 import com.example.weatherapp.exception.ResourceNotFoundException;
 import com.example.weatherapp.mapper.WeatherMapper;
-import com.example.weatherapp.repository.PrefectureRepository;
 import com.example.weatherapp.repository.WeatherRecordRepository;
+import com.example.weatherapp.service.impl.WeatherServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * WeatherServiceの単体テスト
+ * WeatherServiceImplの単体テスト（Day 21のテストを強化したもの）
+ *
+ * 外部API・DBはモックにして、Serviceのロジック
+ * （APIレスポンス → Entity変換 → 保存 → DTO変換）を検証する
  */
 @ExtendWith(MockitoExtension.class)
-@DisplayName(""WeatherService単体テスト"")
+@DisplayName(""WeatherServiceImpl単体テスト"")
 class WeatherServiceTest {
     
     @Mock
-    private PrefectureRepository prefectureRepository;
+    private PrefectureService prefectureService;
     
     @Mock
     private WeatherRecordRepository weatherRecordRepository;
@@ -21944,16 +21959,13 @@ class WeatherServiceTest {
     private WeatherMapper weatherMapper;
     
     @InjectMocks
-    private WeatherService weatherService;
+    private WeatherServiceImpl weatherService;
     
     private Prefecture testPrefecture;
     private OpenMeteoResponseDto testApiResponse;
-    private WeatherRecord testWeatherRecord;
-    private WeatherDetailDto testWeatherDetailDto;
     
     @BeforeEach
     void setUp() {
-        // テストデータ準備
         testPrefecture = Prefecture.builder()
             .id(13L)
             .name(""東京都"")
@@ -21963,57 +21975,80 @@ class WeatherServiceTest {
             .longitude(139.6917)
             .build();
         
-        testApiResponse = new OpenMeteoResponseDto();
-        // API responseの詳細設定（省略）
+        testApiResponse = createApiResponse();
+    }
+    
+    /** 現在の天気 + 7日分の日次予報を持つ、テスト用のAPIレスポンスを作る */
+    private OpenMeteoResponseDto createApiResponse() {
+        OpenMeteoResponseDto.Current current = new OpenMeteoResponseDto.Current();
+        current.setTemperature2m(15.5);
+        current.setWeathercode(1);
+        current.setWindspeed10m(3.2);
+        current.setRelativehumidity2m(60);
+        current.setApparentTemperature(14.0);
+        current.setPrecipitation(0.0);
+        current.setCloudCover(20);
         
-        testWeatherRecord = WeatherRecord.builder()
-            .id(1L)
-            .prefecture(testPrefecture)
-            .fetchedAt(LocalDateTime.now())
-            .build();
+        OpenMeteoResponseDto.Daily daily = new OpenMeteoResponseDto.Daily();
+        daily.setTime(List.of(""2024-01-05"", ""2024-01-06"", ""2024-01-07"", ""2024-01-08"",
+            ""2024-01-09"", ""2024-01-10"", ""2024-01-11""));
+        daily.setTemperature2mMax(List.of(15.2, 14.0, 13.5, 12.0, 11.0, 13.0, 14.5));
+        daily.setTemperature2mMin(List.of(8.1, 7.0, 6.5, 5.0, 4.0, 6.0, 7.5));
+        daily.setWeathercode(List.of(61, 1, 2, 3, 0, 1, 2));
+        daily.setPrecipitationSum(List.of(5.2, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0));
+        daily.setWindspeed10mMax(List.of(8.1, 6.0, 5.5, 7.0, 4.0, 5.0, 6.5));
+        daily.setSunrise(List.of(""2024-01-05T06:51"", ""2024-01-06T06:51"", ""2024-01-07T06:51"",
+            ""2024-01-08T06:51"", ""2024-01-09T06:51"", ""2024-01-10T06:50"", ""2024-01-11T06:50""));
+        daily.setSunset(List.of(""2024-01-05T16:46"", ""2024-01-06T16:47"", ""2024-01-07T16:48"",
+            ""2024-01-08T16:49"", ""2024-01-09T16:50"", ""2024-01-10T16:51"", ""2024-01-11T16:52""));
         
-        testWeatherDetailDto = WeatherDetailDto.builder()
-            .build();
+        OpenMeteoResponseDto response = new OpenMeteoResponseDto();
+        response.setCurrent(current);
+        response.setDaily(daily);
+        return response;
     }
     
     @Test
-    @DisplayName(""正常系: 都道府県IDから天気情報を取得"")
+    @DisplayName(""正常系: 都道府県IDから天気情報を取得し、現在+7日分をDBに保存する"")
     void testGetWeatherByPrefectureId_Success() {
         // Given
-        when(prefectureRepository.findById(13L))
-            .thenReturn(Optional.of(testPrefecture));
-        when(openMeteoClient.fetchWeather(anyDouble(), anyDouble()))
-            .thenReturn(testApiResponse);
-        when(weatherMapper.toEntity(any(Prefecture.class), any(OpenMeteoResponseDto.class)))
-            .thenReturn(testWeatherRecord);
+        WeatherDetailDto dto = WeatherDetailDto.builder().build();
+        when(prefectureService.findEntityById(13L)).thenReturn(testPrefecture);
+        when(openMeteoClient.fetchWeather(35.6895, 139.6917)).thenReturn(testApiResponse);
         when(weatherRecordRepository.save(any(WeatherRecord.class)))
-            .thenReturn(testWeatherRecord);
-        when(weatherMapper.toDetailDto(any(WeatherRecord.class)))
-            .thenReturn(testWeatherDetailDto);
+            .thenAnswer(invocation -> invocation.getArgument(0));  // 渡されたEntityをそのまま返す
+        when(weatherMapper.toDetailDto(any(WeatherRecord.class))).thenReturn(dto);
         
         // When
         WeatherDetailDto result = weatherService.getWeatherByPrefectureId(13L);
         
         // Then
-        assertThat(result).isNotNull();
-        verify(prefectureRepository, times(1)).findById(13L);
-        verify(openMeteoClient, times(1)).fetchWeather(35.6895, 139.6917);
-        verify(weatherRecordRepository, times(1)).save(any(WeatherRecord.class));
+        assertThat(result).isSameAs(dto);
+        
+        // 保存されたEntityの中身を検証する
+        ArgumentCaptor<WeatherRecord> captor = ArgumentCaptor.forClass(WeatherRecord.class);
+        verify(weatherRecordRepository, times(1)).save(captor.capture());
+        WeatherRecord saved = captor.getValue();
+        assertThat(saved.getPrefecture()).isSameAs(testPrefecture);
+        assertThat(saved.getTemperature()).isEqualTo(15.5);
+        assertThat(saved.getWeatherCode()).isEqualTo(1);
+        assertThat(saved.getDailyForecasts()).hasSize(7);
+        assertThat(saved.getDailyForecasts().get(0).getTemperatureMax()).isEqualTo(15.2);
     }
     
     @Test
     @DisplayName(""異常系: 存在しない都道府県ID"")
     void testGetWeatherByPrefectureId_NotFound() {
         // Given
-        when(prefectureRepository.findById(999L))
-            .thenReturn(Optional.empty());
+        when(prefectureService.findEntityById(999L))
+            .thenThrow(new ResourceNotFoundException(""都道府県が見つかりません: id=999""));
         
         // When & Then
         assertThatThrownBy(() -> weatherService.getWeatherByPrefectureId(999L))
             .isInstanceOf(ResourceNotFoundException.class)
             .hasMessageContaining(""都道府県が見つかりません"");
         
-        verify(prefectureRepository, times(1)).findById(999L);
+        // 都道府県がなければ、外部APIは呼ばれない
         verify(openMeteoClient, never()).fetchWeather(anyDouble(), anyDouble());
     }
     
@@ -22021,8 +22056,7 @@ class WeatherServiceTest {
     @DisplayName(""異常系: API呼び出し失敗"")
     void testGetWeatherByPrefectureId_ApiError() {
         // Given
-        when(prefectureRepository.findById(13L))
-            .thenReturn(Optional.of(testPrefecture));
+        when(prefectureService.findEntityById(13L)).thenReturn(testPrefecture);
         when(openMeteoClient.fetchWeather(anyDouble(), anyDouble()))
             .thenThrow(new ExternalApiException(""API接続エラー""));
         
@@ -22031,28 +22065,8 @@ class WeatherServiceTest {
             .isInstanceOf(ExternalApiException.class)
             .hasMessageContaining(""API接続エラー"");
         
+        // APIが失敗したら、DBには保存されない
         verify(weatherRecordRepository, never()).save(any());
-    }
-    
-    @Test
-    @DisplayName(""境界値: 緯度経度の範囲チェック"")
-    void testGetWeatherByPrefectureId_BoundaryValues() {
-        // 日本の最北端・最南端のテスト
-        Prefecture hokkaido = Prefecture.builder()
-            .id(1L)
-            .latitude(45.5)  // 北端
-            .longitude(141.0)
-            .build();
-        
-        Prefecture okinawa = Prefecture.builder()
-            .id(47L)
-            .latitude(24.3)  // 南端
-            .longitude(124.0)
-            .build();
-        
-        // テスト実装
-        assertThat(hokkaido.getLatitude()).isBetween(20.0, 50.0);
-        assertThat(okinawa.getLatitude()).isBetween(20.0, 50.0);
     }
 }
 ```
@@ -22215,6 +22229,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * パフォーマンステスト
@@ -22335,11 +22350,20 @@ void testXssPrevention() throws Exception {
 
 `build.gradle`に追加：
 
+> ⚠️ `build.gradle` の `plugins { }` ブロックは**ファイルに1つだけ**しか書けません。
+> 新しく `plugins { }` を書き足すのではなく、**すでにある `plugins { }` の中に `id 'jacoco'` の1行を追加**してください。
+> それ以外（`jacoco { }` など）は、ファイルの末尾に追加します。
+
 ```gradle
+// ① 既存の plugins { } ブロックの中に1行追加する
 plugins {
-    id 'jacoco'
+    id 'java'
+    id 'org.springframework.boot' version '...'   // 既存の行はそのまま
+    id 'io.spring.dependency-management' version '...'
+    id 'jacoco'                                    // ← これを追加
 }
 
+// ② 以降は、ファイルの末尾に追加する
 jacoco {
     toolVersion = ""0.8.11""
 }
@@ -23279,10 +23303,39 @@ public interface WeatherRecordRepository extends JpaRepository<WeatherRecord, Lo
     
     // 必要なカラムのみ取得
     @Query(""SELECT new com.example.weatherapp.dto.WeatherSummaryDto("" +
-           ""w.id, w.prefecture.name, w.currentTemperature, w.fetchedAt) "" +
+           ""w.id, w.prefecture.name, w.temperature, w.fetchedAt) "" +
            ""FROM WeatherRecord w "" +
            ""WHERE w.prefecture.region = :region"")
     List<WeatherSummaryDto> findSummaryByRegion(@Param(""region"") String region);
+}
+```
+
+上のクエリで使う、一覧表示向けの軽量DTOを作成します。
+（`new ...WeatherSummaryDto(...)` の引数の順番と型が、DTOのコンストラクタと一致している必要があります）
+
+`src/main/java/com/example/weatherapp/dto/WeatherSummaryDto.java`:
+
+```java
+package com.example.weatherapp.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+/**
+ * 天気の概要（一覧表示用の軽量DTO）
+ * 必要な列だけをDBから取得するために使う
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class WeatherSummaryDto {
+    private Long id;
+    private String prefectureName;
+    private Double temperature;
+    private LocalDateTime fetchedAt;
 }
 ```
 
@@ -23290,14 +23343,35 @@ public interface WeatherRecordRepository extends JpaRepository<WeatherRecord, Lo
 
 ### 3. キャッシュ実装（11:30-12:30）
 
-**Spring Cache設定:**
+**依存関係の追加:** `build.gradle` の `dependencies { ... }` に、次の2行を追加してGradleを再読み込みします。
+
+```groovy
+implementation 'org.springframework.boot:spring-boot-starter-cache'
+implementation 'com.github.ben-manes.caffeine:caffeine'
+```
+
+**Spring Cache設定:** `src/main/java/com/example/weatherapp/config/CacheConfig.java`
 
 ```java
+package com.example.weatherapp.config;
+
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.TimeUnit;
+
 @Configuration
 @EnableCaching
 public class CacheConfig {
     
+    // spring.cache.type=none のとき（テスト用）は、この設定を使わずキャッシュを無効にできるようにする
     @Bean
+    @ConditionalOnProperty(name = ""spring.cache.type"", havingValue = ""caffeine"", matchIfMissing = true)
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager(
             ""prefectures"", ""weather"", ""regions""
@@ -23313,10 +23387,14 @@ public class CacheConfig {
 
 **キャッシュ適用:**
 
+Day 19で作った `PrefectureServiceImpl` の既存メソッドに、アノテーションを追加します
+（`@Cacheable` は `org.springframework.cache.annotation` パッケージ）。
+
 ```java
 @Service
-public class PrefectureService {
+public class PrefectureServiceImpl implements PrefectureService {
     
+    @Override
     @Cacheable(value = ""prefectures"", key = ""#id"")
     public PrefectureDto findById(Long id) {
         Prefecture prefecture = prefectureRepository.findById(id)
@@ -23324,6 +23402,7 @@ public class PrefectureService {
         return prefectureMapper.toDto(prefecture);
     }
     
+    @Override
     @Cacheable(value = ""prefectures"")
     public List<PrefectureDto> findAll() {
         return prefectureRepository.findAll().stream()
@@ -23340,10 +23419,14 @@ public class PrefectureService {
 
 **天気データキャッシュ:**
 
+Day 21で作った `WeatherServiceImpl` の `getWeatherByPrefectureId` に追加します。
+
 ```java
 @Service
-public class WeatherService {
+@Transactional
+public class WeatherServiceImpl implements WeatherService {
     
+    @Override
     @Cacheable(
         value = ""weather"",
         key = ""#prefectureId"",
@@ -23355,6 +23438,13 @@ public class WeatherService {
     }
 }
 ```
+
+> ⚠️ **キャッシュの影響に注意**
+> キャッシュが効いている10分間は、同じ都道府県で外部API呼び出しもDB保存も行われません。
+> つまり、天気の**履歴は同じ都道府県につき10分に1件**になります（Day 14で設計した履歴保存の動作が変わります）。
+> また、テストでは前のテストのキャッシュが残って結果が変わることがあるため、
+> テスト用の `src/test/resources/application.properties` に `spring.cache.type=none` を追加しておくと安全です
+> （上の `CacheConfig` は、この指定のときにキャッシュを無効にできるように作ってあります）。
 
 ---
 
@@ -23904,6 +23994,20 @@ public class WeatherService {
 **自動E2Eテスト:**
 
 ```java
+package com.example.weatherapp;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql(""/test-data.sql"")
@@ -23970,6 +24074,17 @@ class ComprehensiveE2ETest {
 ### 3. セキュリティ監査（13:00-14:00）
 
 **セキュリティチェック:**
+
+**依存関係の脆弱性チェックの準備（初回のみ）:**
+`build.gradle` の既存の `plugins { }` ブロックの中に、次の1行を追加してGradleを再読み込みします。
+
+```gradle
+id 'org.owasp.dependencycheck' version '12.1.0'
+```
+
+> ⚠️ 初回実行は脆弱性データベースのダウンロードで**数十分かかる**ことがあります。
+> また、NVD（脆弱性データベース）のAPIキーがないと極端に遅い／失敗することがあります。
+> 時間が足りない場合は、実行は任意とし、「実行方法を理解した」ことを確認できれば十分です。
 
 ```bash
 # 依存関係の脆弱性チェック

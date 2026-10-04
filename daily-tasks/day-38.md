@@ -97,10 +97,39 @@ public interface WeatherRecordRepository extends JpaRepository<WeatherRecord, Lo
     
     // 必要なカラムのみ取得
     @Query("SELECT new com.example.weatherapp.dto.WeatherSummaryDto(" +
-           "w.id, w.prefecture.name, w.currentTemperature, w.fetchedAt) " +
+           "w.id, w.prefecture.name, w.temperature, w.fetchedAt) " +
            "FROM WeatherRecord w " +
            "WHERE w.prefecture.region = :region")
     List<WeatherSummaryDto> findSummaryByRegion(@Param("region") String region);
+}
+```
+
+上のクエリで使う、一覧表示向けの軽量DTOを作成します。
+（`new ...WeatherSummaryDto(...)` の引数の順番と型が、DTOのコンストラクタと一致している必要があります）
+
+`src/main/java/com/example/weatherapp/dto/WeatherSummaryDto.java`:
+
+```java
+package com.example.weatherapp.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+/**
+ * 天気の概要（一覧表示用の軽量DTO）
+ * 必要な列だけをDBから取得するために使う
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class WeatherSummaryDto {
+    private Long id;
+    private String prefectureName;
+    private Double temperature;
+    private LocalDateTime fetchedAt;
 }
 ```
 
@@ -108,14 +137,35 @@ public interface WeatherRecordRepository extends JpaRepository<WeatherRecord, Lo
 
 ### 3. キャッシュ実装（11:30-12:30）
 
-**Spring Cache設定:**
+**依存関係の追加:** `build.gradle` の `dependencies { ... }` に、次の2行を追加してGradleを再読み込みします。
+
+```groovy
+implementation 'org.springframework.boot:spring-boot-starter-cache'
+implementation 'com.github.ben-manes.caffeine:caffeine'
+```
+
+**Spring Cache設定:** `src/main/java/com/example/weatherapp/config/CacheConfig.java`
 
 ```java
+package com.example.weatherapp.config;
+
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.TimeUnit;
+
 @Configuration
 @EnableCaching
 public class CacheConfig {
     
+    // spring.cache.type=none のとき（テスト用）は、この設定を使わずキャッシュを無効にできるようにする
     @Bean
+    @ConditionalOnProperty(name = "spring.cache.type", havingValue = "caffeine", matchIfMissing = true)
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager(
             "prefectures", "weather", "regions"
@@ -131,10 +181,14 @@ public class CacheConfig {
 
 **キャッシュ適用:**
 
+Day 19で作った `PrefectureServiceImpl` の既存メソッドに、アノテーションを追加します
+（`@Cacheable` は `org.springframework.cache.annotation` パッケージ）。
+
 ```java
 @Service
-public class PrefectureService {
+public class PrefectureServiceImpl implements PrefectureService {
     
+    @Override
     @Cacheable(value = "prefectures", key = "#id")
     public PrefectureDto findById(Long id) {
         Prefecture prefecture = prefectureRepository.findById(id)
@@ -142,6 +196,7 @@ public class PrefectureService {
         return prefectureMapper.toDto(prefecture);
     }
     
+    @Override
     @Cacheable(value = "prefectures")
     public List<PrefectureDto> findAll() {
         return prefectureRepository.findAll().stream()
@@ -158,10 +213,14 @@ public class PrefectureService {
 
 **天気データキャッシュ:**
 
+Day 21で作った `WeatherServiceImpl` の `getWeatherByPrefectureId` に追加します。
+
 ```java
 @Service
-public class WeatherService {
+@Transactional
+public class WeatherServiceImpl implements WeatherService {
     
+    @Override
     @Cacheable(
         value = "weather",
         key = "#prefectureId",
@@ -173,6 +232,13 @@ public class WeatherService {
     }
 }
 ```
+
+> ⚠️ **キャッシュの影響に注意**
+> キャッシュが効いている10分間は、同じ都道府県で外部API呼び出しもDB保存も行われません。
+> つまり、天気の**履歴は同じ都道府県につき10分に1件**になります（Day 14で設計した履歴保存の動作が変わります）。
+> また、テストでは前のテストのキャッシュが残って結果が変わることがあるため、
+> テスト用の `src/test/resources/application.properties` に `spring.cache.type=none` を追加しておくと安全です
+> （上の `CacheConfig` は、この指定のときにキャッシュを無効にできるように作ってあります）。
 
 ---
 

@@ -238,6 +238,20 @@ public class WeatherService {
 **自動E2Eテスト:**
 
 ```java
+package com.example.weatherapp;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql("/test-data.sql")
@@ -304,6 +318,17 @@ class ComprehensiveE2ETest {
 ### 3. セキュリティ監査（13:00-14:00）
 
 **セキュリティチェック:**
+
+**依存関係の脆弱性チェックの準備（初回のみ）:**
+`build.gradle` の既存の `plugins { }` ブロックの中に、次の1行を追加してGradleを再読み込みします。
+
+```gradle
+id 'org.owasp.dependencycheck' version '12.1.0'
+```
+
+> ⚠️ 初回実行は脆弱性データベースのダウンロードで**数十分かかる**ことがあります。
+> また、NVD（脆弱性データベース）のAPIキーがないと極端に遅い／失敗することがあります。
+> 時間が足りない場合は、実行は任意とし、「実行方法を理解した」ことを確認できれば十分です。
 
 ```bash
 # 依存関係の脆弱性チェック

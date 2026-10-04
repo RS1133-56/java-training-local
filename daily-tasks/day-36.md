@@ -48,39 +48,42 @@
 package com.example.weatherapp.service;
 
 import com.example.weatherapp.client.OpenMeteoClient;
-import com.example.weatherapp.dto.OpenMeteoResponseDto;
 import com.example.weatherapp.dto.WeatherDetailDto;
+import com.example.weatherapp.dto.api.OpenMeteoResponseDto;
 import com.example.weatherapp.entity.Prefecture;
 import com.example.weatherapp.entity.WeatherRecord;
 import com.example.weatherapp.exception.ExternalApiException;
 import com.example.weatherapp.exception.ResourceNotFoundException;
 import com.example.weatherapp.mapper.WeatherMapper;
-import com.example.weatherapp.repository.PrefectureRepository;
 import com.example.weatherapp.repository.WeatherRecordRepository;
+import com.example.weatherapp.service.impl.WeatherServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * WeatherServiceの単体テスト
+ * WeatherServiceImplの単体テスト（Day 21のテストを強化したもの）
+ *
+ * 外部API・DBはモックにして、Serviceのロジック
+ * （APIレスポンス → Entity変換 → 保存 → DTO変換）を検証する
  */
 @ExtendWith(MockitoExtension.class)
-@DisplayName("WeatherService単体テスト")
+@DisplayName("WeatherServiceImpl単体テスト")
 class WeatherServiceTest {
     
     @Mock
-    private PrefectureRepository prefectureRepository;
+    private PrefectureService prefectureService;
     
     @Mock
     private WeatherRecordRepository weatherRecordRepository;
@@ -92,16 +95,13 @@ class WeatherServiceTest {
     private WeatherMapper weatherMapper;
     
     @InjectMocks
-    private WeatherService weatherService;
+    private WeatherServiceImpl weatherService;
     
     private Prefecture testPrefecture;
     private OpenMeteoResponseDto testApiResponse;
-    private WeatherRecord testWeatherRecord;
-    private WeatherDetailDto testWeatherDetailDto;
     
     @BeforeEach
     void setUp() {
-        // テストデータ準備
         testPrefecture = Prefecture.builder()
             .id(13L)
             .name("東京都")
@@ -111,57 +111,80 @@ class WeatherServiceTest {
             .longitude(139.6917)
             .build();
         
-        testApiResponse = new OpenMeteoResponseDto();
-        // API responseの詳細設定（省略）
+        testApiResponse = createApiResponse();
+    }
+    
+    /** 現在の天気 + 7日分の日次予報を持つ、テスト用のAPIレスポンスを作る */
+    private OpenMeteoResponseDto createApiResponse() {
+        OpenMeteoResponseDto.Current current = new OpenMeteoResponseDto.Current();
+        current.setTemperature2m(15.5);
+        current.setWeathercode(1);
+        current.setWindspeed10m(3.2);
+        current.setRelativehumidity2m(60);
+        current.setApparentTemperature(14.0);
+        current.setPrecipitation(0.0);
+        current.setCloudCover(20);
         
-        testWeatherRecord = WeatherRecord.builder()
-            .id(1L)
-            .prefecture(testPrefecture)
-            .fetchedAt(LocalDateTime.now())
-            .build();
+        OpenMeteoResponseDto.Daily daily = new OpenMeteoResponseDto.Daily();
+        daily.setTime(List.of("2024-01-05", "2024-01-06", "2024-01-07", "2024-01-08",
+            "2024-01-09", "2024-01-10", "2024-01-11"));
+        daily.setTemperature2mMax(List.of(15.2, 14.0, 13.5, 12.0, 11.0, 13.0, 14.5));
+        daily.setTemperature2mMin(List.of(8.1, 7.0, 6.5, 5.0, 4.0, 6.0, 7.5));
+        daily.setWeathercode(List.of(61, 1, 2, 3, 0, 1, 2));
+        daily.setPrecipitationSum(List.of(5.2, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0));
+        daily.setWindspeed10mMax(List.of(8.1, 6.0, 5.5, 7.0, 4.0, 5.0, 6.5));
+        daily.setSunrise(List.of("2024-01-05T06:51", "2024-01-06T06:51", "2024-01-07T06:51",
+            "2024-01-08T06:51", "2024-01-09T06:51", "2024-01-10T06:50", "2024-01-11T06:50"));
+        daily.setSunset(List.of("2024-01-05T16:46", "2024-01-06T16:47", "2024-01-07T16:48",
+            "2024-01-08T16:49", "2024-01-09T16:50", "2024-01-10T16:51", "2024-01-11T16:52"));
         
-        testWeatherDetailDto = WeatherDetailDto.builder()
-            .build();
+        OpenMeteoResponseDto response = new OpenMeteoResponseDto();
+        response.setCurrent(current);
+        response.setDaily(daily);
+        return response;
     }
     
     @Test
-    @DisplayName("正常系: 都道府県IDから天気情報を取得")
+    @DisplayName("正常系: 都道府県IDから天気情報を取得し、現在+7日分をDBに保存する")
     void testGetWeatherByPrefectureId_Success() {
         // Given
-        when(prefectureRepository.findById(13L))
-            .thenReturn(Optional.of(testPrefecture));
-        when(openMeteoClient.fetchWeather(anyDouble(), anyDouble()))
-            .thenReturn(testApiResponse);
-        when(weatherMapper.toEntity(any(Prefecture.class), any(OpenMeteoResponseDto.class)))
-            .thenReturn(testWeatherRecord);
+        WeatherDetailDto dto = WeatherDetailDto.builder().build();
+        when(prefectureService.findEntityById(13L)).thenReturn(testPrefecture);
+        when(openMeteoClient.fetchWeather(35.6895, 139.6917)).thenReturn(testApiResponse);
         when(weatherRecordRepository.save(any(WeatherRecord.class)))
-            .thenReturn(testWeatherRecord);
-        when(weatherMapper.toDetailDto(any(WeatherRecord.class)))
-            .thenReturn(testWeatherDetailDto);
+            .thenAnswer(invocation -> invocation.getArgument(0));  // 渡されたEntityをそのまま返す
+        when(weatherMapper.toDetailDto(any(WeatherRecord.class))).thenReturn(dto);
         
         // When
         WeatherDetailDto result = weatherService.getWeatherByPrefectureId(13L);
         
         // Then
-        assertThat(result).isNotNull();
-        verify(prefectureRepository, times(1)).findById(13L);
-        verify(openMeteoClient, times(1)).fetchWeather(35.6895, 139.6917);
-        verify(weatherRecordRepository, times(1)).save(any(WeatherRecord.class));
+        assertThat(result).isSameAs(dto);
+        
+        // 保存されたEntityの中身を検証する
+        ArgumentCaptor<WeatherRecord> captor = ArgumentCaptor.forClass(WeatherRecord.class);
+        verify(weatherRecordRepository, times(1)).save(captor.capture());
+        WeatherRecord saved = captor.getValue();
+        assertThat(saved.getPrefecture()).isSameAs(testPrefecture);
+        assertThat(saved.getTemperature()).isEqualTo(15.5);
+        assertThat(saved.getWeatherCode()).isEqualTo(1);
+        assertThat(saved.getDailyForecasts()).hasSize(7);
+        assertThat(saved.getDailyForecasts().get(0).getTemperatureMax()).isEqualTo(15.2);
     }
     
     @Test
     @DisplayName("異常系: 存在しない都道府県ID")
     void testGetWeatherByPrefectureId_NotFound() {
         // Given
-        when(prefectureRepository.findById(999L))
-            .thenReturn(Optional.empty());
+        when(prefectureService.findEntityById(999L))
+            .thenThrow(new ResourceNotFoundException("都道府県が見つかりません: id=999"));
         
         // When & Then
         assertThatThrownBy(() -> weatherService.getWeatherByPrefectureId(999L))
             .isInstanceOf(ResourceNotFoundException.class)
             .hasMessageContaining("都道府県が見つかりません");
         
-        verify(prefectureRepository, times(1)).findById(999L);
+        // 都道府県がなければ、外部APIは呼ばれない
         verify(openMeteoClient, never()).fetchWeather(anyDouble(), anyDouble());
     }
     
@@ -169,8 +192,7 @@ class WeatherServiceTest {
     @DisplayName("異常系: API呼び出し失敗")
     void testGetWeatherByPrefectureId_ApiError() {
         // Given
-        when(prefectureRepository.findById(13L))
-            .thenReturn(Optional.of(testPrefecture));
+        when(prefectureService.findEntityById(13L)).thenReturn(testPrefecture);
         when(openMeteoClient.fetchWeather(anyDouble(), anyDouble()))
             .thenThrow(new ExternalApiException("API接続エラー"));
         
@@ -179,28 +201,8 @@ class WeatherServiceTest {
             .isInstanceOf(ExternalApiException.class)
             .hasMessageContaining("API接続エラー");
         
+        // APIが失敗したら、DBには保存されない
         verify(weatherRecordRepository, never()).save(any());
-    }
-    
-    @Test
-    @DisplayName("境界値: 緯度経度の範囲チェック")
-    void testGetWeatherByPrefectureId_BoundaryValues() {
-        // 日本の最北端・最南端のテスト
-        Prefecture hokkaido = Prefecture.builder()
-            .id(1L)
-            .latitude(45.5)  // 北端
-            .longitude(141.0)
-            .build();
-        
-        Prefecture okinawa = Prefecture.builder()
-            .id(47L)
-            .latitude(24.3)  // 南端
-            .longitude(124.0)
-            .build();
-        
-        // テスト実装
-        assertThat(hokkaido.getLatitude()).isBetween(20.0, 50.0);
-        assertThat(okinawa.getLatitude()).isBetween(20.0, 50.0);
     }
 }
 ```
@@ -363,6 +365,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * パフォーマンステスト
@@ -483,11 +486,20 @@ void testXssPrevention() throws Exception {
 
 `build.gradle`に追加：
 
+> ⚠️ `build.gradle` の `plugins { }` ブロックは**ファイルに1つだけ**しか書けません。
+> 新しく `plugins { }` を書き足すのではなく、**すでにある `plugins { }` の中に `id 'jacoco'` の1行を追加**してください。
+> それ以外（`jacoco { }` など）は、ファイルの末尾に追加します。
+
 ```gradle
+// ① 既存の plugins { } ブロックの中に1行追加する
 plugins {
-    id 'jacoco'
+    id 'java'
+    id 'org.springframework.boot' version '...'   // 既存の行はそのまま
+    id 'io.spring.dependency-management' version '...'
+    id 'jacoco'                                    // ← これを追加
 }
 
+// ② 以降は、ファイルの末尾に追加する
 jacoco {
     toolVersion = "0.8.11"
 }

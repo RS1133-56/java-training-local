@@ -663,7 +663,7 @@ public class WeatherCodeUtil {
         Map.entry(51, "🌦️"),
         Map.entry(53, "🌧️"),
         Map.entry(55, "🌧️"),
-        Map.entry(61, "🌦️"),
+        Map.entry(61, "🌧️"),
         Map.entry(63, "🌧️"),
         Map.entry(65, "🌧️"),
         Map.entry(71, "🌨️"),
