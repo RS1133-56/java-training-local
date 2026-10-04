@@ -557,7 +557,7 @@ button:disabled {
 ```bash
 git add .
 git commit -m "feat(a11y): アクセシビリティ対応実装"
-git push origin feature/day-35
+git push origin main
 ```
 
 ---

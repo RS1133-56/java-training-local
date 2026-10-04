@@ -109,9 +109,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * グローバル例外ハンドラー
@@ -213,23 +213,28 @@ public class GlobalExceptionHandler {
     }
     
     /**
-     * NoHandlerFoundExceptionのハンドリング
+     * NoResourceFoundExceptionのハンドリング
      * 存在しないURLにアクセスした場合
+     * 
+     * ※ Spring 6.1以降（Spring Boot 3.2以降）では、対応するControllerも静的ファイルも
+     *    ないURLにアクセスすると NoResourceFoundException が発生します。
+     *    （以前のバージョンで使われていた NoHandlerFoundException は、追加の設定をしない限り発生しません）
      * 
      * @param e 例外
      * @param model モデル
      * @return エラーページ
      */
-    @ExceptionHandler(NoHandlerFoundException.class)
+    @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleNoHandlerFound(
-        NoHandlerFoundException e,
+    public String handleNoResourceFound(
+        NoResourceFoundException e,
         Model model
     ) {
-        log.warn("ページが見つかりません: {}", e.getRequestURL());
+        String requestUrl = "/" + e.getResourcePath();
+        log.warn("ページが見つかりません: {}", requestUrl);
         
         model.addAttribute("errorMessage", "お探しのページは見つかりませんでした");
-        model.addAttribute("requestUrl", e.getRequestURL());
+        model.addAttribute("requestUrl", requestUrl);
         model.addAttribute("statusCode", 404);
         
         return "error/404";
@@ -625,7 +630,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.*;
@@ -641,7 +646,7 @@ class GlobalExceptionHandlerTest {
     @Autowired
     private MockMvc mockMvc;
     
-    @MockBean
+    @MockitoBean
     private WeatherService weatherService;
     
     @Test
@@ -710,7 +715,7 @@ class GlobalExceptionHandlerTest {
 ```bash
 git add .
 git commit -m "feat(exception): GlobalExceptionHandlerとエラーページを実装"
-git push origin feature/day-24
+git push origin main
 ```
 
 ---

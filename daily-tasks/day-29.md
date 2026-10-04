@@ -643,7 +643,7 @@ img {
 ```bash
 git add .
 git commit -m "feat(frontend): CSSアーキテクチャとデザインシステム構築"
-git push origin feature/day-29
+git push origin main
 ```
 
 ---

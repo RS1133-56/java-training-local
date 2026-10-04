@@ -95,28 +95,30 @@ python3 create_issues.py             # 実行
 
 ---
 
-## 方法3: CSV + 手動インポート
+## 方法3: 手動で1件ずつ登録
+
+スクリプトが使えない場合の方法です（40件あるので時間がかかります）。
 
 ### 手順
 
-#### 1. CSVファイルを使用
-`github-issues.csv` が既に生成されています。
+1. リポジトリの「Issues」タブ → 「New issue」
+2. `daily-tasks/day-XX.md` の中身を、タイトル（1行目の `# ` を除いたもの）と本文にコピー
+3. ラベル（`training`、`day-N`）とマイルストーンを設定して「Submit new issue」
 
-#### 2. GitHub Projectsでインポート
+> ⚠️ 本文中の `[Day N](day-NN.md)` のような相対リンクは、Issue上では開けません（404になります）。
+> 手動登録の場合は、リンクを辿らず、Issuesタブから次のDayのIssueを開いてください。
+>
+> ℹ️ `github-issues.csv` は、他のツールへのデータ移行や一覧確認用です。
+> GitHub Projects はCSVからのインポートに対応していないため、このCSVを直接取り込むことはできません。
 
-1. GitHubリポジトリの "Projects" タブ
-2. "New project" → "Table" を選択
-3. "Import" → CSVファイルをアップロード
-4. 各行を右クリック → "Convert to issue"
-
-**メリット:** トークン不要  
-**デメリット:** 手動操作が必要
+**メリット:** トークン・ツール不要  
+**デメリット:** 手作業が多い
 
 ---
 
 ## 方法4: GitHub Actions（自動化）
 
-CI/CDパイプラインで自動的にissueを作成する方法もあります。
+ローカルにツールを入れず、GitHub上で一括作成する方法です。
 
 `.github/workflows/create-issues.yml` を作成：
 
@@ -124,31 +126,27 @@ CI/CDパイプラインで自動的にissueを作成する方法もあります�
 name: Create Training Issues
 
 on:
-  workflow_dispatch:  # 手動実行
+  workflow_dispatch:  # Actionsタブから手動実行
+
+permissions:
+  issues: write  # Issue・ラベル・マイルストーンの作成に必要
+  contents: read
 
 jobs:
   create-issues:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@v4
+
       - name: Create Issues
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          for day in {1..40}; do
-            FILE="daily-tasks/day-$(printf '%02d' $day).md"
-            TITLE=$(head -n 1 "$FILE" | sed 's/# //')
-            BODY=$(cat "$FILE")
-            
-            gh issue create \
-              --title "Day $day: $TITLE" \
-              --body "$BODY" \
-              --label "training,day-$day"
-              
-            sleep 1
-          done
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: ./create-github-issues.sh --yes
 ```
+
+- タイトルの組み立て・ラベル/マイルストーンの作成・重複スキップは `create-github-issues.sh` が行います
+- `--yes` は実行前の確認を省略するオプションです
 
 ---
 
@@ -158,7 +156,7 @@ jobs:
 |------|--------|---------|-------------|
 | GitHub CLI | ⭐ 簡単 | 5分 | 不要 |
 | Python API | ⭐⭐ 中 | 10分 | 必要 |
-| CSV手動 | ⭐⭐⭐ 面倒 | 30分 | 不要 |
+| 手動登録 | ⭐⭐⭐ 面倒 | 60分以上 | 不要 |
 | GitHub Actions | ⭐⭐ 中 | 15分 | 不要 |
 
 ---

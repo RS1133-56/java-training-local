@@ -715,7 +715,7 @@ model.addAttribute("books", books);
 ```bash
 git add .
 git commit -m "feat(frontend): Thymeleaf基礎実装と練習ページ作成"
-git push origin feature/day-26
+git push origin main
 ```
 
 ---

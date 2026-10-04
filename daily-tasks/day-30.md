@@ -696,7 +696,7 @@ table {
 ```bash
 git add .
 git commit -m "feat(frontend): レスポンシブデザイン対応"
-git push origin feature/day-30
+git push origin main
 ```
 
 ---

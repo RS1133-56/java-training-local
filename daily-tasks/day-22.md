@@ -280,7 +280,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
@@ -302,7 +302,7 @@ class HomeControllerTest {
     @Autowired
     private MockMvc mockMvc;
     
-    @MockBean
+    @MockitoBean
     private PrefectureService prefectureService;
     
     private PrefectureDto tokyo;
@@ -415,7 +415,7 @@ class HomeControllerTest {
    - `perform(get("/"))` でGETリクエスト送信
    - 実際のサーバー起動不要
 
-3. **@MockBean**
+3. **@MockitoBean**
    - PrefectureServiceをモック化
    - `when().thenReturn()` で振る舞いを定義
 
@@ -601,7 +601,7 @@ DEBUG HomeController - モデルにデータを設定完了
 ```bash
 git add .
 git commit -m "feat(controller): HomeControllerとテストを実装"
-git push origin feature/day-22
+git push origin main
 ```
 
 ---
@@ -658,7 +658,7 @@ model.addAttribute("groupedPrefectures", data);
 
 **解決策:**
 ```java
-@MockBean
+@MockitoBean
 private PrefectureService prefectureService;
 
 @BeforeEach

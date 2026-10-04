@@ -67,8 +67,8 @@ public class RestTemplateConfig {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder
-            .setConnectTimeout(Duration.ofSeconds(5))
-            .setReadTimeout(Duration.ofSeconds(10))
+            .connectTimeout(Duration.ofSeconds(5))
+            .readTimeout(Duration.ofSeconds(10))
             .requestFactory(() -> new BufferingClientHttpRequestFactory(
                 new SimpleClientHttpRequestFactory()
             ))
@@ -78,8 +78,8 @@ public class RestTemplateConfig {
 ```
 
 **ポイント:**
-- **setConnectTimeout**: 接続確立の制限時間（5秒）
-- **setReadTimeout**: レスポンス待機の制限時間（10秒）
+- **connectTimeout**: 接続確立の制限時間（5秒）
+- **readTimeout**: レスポンス待機の制限時間（10秒）
 - **BufferingClientHttpRequestFactory**: レスポンスの複数回読み取りを可能に
 
 ---
@@ -151,7 +151,7 @@ public class OpenMeteoClient {
     }
     
     private String buildUrl(Double latitude, Double longitude) {
-        return UriComponentsBuilder.fromHttpUrl(API_BASE_URL)
+        return UriComponentsBuilder.fromUriString(API_BASE_URL)
             .queryParam("latitude", latitude)
             .queryParam("longitude", longitude)
             .queryParam("current", 
@@ -251,7 +251,7 @@ class OpenMeteoClientTest {
 ```bash
 git add .
 git commit -m "feat(client): OpenMeteoClient実装"
-git push origin feature/day-20
+git push origin main
 ```
 
 ---

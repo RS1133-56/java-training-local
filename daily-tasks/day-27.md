@@ -618,7 +618,7 @@ class HomeControllerE2ETest {
 ```bash
 git add .
 git commit -m "feat(frontend): トップページ（index.html）実装"
-git push origin feature/day-27
+git push origin main
 ```
 
 ---

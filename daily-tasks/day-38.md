@@ -423,7 +423,7 @@ void testApiResponseTime() throws Exception {
 ```bash
 git add .
 git commit -m "perf: パフォーマンス最適化完了"
-git push origin feature/day-38
+git push origin main
 ```
 
 ---

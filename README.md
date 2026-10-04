@@ -45,22 +45,22 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
 
 ### Week 5: API実装（Day 21-25）
 - Day 21: [Service層実装（Weather）](daily-tasks/day-21.md)
-- Day 22: [Controller実装（Home）](daily-tasks/day-22.md)
-- Day 23: [Controller実装（Weather）](daily-tasks/day-23.md)
-- Day 24: [例外ハンドリング実装](daily-tasks/day-24.md)
-- Day 25: [バックエンドの統合テスト](daily-tasks/day-25.md)
+- Day 22: [Controller層実装（Home）](daily-tasks/day-22.md)
+- Day 23: [Controller層実装（Weather）](daily-tasks/day-23.md)
+- Day 24: [例外ハンドリング統一化](daily-tasks/day-24.md)
+- Day 25: [バックエンド統合テスト](daily-tasks/day-25.md)
 
 ### Week 6: フロントエンド実装（Day 26-30）
 - Day 26: [Thymeleafテンプレート基礎](daily-tasks/day-26.md)
-- Day 27: [トップページ実装](daily-tasks/day-27.md)
-- Day 28: [詳細ページ実装](daily-tasks/day-28.md)
+- Day 27: [トップページ実装（index.html）](daily-tasks/day-27.md)
+- Day 28: [天気詳細ページ実装（weather-detail.html）](daily-tasks/day-28.md)
 - Day 29: [CSS基礎とスタイリング](daily-tasks/day-29.md)
 - Day 30: [レスポンシブデザイン対応](daily-tasks/day-30.md)
 
 ### Week 7: 機能追加（Day 31-35）
 - Day 31: [ローディング機能実装](daily-tasks/day-31.md)
 - Day 32: [天気アイコン表示](daily-tasks/day-32.md)
-- Day 33: [お気に入り機能実装（LocalStorage）](daily-tasks/day-33.md)
+- Day 33: [お気に入り機能実装](daily-tasks/day-33.md)
 - Day 34: [エラーページの作成](daily-tasks/day-34.md)
 - Day 35: [アクセシビリティ対応](daily-tasks/day-35.md)
 
@@ -69,7 +69,7 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
 - Day 37: [ドキュメント作成](daily-tasks/day-37.md)
 - Day 38: [パフォーマンス最適化](daily-tasks/day-38.md)
 - Day 39: [最終レビュー・総合テスト](daily-tasks/day-39.md)
-- Day 40: [成果発表準備・プロジェクト完成](daily-tasks/day-40.md)
+- Day 40: [成果発表準備・プロジェクト完成 🎉](daily-tasks/day-40.md)
 
 ## 🛠️ 使用技術
 
@@ -193,6 +193,9 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
    git commit -m "feat: XXXを実装"
    git push origin main
    ```
+
+   > 💡 ブランチ運用: Day 2 でブランチ・マージの操作を練習しますが、Day 3 以降の日々の作業は
+   > **`main` ブランチに直接コミット・プッシュ**します（個人の研修なので、ブランチは切らなくてOKです）
 
 3. **チェックリストを更新**
    - 完了したタスクにチェック

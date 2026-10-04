@@ -601,7 +601,7 @@ mysql -u root -p weather_app < backup_20240105.sql
 ```bash
 git add .
 git commit -m "docs: プロジェクトドキュメント作成完了"
-git push origin feature/day-37
+git push origin main
 ```
 
 ---

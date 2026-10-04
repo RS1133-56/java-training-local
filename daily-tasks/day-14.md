@@ -361,7 +361,7 @@ public class OpenMeteoClient {
     
     private String buildUrl(Double lat, Double lon) {
         return UriComponentsBuilder
-            .fromHttpUrl("https://api.open-meteo.com/v1/forecast")
+            .fromUriString("https://api.open-meteo.com/v1/forecast")
             .queryParam("latitude", lat)
             .queryParam("longitude", lon)
             .queryParam("current", "temperature_2m,weathercode,windspeed_10m,relativehumidity_2m")

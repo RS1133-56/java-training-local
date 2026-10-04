@@ -4,6 +4,7 @@
 # 使い方（自分のリポジトリ＝フォークをcloneしたフォルダで実行）:
 #   ./create-github-issues.sh --dry-run   # 作成せず、宛先・件数・タイトルだけ確認
 #   ./create-github-issues.sh             # 実際に作成（実行前に宛先の確認あり）
+#   ./create-github-issues.sh --yes       # 確認なしで作成（GitHub Actions など自動実行用）
 #
 # 事前準備:
 #   - GitHub CLI(gh) をインストールし、gh auth login 済みであること
@@ -13,6 +14,8 @@
 #   - 宛先は「このフォルダの git remote origin」＝あなたのリポジトリになります
 #   - ラベル(training, day-1〜day-40)とマイルストーンが無ければ自動で作成します
 #   - 既に同じタイトルのIssueがある場合はスキップします（再実行しても重複しません）
+#   - 本文中の「次は [Day N](day-NN.md)」などの相対リンクは、Issue上でも開けるよう
+#     GitHub上のファイルへの絶対URLに自動で書き換えます（書き換え先は main ブランチ）
 #
 # 環境変数で上書き可能:
 #   REPO="owner/name"  MILESTONE="40日間研修"
@@ -21,7 +24,13 @@ set -euo pipefail
 
 MILESTONE="${MILESTONE:-40日間研修}"
 DRY_RUN=false
-[ "${1:-}" = "--dry-run" ] && DRY_RUN=true
+ASSUME_YES=false
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=true ;;
+    --yes|-y)  ASSUME_YES=true ;;
+  esac
+done
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TASK_DIR="$SCRIPT_DIR/daily-tasks"
@@ -41,8 +50,10 @@ echo "📌 マイルストーン : $MILESTONE"
 echo
 
 if ! $DRY_RUN; then
-  read -r -p "このリポジトリにIssueを40件作成します。よろしいですか？ (y/N): " ANSWER
-  [ "$ANSWER" = "y" ] || [ "$ANSWER" = "Y" ] || { echo "中止しました"; exit 0; }
+  if ! $ASSUME_YES; then
+    read -r -p "このリポジトリにIssueを40件作成します。よろしいですか？ (y/N): " ANSWER
+    [ "$ANSWER" = "y" ] || [ "$ANSWER" = "Y" ] || { echo "中止しました"; exit 0; }
+  fi
 
   echo "🏷  ラベルを準備中..."
   gh label create "training" --repo "$REPO" --color 0E8A16 --description "研修課題" --force >/dev/null
@@ -83,12 +94,17 @@ for day in $(seq 1 40); do
     continue
   fi
 
+  # 相対リンク(day-NN.md)を、GitHub上のファイルへの絶対URLに書き換えた本文を作る
+  BODY_FILE="$(mktemp)"
+  sed -E "s#\]\((day-[0-9]+\.md)\)#](https://github.com/$REPO/blob/main/daily-tasks/\1)#g" "$FILE" > "$BODY_FILE"
+
   gh issue create \
     --repo "$REPO" \
     --title "$TITLE" \
-    --body-file "$FILE" \
+    --body-file "$BODY_FILE" \
     --label "training,day-$day" \
     --milestone "$MILESTONE" >/dev/null
+  rm -f "$BODY_FILE"
   echo "✓ $TITLE を作成"
   count=$((count + 1))
   sleep 1  # API制限対策

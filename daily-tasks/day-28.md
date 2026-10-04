@@ -791,7 +791,7 @@ class WeatherDetailPageTest {
 ```bash
 git add .
 git commit -m "feat(frontend): 天気詳細ページ実装"
-git push origin feature/day-28
+git push origin main
 ```
 
 ---

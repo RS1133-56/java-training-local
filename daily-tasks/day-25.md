@@ -695,7 +695,7 @@ open build/reports/jacoco/test/html/index.html
 ```bash
 git add .
 git commit -m "test(integration): バックエンド統合テストを実装"
-git push origin feature/day-25
+git push origin main
 ```
 
 ---

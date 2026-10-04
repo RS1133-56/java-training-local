@@ -591,7 +591,7 @@ test {
 ```bash
 git add .
 git commit -m "test: テスト・品質保証完了"
-git push origin feature/day-36
+git push origin main
 ```
 
 ---

@@ -869,7 +869,7 @@ Prefecture (1) ←──── (*) WeatherRecord (1) ←──── (*) DailyFo
 ```bash
 git add .
 git commit -m "feat(entity): Prefecture, WeatherRecord, DailyForecast Entityを実装"
-git push origin feature/day-16
+git push origin main
 ```
 
 ---

@@ -640,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function() {
 ```bash
 git add .
 git commit -m "feat(frontend): お気に入り機能実装"
-git push origin feature/day-33
+git push origin main
 ```
 
 ---

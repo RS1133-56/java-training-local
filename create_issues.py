@@ -5,6 +5,10 @@ GitHubのissueを一括作成するスクリプト
 使い方:
   python3 create_issues.py --dry-run   # 作成せずタイトルだけ確認
   python3 create_issues.py             # 実際に作成（要 GITHUB_TOKEN）
+  python3 create_issues.py --yes       # 確認なしで作成
+
+本文中の相対リンク（day-NN.md）は、Issue上でも開けるよう
+GitHub上のファイルへの絶対URL（mainブランチ）に書き換えて登録します。
 """
 
 import re
@@ -41,6 +45,7 @@ def detect_repo():
 REPO_OWNER, REPO_NAME = detect_repo()
 MILESTONE_TITLE = os.environ.get("MILESTONE", "40日間研修")
 DRY_RUN = "--dry-run" in sys.argv
+ASSUME_YES = "--yes" in sys.argv or "-y" in sys.argv
 
 # GitHubのissue作成用ベースURL
 BASE_URL = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues"
@@ -129,7 +134,7 @@ def main():
     milestone = None
     existing_titles = set()
     if not DRY_RUN:
-        if input("このリポジトリにIssueを40件作成します。よろしいですか？ (y/N): ").strip().lower() != "y":
+        if not ASSUME_YES and input("このリポジトリにIssueを40件作成します。よろしいですか？ (y/N): ").strip().lower() != "y":
             print("中止しました")
             return
         ensure_labels()
@@ -159,8 +164,15 @@ def main():
             print(f"- スキップ（作成済み）: {title}")
             continue
         
+        # 相対リンク(day-NN.md)を絶対URLに書き換える
+        body = re.sub(
+            r"\]\((day-\d+\.md)\)",
+            rf"](https://github.com/{REPO_OWNER}/{REPO_NAME}/blob/main/daily-tasks/\1)",
+            content,
+        )
+        
         # issue作成
-        if create_issue(day, title, content, milestone=milestone):
+        if create_issue(day, title, body, milestone=milestone):
             success_count += 1
         else:
             fail_count += 1

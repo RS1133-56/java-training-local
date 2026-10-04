@@ -704,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function() {
 ```bash
 git add .
 git commit -m "feat(frontend): ローディング機能実装"
-git push origin feature/day-31
+git push origin main
 ```
 
 ---

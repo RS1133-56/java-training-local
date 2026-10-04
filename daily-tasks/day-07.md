@@ -631,8 +631,8 @@ public class RestTemplateConfig {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder
-            .setConnectTimeout(Duration.ofSeconds(5))  // 接続タイムアウト
-            .setReadTimeout(Duration.ofSeconds(5))     // 読み取りタイムアウト
+            .connectTimeout(Duration.ofSeconds(5))  // 接続タイムアウト
+            .readTimeout(Duration.ofSeconds(5))     // 読み取りタイムアウト
             .build();
     }
 }
@@ -684,7 +684,7 @@ public class OpenMeteoClient {
     }
     
     private String buildUrl(Double latitude, Double longitude) {
-        return UriComponentsBuilder.fromHttpUrl(API_BASE_URL)
+        return UriComponentsBuilder.fromUriString(API_BASE_URL)
             .queryParam("latitude", latitude)
             .queryParam("longitude", longitude)
             .queryParam("current", "temperature_2m,weathercode,windspeed_10m,relativehumidity_2m")

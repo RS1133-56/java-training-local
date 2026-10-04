@@ -892,7 +892,7 @@ public class ErrorTestController {
 ```bash
 git add .
 git commit -m "feat(frontend): エラーページ実装"
-git push origin feature/day-34
+git push origin main
 ```
 
 ---

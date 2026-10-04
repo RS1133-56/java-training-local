@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
 ```bash
 git add .
 git commit -m "feat(frontend): 天気アイコン表示機能実装"
-git push origin feature/day-32
+git push origin main
 ```
 
 ---
