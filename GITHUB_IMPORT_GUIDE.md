@@ -258,7 +258,7 @@ GitHubのProject（カンバンボード）と連携すると、
 ### issueコメント例
 
 ```markdown
-## ✅ Day 1 完了報告
+## ✅ Day 2 完了報告
 
 ### 実施記録
 - 実施日: 2024/11/26
@@ -268,20 +268,22 @@ GitHubのProject（カンバンボード）と連携すると、
 ### 完了チェックリスト
 - [x] JDK 17インストール
 - [x] IntelliJ IDEA設定
+- [x] Chromeと研修で使うサイトへの接続確認
 - [x] MySQLインストール
-- [x] Gradleプロジェクト作成
-- [x] 動作確認
+- [x] Postman動作確認
+- [x] setup-complete.md作成
 
 ### 学んだこと
-- Gradleの基本的な使い方
-- Spring Bootプロジェクトの構造
+- 環境変数（JAVA_HOME / PATH）の設定方法
+- MySQLの初期設定
 
 ### 困ったこと・質問
 - MySQLの初期設定でエラー
   → 文字コードの設定で解決
 
 ### 次のDay予定
-Day 2: Gitの基本とGitHub連携
+Day 3: GradleとSpring Bootプロジェクトの作成
+
 ```
 
 ### ラベル活用例

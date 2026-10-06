@@ -16,8 +16,8 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
 ## 📅 研修スケジュール（40営業日）
 
 ### Week 1: 環境構築 & Git基礎（Day 1-5）
-- Day 1: [開発環境のセットアップ](daily-tasks/day-01.md)
-- Day 2: [Gitの基本操作をマスターする](daily-tasks/day-02.md)
+- Day 1: [Gitの基本操作とGitHubの準備](daily-tasks/day-01.md)
+- Day 2: [開発環境のセットアップ](daily-tasks/day-02.md)
 - Day 3: [環境構築完了とHello World](daily-tasks/day-03.md)
 - Day 4: [Spring Boot基礎とプロジェクト作成](daily-tasks/day-04.md)
 - Day 5: [Spring Boot Hello Worldの理解](daily-tasks/day-05.md)
@@ -133,6 +133,17 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
 
 ### 1. 準備（最初の1回だけ）
 
+**先に用意するもの（Issueを作る前に必要です）:**
+- **GitHubアカウント**（無料）
+- **Git**（Windowsの方は、一緒に入る **Git Bash** でコマンドを実行します）
+- **GitHub CLI（`gh`）** とログイン（`gh auth login`）
+
+> インストール手順は、[Day 1](daily-tasks/day-01.md) の「1. Gitのインストールと初期設定」「2. GitHubの準備」に書いてあります。
+> このリポジトリの `daily-tasks/day-01.md` を開き、そこに従って先に進めてください。
+> （Issueはまだ作られていないので、この時点では、リポジトリ内のファイルを読みます）
+
+**手順:**
+
 1. このリポジトリを**フォーク**する（自分のGitHubアカウントにコピーされます）
 2. フォークした**自分のリポジトリ**をローカルにクローンする
    ```bash
@@ -147,6 +158,7 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
    ```
    - ラベルとマイルストーンは自動で作られます
    - 手順の詳細・うまくいかない場合は [GitHubインポートガイド](GITHUB_IMPORT_GUIDE.md)
+4. 自分のリポジトリの「Issues」タブに Day 1〜40 が並んでいることを確認し、**Day 1 のIssueから**研修を始める
 
 ### 2. 毎日の作業場所
 
@@ -194,7 +206,7 @@ Git初心者から始めて、Spring Bootを使った実践的なWebアプリケ
    git push origin main
    ```
 
-   > 💡 ブランチ運用: Day 2 でブランチ・マージの操作を練習しますが、Day 3 以降の日々の作業は
+   > 💡 ブランチ運用: Day 1 でブランチ・マージの操作を練習しますが、Day 2 以降の日々の作業は
    > **`main` ブランチに直接コミット・プッシュ**します（個人の研修なので、ブランチは切らなくてOKです）
 
 3. **チェックリストを更新**

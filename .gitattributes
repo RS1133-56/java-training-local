@@ -1,0 +1,2 @@
+# シェルスクリプトは、Windowsでクローンしても改行コードをLFのままにする（Git Bashで実行できるようにする）
+*.sh text eol=lf

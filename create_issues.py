@@ -170,6 +170,11 @@ def main():
             rf"](https://github.com/{REPO_OWNER}/{REPO_NAME}/blob/main/daily-tasks/\1)",
             content,
         )
+        body = re.sub(
+            r"\]\(\.\./([A-Za-z_]+\.md)\)",
+            rf"](https://github.com/{REPO_OWNER}/{REPO_NAME}/blob/main/\1)",
+            body,
+        )
         
         # issue作成
         if create_issue(day, title, body, milestone=milestone):

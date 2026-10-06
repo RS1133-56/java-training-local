@@ -96,7 +96,10 @@ for day in $(seq 1 40); do
 
   # 相対リンク(day-NN.md)を、GitHub上のファイルへの絶対URLに書き換えた本文を作る
   BODY_FILE="$(mktemp)"
-  sed -E "s#\]\((day-[0-9]+\.md)\)#](https://github.com/$REPO/blob/main/daily-tasks/\1)#g" "$FILE" > "$BODY_FILE"
+  sed -E \
+    -e "s#\]\((day-[0-9]+\.md)\)#](https://github.com/$REPO/blob/main/daily-tasks/\1)#g" \
+    -e "s#\]\(\.\./([A-Za-z_]+\.md)\)#](https://github.com/$REPO/blob/main/\1)#g" \
+    "$FILE" > "$BODY_FILE"
 
   gh issue create \
     --repo "$REPO" \
