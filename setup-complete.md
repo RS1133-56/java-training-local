@@ -3,18 +3,27 @@
 ## インストール済みツール
 
 ### JDK
-- バージョン: [ここにバージョンを記載]
-- インストールパス: [パスを記載]
+- バージョン: [openjdk 17.0.20]
+- インストールパス: [/home/roiko/.sdkman/candidates/java/17.0.20-tem/bin/java]
 
-### IntelliJ IDEA
-- バージョン: [バージョンを記載]
-- インストール済みプラグイン: [リストを記載]
+### VSCode
+- バージョン: [1.140.0]
+- インストール済みプラグイン: [
+ms-ceintl.vscode-language-pack-ja
+redhat.java
+vscjava.vscode-gradle
+vscjava.vscode-java-debug
+vscjava.vscode-java-dependency
+vscjava.vscode-java-pack
+vscjava.vscode-java-test
+vscjava.vscode-maven
+]
 
 ### Git / GitHub（Day 1で設定済み）
-- Gitのバージョン: [バージョンを記載]
-- GitHub CLI（gh）のバージョン: [バージョンを記載]
-- GitHubのユーザー名: [名前]
-- リポジトリのURL: [フォークしたリポジトリのURL]
+- Gitのバージョン: [git version 2.53.0]
+- GitHub CLI（gh）のバージョン: [2.102.0]
+- GitHubのユーザー名: [RS1133-56]
+- リポジトリのURL: [https://github.com/RS1133-56/java-training-local)]
 
 ### MySQL
 - バージョン: [バージョンを記載]
@@ -22,12 +31,12 @@
 - データベース: weather_app
 
 ### Postman
-- バージョン: [バージョンを記載]
+- バージョン: [12.31.3]
 - テスト結果: 成功
 
 ### Chrome
-- バージョン: [バージョンを記載]
-- 研修で使うサイトへの接続: [すべてOK／NGがあれば記載]
+- バージョン: [154.0.8037.98（公式ビルド） （64 ビット）]
+- 研修で使うサイトへの接続: [すべてOK]
 
 ## 動作確認
 - [ ] Java実行確認
