@@ -39,15 +39,18 @@ vscjava.vscode-maven
 - 研修で使うサイトへの接続: [すべてOK]
 
 ## 動作確認
-- [ ] Java実行確認
-- [ ] IntelliJ IDEA起動確認
-- [ ] Git操作確認（`git --version`、`gh auth status`）
-- [ ] MySQL接続確認
-- [ ] Postman動作確認
-- [ ] Chromeと研修で使うサイトへの接続確認
+- [◯] Java実行確認
+- [◯] IntelliJ IDEA起動確認
+- [◯] Git操作確認（`git --version`、`gh auth status`）
+- [◯] MySQL接続確認
+- [◯] Postman動作確認
+- [◯] Chromeと研修で使うサイトへの接続確認
 
 ## 問題と解決策
-[問題があれば記載]
+[　MySQLのポート競合
+→java-trainingの方はDockerコンテナでたて、別研修で使用しているものはポート3307にして解決
+
+]
 
 ## 完了日時
-[日時を記載]
+[10/9 9:55]
