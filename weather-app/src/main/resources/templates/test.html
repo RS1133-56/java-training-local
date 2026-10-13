@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Messages</title>
+</head>
+<body>
+    <h1>Test Messages</h1>
+    
+    <form method="post" action="/test">
+        <input type="text" name="message" placeholder="Enter message">
+        <button type="submit">Send</button>
+    </form>
+    
+    <ul>
+        <li th:each="msg : ${messages}">
+            <span th:text="${msg.message}"></span>
+            (<span th:text="${msg.createdAt}"></span>)
+        </li>
+    </ul>
+</body>
+</html>
