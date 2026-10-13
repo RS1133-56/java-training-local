@@ -37,3 +37,5 @@ out/
 .vscode/
 
 .env
+### Application Properties ###
+application-local.properties
