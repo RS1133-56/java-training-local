@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            font-size: 4rem;
+            margin: 0;
+        }
+        p {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hello World!</h1>
+        <p>Spring Bootアプリケーションが動作しています</p>
+        <p th:text="'現在時刻: ' + ${currentTime}"></p>
+    </div>
+</body>
+</html>
