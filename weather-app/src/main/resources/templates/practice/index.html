@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>練習ページ</title>
+</head>
+<body>
+    <h1 th:text="${message}"></h1>
+    
+    <h2>アノテーション練習リンク</h2>
+    <ul>
+        <li><a href="/practice/param?name=Taro&age=25">@RequestParam練習</a></li>
+        <li><a href="/practice/user/123">@PathVariable練習</a></li>
+        <li><a href="/practice/article/tech/456">複数PathVariable練習</a></li>
+        <li><a href="/practice/json">JSON返却練習</a></li>
+    </ul>
+</body>
+</html>
